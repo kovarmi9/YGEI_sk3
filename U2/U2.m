@@ -39,3 +39,15 @@ c = normxcorr2(template_B, imB);
 subplot(2,2,2)
 imshow(c)
 title('Corelation');
+
+% Find locations with correlation above 0.7
+limit = 0.7;
+[ypeak, xpeak] = find(c >= limit);
+
+% Display the matching areas
+subplot(2,2,4)
+imshow(im)
+hold on
+plot(xpeak,ypeak,'r.')
+title('Matching areas');
+hold off
