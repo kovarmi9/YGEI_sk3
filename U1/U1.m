@@ -1,7 +1,7 @@
 clc; clear variables; close all; format long g
 
 % Load the image
-originalImage = imread('image2.bmp');
+originalImage = imread('colour_2.tiff');
 
 % Display the uncompressed image
 figure(1)
