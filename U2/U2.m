@@ -19,3 +19,8 @@ imB=im(:,:,3);
 % figure(1)
 % ImR = imshow(imR);
 % [J,rect] = imcrop(ImR);
+
+% Showing original image
+subplot(2,2,1)
+imshow(im)
+title('Original image');
