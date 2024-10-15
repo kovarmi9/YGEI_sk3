@@ -48,6 +48,8 @@ limit = 0.7;
 subplot(2,2,4)
 imshow(im)
 hold on
-plot(xpeak,ypeak,'r.')
+for i = 1:length(xpeak)
+    rectangle('Position', [xpeak(i) - size(template_B, 2), ypeak(i) - size(template_B, 1), size(template_B, 2), size(template_B, 1)], 'EdgeColor', 'r')
+end
 title('Matching areas');
 hold off
