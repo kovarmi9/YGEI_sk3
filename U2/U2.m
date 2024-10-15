@@ -24,3 +24,9 @@ imB=im(:,:,3);
 subplot(2,2,1)
 imshow(im)
 title('Original image');
+
+% Showing template
+template = imcrop(im, [2987, 3047, 40 ,80]);
+subplot(2,2,3)
+imshow(template)
+title('Template');
