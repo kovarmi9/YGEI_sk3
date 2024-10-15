@@ -30,3 +30,12 @@ template = imcrop(im, [2987, 3047, 40 ,80]);
 subplot(2,2,3)
 imshow(template)
 title('Template');
+
+% Extract of blue colour from template
+template_B = template(:,:,3);
+
+% Calculation of corelation
+c = normxcorr2(template_B, imB);
+subplot(2,2,2)
+imshow(c)
+title('Corelation');
