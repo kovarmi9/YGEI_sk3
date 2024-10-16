@@ -1,4 +1,8 @@
-function [Y, Cb, Cr] = jpeg_decompression(YT, CBT, CRT, Qy, Qc, m, n)
+function [Y, Cb, Cr] = jpeg_decompression(YT, CBT, CRT, Qy, Qc)
+
+    % Getting size of matrix
+    [m, n] = size(YT);
+
     % JPEG decompression
     Y = zeros(m, n);
     Cb = zeros(m, n);

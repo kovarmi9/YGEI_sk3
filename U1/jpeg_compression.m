@@ -1,4 +1,7 @@
-function [YT, CBT, CRT] = jpeg_compression(Y, CB, CR, Qy, Qc, m, n)
+function [YT, CBT, CRT] = jpeg_compression(Y, CB, CR, Qy, Qc)
+
+    % Getting size of matrix
+    [m, n] = size(Y);
 
     % JPEG compression
     YT = zeros(m, n);

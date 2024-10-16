@@ -49,67 +49,10 @@ Qy = (50*Qy)/q;
 [m, n] = size(Y);
 
 % JPEG compression
-[YT, CBT, CRT] = jpeg_compression(Y, CB, CR, Qy, Qc, m, n);
+[YT, CBT, CRT] = jpeg_compression(Y, CB, CR, Qy, Qc);
 
 % JPEG decompression
-[Y, Cb, Cr] = jpeg_decompression(YT, CBT, CRT, Qy, Qc, m, n);
-
-% % JPEG compression
-% for i = 1:8:m-7
-%     for j=1:8:n-7
-% 
-%         % Create tiles (submatrices)
-%         Ys = Y(i:i+7,j:j+7);
-%         CBs = CB(i:i+7,j:j+7);
-%         CRs = CR(i:i+7,j:j+7);
-% 
-%         % Apply DCT
-%         Ydct = mydct(Ys);
-%         CBdct = mydct(CBs);
-%         CRdct = mydct(CRs);
-% 
-%         % Quantisation
-%         Yq = Ydct./Qc;
-%         CBq = CBdct./Qy;
-%         CRq = CRdct./Qy;
-%         
-%         % Round values
-%         Yqr = round(Yq);
-%         CBqr = round(CBq);
-%         CRqr = round(CRq);
-% 
-%         % Overwrite tile with the compressed one
-%         YT(i:i+7,j:j+7) = Yqr; 
-%         CBT(i:i+7,j:j+7) = CBqr;
-%         CRT(i:i+7,j:j+7) = CRqr;
-%     end
-% end
-% 
-% % JPEG decompression
-% for i = 1:8:m-7
-%     for j=1:8:n-7
-% 
-%         % Create tiles (submatrices)
-%         Ys = YT(i:i+7,j:j+7);
-%         CBs = CBT(i:i+7,j:j+7);
-%         CRs = CRT(i:i+7,j:j+7);
-% 
-%         % Dequantization
-%         Ysd = Ys.*Qc;
-%         CBd = CBs.*Qy;
-%         CRd = CRs.*Qy;
-% 
-%         % Apply IDCT
-%         Yidct = myidct(Ysd);
-%         CBidct = myidct(CBd);
-%         CRidct = myidct(CRd);
-% 
-%         % Overwrite tile with the compressed one
-%         Y(i:i+7,j:j+7) = Yidct; 
-%         Cb(i:i+7,j:j+7) = CBidct;
-%         Cr(i:i+7,j:j+7) = CRidct;
-%     end
-% end
+[Y, Cb, Cr] = jpeg_decompression(YT, CBT, CRT, Qy, Qc);
 
 % YCBCR to RGB
 Rd = Y+ 1.4020*(Cr-128);
