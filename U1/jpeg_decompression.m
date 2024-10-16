@@ -25,9 +25,9 @@ function [Y, Cb, Cr] = jpeg_decompression(YT, CBT, CRT, Qy, Qc, transType)
             CRd = CRs .* Qy;
 
             % Apply IDCT
-            Yidct = transFunc(Ysd);
-            CBidct = transFunc(CBd);
-            CRidct = transFunc(CRd);
+            Yidct = real(transFunc(Ysd));
+            CBidct = real(transFunc(CBd));
+            CRidct = real(transFunc(CRd));
 
             % Overwrite tile with the decompressed one
             Y(i:i+7, j:j+7) = Yidct; 

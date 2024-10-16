@@ -49,7 +49,7 @@ Qy = (50*Qy)/q;
 [m, n] = size(Y);
 
 % JPEG compression with DCT
-[YT, CBT, CRT] = jpeg_compression(Y, CB, CR, Qy, Qc, 'fft2');
+[YT, CBT, CRT] = jpeg_compression(Y, CB, CR, Qy, Qc, 'myfft2');
 
 % JPEG decompression with DCT
 [Y, Cb, Cr] = jpeg_decompression(YT, CBT, CRT, Qy, Qc, 'ifft2');
