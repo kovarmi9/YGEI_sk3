@@ -1,0 +1,37 @@
+function [YT, CBT, CRT] = jpeg_compression(Y, CB, CR, Qy, Qc, m, n)
+
+    % JPEG compression
+    YT = zeros(m, n);
+    CBT = zeros(m, n);
+    CRT = zeros(m, n);
+
+    for i = 1:8:m-7
+        for j = 1:8:n-7
+
+            % Create tiles (submatrices)
+            Ys = Y(i:i+7, j:j+7);
+            CBs = CB(i:i+7, j:j+7);
+            CRs = CR(i:i+7, j:j+7);
+
+            % Apply DCT
+            Ydct = mydct(Ys);
+            CBdct = mydct(CBs);
+            CRdct = mydct(CRs);
+
+            % Quantisation
+            Yq = Ydct ./ Qc;
+            CBq = CBdct ./ Qy;
+            CRq = CRdct ./ Qy;
+
+            % Round values
+            Yqr = round(Yq);
+            CBqr = round(CBq);
+            CRqr = round(CRq);
+
+            % Overwrite tile with the compressed one
+            YT(i:i+7, j:j+7) = Yqr; 
+            CBT(i:i+7, j:j+7) = CBqr;
+            CRT(i:i+7, j:j+7) = CRqr;
+        end
+    end
+end
