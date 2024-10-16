@@ -2,7 +2,7 @@ function F = myfft(x)
 % Calculate FFT with recursion
     
     % Length of the input vector
-     n = length(x);
+    n = length(x);
 
     % If n <= 1, the function returns the input vector x as output F
     if  n <= 1
