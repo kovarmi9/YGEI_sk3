@@ -1,7 +1,6 @@
 function [YT, CBT, CRT] = jpeg_compression(Y, CB, CR, Qy, Qc, transType)
 
-    % Selected transformation to function transFunc
-    transFunc = str2func(transType);
+    transFunc = str2func(transType
 
     % Getting size of matrix
     [m, n] = size(Y);
@@ -20,9 +19,9 @@ function [YT, CBT, CRT] = jpeg_compression(Y, CB, CR, Qy, Qc, transType)
             CRs = CR(i:i+7, j:j+7);
 
             % Apply DCT
-            Ydct = transFunc(Ys);
-            CBdct = transFunc(CBs);
-            CRdct = transFunc(CRs);
+            Ydct = mydct(Ys);
+            CBdct = mydct(CBs);
+            CRdct = mydct(CRs);
 
             % Quantisation
             Yq = Ydct ./ Qc;

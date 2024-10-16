@@ -1,4 +1,7 @@
-function [Y, Cb, Cr] = jpeg_decompression(YT, CBT, CRT, Qy, Qc)
+function [Y, Cb, Cr] = jpeg_decompression(YT, CBT, CRT, Qy, Qc, transType)
+
+    % Selected transformation to function transFunc
+    transFunc = str2func(transType);
 
     % Getting size of matrix
     [m, n] = size(YT);
@@ -22,9 +25,9 @@ function [Y, Cb, Cr] = jpeg_decompression(YT, CBT, CRT, Qy, Qc)
             CRd = CRs .* Qy;
 
             % Apply IDCT
-            Yidct = myidct(Ysd);
-            CBidct = myidct(CBd);
-            CRidct = myidct(CRd);
+            Yidct = transFunc(Ysd);
+            CBidct = transFunc(CBd);
+            CRidct = transFunc(CRd);
 
             % Overwrite tile with the decompressed one
             Y(i:i+7, j:j+7) = Yidct; 

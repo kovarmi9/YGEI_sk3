@@ -1,7 +1,7 @@
 clc; clear variables; close all; format long g
 
 % Load the image
-originalImage = imread('greyscale_2.bmp');
+originalImage = imread('colour_2.bmp');
 
 % Display the uncompressed image
 figure(1)
@@ -48,11 +48,13 @@ Qy = (50*Qy)/q;
 % Process input easter by sub-matrices
 [m, n] = size(Y);
 
-% JPEG compression
-[YT, CBT, CRT] = jpeg_compression(Y, CB, CR, Qy, Qc);
+% JPEG compression with DCT
+[YT, CBT, CRT] = jpeg_compression(Y, CB, CR, Qy, Qc, 'fft2');
 
-% JPEG decompression
-[Y, Cb, Cr] = jpeg_decompression(YT, CBT, CRT, Qy, Qc);
+% JPEG decompression with DCT
+[Y, Cb, Cr] = jpeg_decompression(YT, CBT, CRT, Qy, Qc, 'ifft2');
+
+
 
 % YCBCR to RGB
 Rd = Y+ 1.4020*(Cr-128);
