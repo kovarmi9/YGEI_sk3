@@ -1,4 +1,4 @@
-function [LL, LH, HL, HH] = mydwt2(block)
+function output = mydwt2(block)
 
     % Getting size
     [rows, cols] = size(block);
@@ -33,5 +33,5 @@ function [LL, LH, HL, HH] = mydwt2(block)
     end
     
     % Assemble the output 8x8 block
-    LL = [LL, LH; HL, HH];
+    output = [LL, LH; HL, HH];
 end

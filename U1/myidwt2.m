@@ -1,7 +1,7 @@
 function block = myidwt2(LL)
-    % Assume the input block is 8x8
+
+    % Getting size
     [rows, cols] = size(LL);
-    assert(rows == 8 && cols == 8, 'Block size must be 8x8');
     
     % Split into sub-blocks
     LL_sub = LL(1:4, 1:4);
