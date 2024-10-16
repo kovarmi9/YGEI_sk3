@@ -19,3 +19,23 @@ for i = 1:rows
         sumMatrix(i, j) = i + j;
     end
 end
+
+% Initialize vector for index sums
+sumVector = zeros(1, rows * cols);
+
+% Generate the increasing part of the vector
+index = 1;
+for n = 0:cols
+    sumVector(index:index+n-1) = n + 1;
+    index = index + n;
+end
+
+% Generate the decreasing part of the vector
+for n = cols-1:-1:1
+    sumVector(index:index+n-1) = cols * 2 + 1 - n;
+    index = index + n;
+end
+
+% Display
+disp(sumVector);
+
