@@ -1,5 +1,6 @@
 clc; clear variables; close all; format long g
 
+pepa=11;
 % Load the image
 originalImage = imread('greyscale_2.bmp');
 
