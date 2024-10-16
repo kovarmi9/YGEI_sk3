@@ -9,3 +9,13 @@ M = [ 1,  7,  3,  1;
 
 % Get the size of the matrix
 [rows, cols] = size(M);
+
+% Initialization matrix of sums of indexs
+sumMatrix = zeros(rows, cols);
+
+% Filling the sum matrix with the sum of indexs
+for i = 1:rows
+    for j = 1:cols
+        sumMatrix(i, j) = i + j;
+    end
+end
