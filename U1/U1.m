@@ -1,7 +1,7 @@
 clc; clear variables; close all; format long g
 
 % Load the image
-originalImage = imread('colour_2.bmp');
+originalImage = imread('Image2.bmp');
 
 % Display the uncompressed image
 figure(1)
@@ -49,10 +49,10 @@ Qy = (50*Qy)/q;
 [m, n] = size(Y);
 
 % JPEG compression with DCT
-[YT, CBT, CRT] = jpeg_compression(Y, CB, CR, Qy, Qc, 'myfft2');
+[YT, CBT, CRT] = jpeg_compression(Y, CB, CR, Qy, Qc, 'mydwt2');
 
 % JPEG decompression with DCT
-[Y, Cb, Cr] = jpeg_decompression(YT, CBT, CRT, Qy, Qc, 'myifft2');
+[Y, Cb, Cr] = jpeg_decompression(YT, CBT, CRT, Qy, Qc, 'myidwt2');
 
 % YCBCR to RGB
 Rd = Y+ 1.4020*(Cr-128);
