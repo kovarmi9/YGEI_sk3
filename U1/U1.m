@@ -54,8 +54,6 @@ Qy = (50*Qy)/q;
 % JPEG decompression with DCT
 [Y, Cb, Cr] = jpeg_decompression(YT, CBT, CRT, Qy, Qc, 'myifft2');
 
-
-
 % YCBCR to RGB
 Rd = Y+ 1.4020*(Cr-128);
 Gd = Y-0.3441*(Cb-128) - 0.7141*(Cr-128);

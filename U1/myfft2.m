@@ -8,7 +8,7 @@ function F = myfft2(X)
 
     % Compute the FFT for each row
     for i = 1:rows
-        F_complex(i, :) = fft(X(i, :));
+        F_complex(i, :) = myfft(X(i, :));
     end
 
     % Compute the FFT for each column
