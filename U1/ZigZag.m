@@ -1,16 +1,15 @@
-% test zigzag
-clc; clear variables; close all; format long g;
-
-% Example matrix
-M = [ 1,  7,  3,  1;
-      5,  9,  7,  8;
-      9, 10, 11, 12;
-      9, -5, 15, 79];
-
-zigzag = zigzagTraversal(M);
-disp(zigzag)
-
-function zigzag = zigzagTraversal(M)
+function zigzag = ZigZag(M)
+    %   zigzag = ZIGZAG(M) takes a square matrix M as input and returns
+    %   vector zigzag containing the elements of M traversed in a zigzag
+    %   pattern based on the sum of their indices.
+    %
+    %   Example:
+    %       M = [1, 7, 3, 1;
+    %            5, 9, 7, 8;
+    %            9, 10, 11, 12;
+    %            9, -5, 15, 79];
+    %       zigzag = ZigZag(M);
+    %       disp(zigzag);
     
     % Get the size of the matrix
     [rows, cols] = size(M);
