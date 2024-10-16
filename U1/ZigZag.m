@@ -39,3 +39,8 @@ end
 % Display
 disp(sumVector);
 
+% Initialize vector for positions
+positions = zeros(1, length(sumVector));
+
+
+
