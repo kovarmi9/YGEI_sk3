@@ -1,19 +1,26 @@
 clc; clear; format long G
 
-MyImg=randi(255,16,16,3);
+MyImg=randi(255,8,8,3);
 
 
+[r,~,b]=size(MyImg);
+k=16;
+nS=k/r;
+nR=k/r;
 
-k=4;
+NewImg=zeros(k,k,b);
 
-[r,s]=size(MyImg);
-
-nS=r/k;
-nR=r/k;
-
-NewImg=zeros(k);
-for i=0:k-1
-    for j=0:k-1
-        NewImg(i+1,j+1)=MyImg(i*nS+1,j*nR+1);
-    end
+for i=0:nR:k-1
+   for j=0:nS:k-1
+       NewImg(i+1:i+nR,j+1:j+nS)=MyImg(i*nS+1,j*nR+1);
+   end
 end
+
+
+% for n=1:b    
+%     for i=0:k-1
+%         for j=0:k-1
+%             NewImg(i+1,j+1,n)=MyImg(i*nS+1,j*nR+1,n);
+%         end
+%     end
+% end
