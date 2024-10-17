@@ -17,8 +17,8 @@ G = double(originalImage(:,:,2));
 B = double(originalImage(:,:,3));
 
 % Testing ZigZag and inverseZigZag
-B_zig=ZigZag(B);
-B_zag=inverseZigZag(B_zig);
+B_zig=ZigZag.to(B);
+B_zag=ZigZag.from(B_zig);
 disp(B-B_zag)
 
 % Transformation RGB to YCBCR
