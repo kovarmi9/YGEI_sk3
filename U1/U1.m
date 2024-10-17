@@ -16,6 +16,11 @@ R = double(originalImage(:,:,1));
 G = double(originalImage(:,:,2));
 B = double(originalImage(:,:,3));
 
+% Testing ZigZag and inverseZigZag
+B_zig=ZigZag(B);
+B_zag=inverseZigZag(B_zig);
+disp(B-B_zag)
+
 % Transformation RGB to YCBCR
 Y =   0.2990 * R + 0.5870 * G + 0.1140 * B;
 CB = -0.1687 * R - 0.3313 * G + 0.5000 * B + 128;
