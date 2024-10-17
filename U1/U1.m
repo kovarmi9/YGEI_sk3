@@ -54,10 +54,10 @@ Qy = (50*Qy)/q;
 [m, n] = size(Y);
 
 % JPEG compression with DCT
-[YT, CBT, CRT] = jpeg_compression(Y, CB, CR, Qy, Qc, 'mydwt2');
+[YT, CBT, CRT] = jpeg_compression(Y, CB, CR, Qy, Qc, 'mydct');
 
 % JPEG decompression with DCT
-[Y, Cb, Cr] = jpeg_decompression(YT, CBT, CRT, Qy, Qc, 'myidwt2');
+[Y, Cb, Cr] = jpeg_decompression(YT, CBT, CRT, Qy, Qc, 'myidct');
 
 % YCBCR to RGB
 Rd = Y+ 1.4020*(Cr-128);

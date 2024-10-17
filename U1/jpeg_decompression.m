@@ -20,7 +20,7 @@ function [Y, Cb, Cr] = jpeg_decompression(YT, CBT, CRT, Qy, Qc, transType)
             CRs = CRT(i:i+7, j:j+7);
 
             % Dequantization
-            Ysd = Ys .* Qc;
+            Ysd = Ys .* Qc;% may be wrong
             CBd = CBs .* Qy;
             CRd = CRs .* Qy;
 

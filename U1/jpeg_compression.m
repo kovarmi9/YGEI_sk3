@@ -25,7 +25,7 @@ function [YT, CBT, CRT] = jpeg_compression(Y, CB, CR, Qy, Qc, transType)
             CRdct = transFunc(CRs);
 
             % Quantisation
-            Yq = Ydct ./ Qc;
+            Yq = Ydct ./ Qc;% may be wrong
             CBq = CBdct ./ Qy;
             CRq = CRdct ./ Qy;
 
