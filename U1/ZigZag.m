@@ -1,7 +1,24 @@
 classdef ZigZag
+    %   ZigZag Class for converting square matrix to zigzag vectors and back.
+    %
+    %   Methods:
+    %       to   - Convert a square matrix to a zigzag vector.
+    %       from - Reconstruct a square matrix from a zigzag vector.
+    %
+    %   Example:
+    %       M = [1, 7, 3, 1;
+    %            5, 9, 7, 8;
+    %            9, 10, 11, 12;
+    %            9, -5, 15, 79];
+    %       zigzag = ZigZag.to(M);
+    %       disp(zigzag);
+    %
+    %       M_reconstructed = ZigZag.from(zigzag);
+    %       disp(M_reconstructed);
+    
     methods (Static)
         function zigzag = to(M)
-            %   zigzag = ZIGZAG(M) takes a square matrix M as input and returns
+            %   zigzag = ZigZag.to(M) takes a square matrix M as input and returns
             %   vector zigzag containing the elements of M traversed in a zigzag
             %   pattern based on the sum of their indices.
             %
@@ -110,7 +127,7 @@ classdef ZigZag
         end
 
         function M = from(zigzag)
-            %   M = INVERSEZIGZAG(zigzag) takes a vector zigzag and
+            %   M = ZigZag.from(zigzag) takes a vector zigzag and
             %   reconstructs a square matrix M by traversing the
             %   elements in a zigzag pattern.
             %
