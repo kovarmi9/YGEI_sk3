@@ -1,5 +1,6 @@
-function [NewImg] = MydResample(MyImg,k)
+function [NewImg] = MyDResample(MyImg,k)
 %%
+% down resampeling
 % input = MyImg - images
 %           k   - resampeling factor factor
 %
