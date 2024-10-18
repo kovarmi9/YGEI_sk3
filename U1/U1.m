@@ -1,7 +1,7 @@
 clc; clear variables; close all; format long g
 
 % Load the image
-originalImage = imread('greyscale_2.bmp');
+originalImage = imread('Image2.bmp');
 
 % Display the uncompressed image
 figure(1)
@@ -15,6 +15,11 @@ q = 50;
 R = double(originalImage(:,:,1));
 G = double(originalImage(:,:,2));
 B = double(originalImage(:,:,3));
+
+% Testing ZigZag and inverseZigZag
+B_zig=ZigZag.to(B);
+B_zag=ZigZag.from(B_zig);
+disp(B-B_zag)
 
 % Transformation RGB to YCBCR
 Y =   0.2990 * R + 0.5870 * G + 0.1140 * B;
@@ -48,11 +53,11 @@ Qy = (50*Qy)/q;
 % Process input easter by sub-matrices
 [m, n] = size(Y);
 
-% JPEG compression
-[YT, CBT, CRT] = jpeg_compression(Y, CB, CR, Qy, Qc);
+% JPEG compression with DCT
+[YT, CBT, CRT] = jpeg_compression(Y, CB, CR, Qy, Qc, 'mydct');
 
-% JPEG decompression
-[Y, Cb, Cr] = jpeg_decompression(YT, CBT, CRT, Qy, Qc);
+% JPEG decompression with DCT
+[Y, Cb, Cr] = jpeg_decompression(YT, CBT, CRT, Qy, Qc, 'myidct');
 
 % YCBCR to RGB
 Rd = Y+ 1.4020*(Cr-128);
