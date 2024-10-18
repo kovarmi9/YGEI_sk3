@@ -20,7 +20,7 @@ classdef Resample
             if nargin <2
                 k=2;
             end
-            [NewImg,nR,nS,~,~,b]=StatsDown(MyImg,k);
+            [NewImg,nR,nS,~,~,b]=Resample.StatsDown(MyImg,k);
         
             %runs for each band
             for n=1:b 
@@ -47,7 +47,7 @@ classdef Resample
             if nargin <2
                 k=2;
             end
-            [NewImg,~,~,r,s,b]=StatsUp(MyImg,k);
+            [NewImg,~,~,r,s,b]=Resample.StatsUp(MyImg,k);
             
             %runs for each band
             for n=1:b
@@ -77,8 +77,8 @@ classdef Resample
             if nargin <2
                 k=2;
             end
-            [NewImg,nR,nS,~,~,b]=StatsDown(MyImg,k);
-            
+            [NewImg,nR,nS,~,~,b]=Resample.StatsDown(MyImg,k);
+
             %runs for each band
             for n=1:b
                 %runs for rows
@@ -135,7 +135,7 @@ classdef Resample
             % output = NewImg - resampled image
             %%
             k=2;
-            [NewImg,~,~,r,s,b]=StatsUp(MyImg,k);
+            [NewImg,~,~,r,s,b]=Resample.StatsUp(MyImg,k);
             
             % creates a padded matrix
             MyImgP=[MyImg,MyImg(:,end,:);MyImg(end,:,:),MyImg(end,end,:)];
