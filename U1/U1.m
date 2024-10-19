@@ -1,7 +1,7 @@
 clc; clear variables; close all; format long g
 
 % Load the image
-originalImage = imread('Image2.bmp');
+originalImage = imread('colour_2.bmp');
 
 % Display the uncompressed image
 figure(1)
@@ -16,15 +16,18 @@ R = double(originalImage(:,:,1));
 G = double(originalImage(:,:,2));
 B = double(originalImage(:,:,3));
 
-% Testing ZigZag and inverseZigZag
-B_zig=ZigZag.to(B);
-B_zag=ZigZag.from(B_zig);
-disp(B-B_zag)
-
 % Transformation RGB to YCBCR
 Y =   0.2990 * R + 0.5870 * G + 0.1140 * B;
 CB = -0.1687 * R - 0.3313 * G + 0.5000 * B + 128;
 CR =  0.5    * R - 0.4187 * G - 0.0813 * B + 128;
+
+% Downsampling chrominance components of picture
+CB_downsampled = Resample.MyDResample2X2(CB);
+CR_downsampled = Resample.MyDResample2X2(CR);
+
+% Expand the chrominance components back to original size
+CB_expanded = expandImage(CB, CB_downsampled);
+CR_expanded = expandImage(CR, CR_downsampled);
 
 % Quantisation matrix
 Qy = [16  11  10  16  24  40  51  61
@@ -54,10 +57,10 @@ Qy = (50*Qy)/q;
 [m, n] = size(Y);
 
 % JPEG compression with DCT
-[YT, CBT, CRT] = jpeg_compression(Y, CB, CR, Qy, Qc, 'mydct');
+[YT, CBT, CRT, Y_zigzag, CB_zigzag, CR_zigzag] = jpeg_compression(Y, CB_expanded, CR_expanded, Qy, Qc, 'mydct');
 
 % JPEG decompression with DCT
-[Y, Cb, Cr] = jpeg_decompression(YT, CBT, CRT, Qy, Qc, 'myidct');
+[Y, Cb, Cr] = jpeg_decompression(Y_zigzag, CB_zigzag, CR_zigzag, YT, CBT, CRT, Qy, Qc, 'myidct');
 
 % YCBCR to RGB
 Rd = Y+ 1.4020*(Cr-128);
@@ -90,6 +93,7 @@ dB2 = dB.^2;
 sigR = sqrt(sum(sum(dR2))/(m*n));
 sigG = sqrt(sum(sum(dG2))/(m*n));
 sigB = sqrt(sum(sum(dB2))/(m*n));
+
 
 
 
