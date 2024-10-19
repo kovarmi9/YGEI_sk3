@@ -11,7 +11,7 @@ function [Y, Cb, Cr] = jpeg_decompression(Y_zigzag, CB_zigzag, CR_zigzag, YT, CB
     Cb = zeros(m, n);
     Cr = zeros(m, n);
 
-    % Initializing counter for zigzag
+    % Initializing counters for zigzag
     zigzag_index = 1;
 
     for i = 1:8:m-7
@@ -35,7 +35,7 @@ function [Y, Cb, Cr] = jpeg_decompression(Y_zigzag, CB_zigzag, CR_zigzag, YT, CB
             CBs = CBT(i:i+7, j:j+7);
             CRs = CRT(i:i+7, j:j+7);
 
-            % Yq from ZigZag and Ys without ZigZag are same so it's wotking
+            % Yq from ZigZag and Ys 
 
             % Dequantization
             Ysd = Ys .* Qc;% may be wrong
