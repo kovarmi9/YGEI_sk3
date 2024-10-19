@@ -34,6 +34,15 @@ CR_downsampled = Resample.MyDResample2X2(CR);
 CB_expanded = expandImage(CB, CB_downsampled);
 CR_expanded = expandImage(CR, CR_downsampled);
 
+% Display sizes
+disp('Original size of CB:');
+disp(size(CB));
+disp('Downsampled size of CB:');
+disp(size(CB_downsampled));
+disp('Expanded size of CB:');
+disp(size(CB_expanded));
+
+
 % Quantisation matrix
 Qy = [16  11  10  16  24  40  51  61
       12  12  14  19  26  58  60  55
@@ -62,7 +71,7 @@ Qy = (50*Qy)/q;
 [m, n] = size(Y);
 
 % JPEG compression with DCT
-[YT, CBT, CRT] = jpeg_compression(Y, CB_expanded, CR_expanded, Qy, Qc, 'mydct');
+[YT, CBT, CRT] = jpeg_compression(Y, CB_expanded, CR, Qy, Qc, 'mydct');
 
 % JPEG decompression with DCT
 [Y, Cb, Cr] = jpeg_decompression(YT, CBT, CRT, Qy, Qc, 'myidct');
@@ -99,6 +108,19 @@ sigR = sqrt(sum(sum(dR2))/(m*n));
 sigG = sqrt(sum(sum(dG2))/(m*n));
 sigB = sqrt(sum(sum(dB2))/(m*n));
 
+function [expandedImg] = expandImage(originalImg, newImg)
+    [orig_r, orig_s, b] = size(originalImg);
+    [new_r, new_s, ~] = size(newImg);
+    scale_factor_r = orig_r / new_r;
+    scale_factor_s = orig_s / new_s;
+    
+    expandedImg = zeros(orig_r, orig_s, b);
 
-
-
+    for n = 1:b
+        for i = 1:new_r
+            for j = 1:new_s
+                expandedImg((i-1)*scale_factor_r+1:i*scale_factor_r, (j-1)*scale_factor_s+1:j*scale_factor_s, n) = newImg(i, j, n);
+            end
+        end
+    end
+end
