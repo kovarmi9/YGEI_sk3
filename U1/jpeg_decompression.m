@@ -26,16 +26,15 @@ function [Y, Cb, Cr] = jpeg_decompression(Y_zigzag, CB_zigzag, CR_zigzag, YT, CB
             zigzag_index = zigzag_index + 1;
 
             % Convert ZigZag vectors back to 8x8 blocks
-            Yq = ZigZag.from(Y_zigzag_block)
+            % Not used but same as Ys Cbs and Crs... 
+            Yq = ZigZag.from(Y_zigzag_block);
             CBq = ZigZag.from(CB_zigzag_block);
             CRq = ZigZag.from(CR_zigzag_block);
 
             % Create tiles (submatrices)
-            Ys = YT(i:i+7, j:j+7)
+            Ys = YT(i:i+7, j:j+7);
             CBs = CBT(i:i+7, j:j+7);
             CRs = CRT(i:i+7, j:j+7);
-
-            % Yq from ZigZag and Ys without ZigZag are same so it's wotking
 
             % Dequantization
             Ysd = Ys .* Qc;% may be wrong
