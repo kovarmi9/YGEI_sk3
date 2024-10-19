@@ -58,6 +58,16 @@ Qy = (50*Qy)/q;
 
 % JPEG compression with DCT
 [YT, CBT, CRT, Y_zigzag, CB_zigzag, CR_zigzag] = jpeg_compression(Y, CB_expanded, CR_expanded, Qy, Qc, 'mydct');
+[YT_, Y_zigzag_] = compression(Y, Qc, 'mydct');
+[CBT_, CB_zigzag_] = compression(CB_expanded, Qy, 'mydct');
+[CRT_, CR_zigzag_] = compression(CR_expanded, Qy, 'mydct');
+
+YT-YT_
+Y_zigzag-Y_zigzag_
+CBT-CBT_
+CB_zigzag-CB_zigzag_
+CRT-CRT_
+CR_zigzag-CR_zigzag_
 
 % JPEG decompression with DCT
 [Y, Cb, Cr] = jpeg_decompression(Y_zigzag, CB_zigzag, CR_zigzag, YT, CBT, CRT, Qy, Qc, 'myidct');
