@@ -29,10 +29,15 @@ function [Y, Cb, Cr] = jpeg_decompression(YT, CBT, CRT, Qy, Qc, transType)
             CBidct = real(transFunc(CBd));
             CRidct = real(transFunc(CRd));
 
-            % Overwrite tile with the decompressed one
-            Y(i:i+7, j:j+7) = Yidct; 
-            Cb(i:i+7, j:j+7) = CBidct;
-            Cr(i:i+7, j:j+7) = CRidct;
+            % Reverse interval transformation
+            Y(i:i+7, j:j+7) = 0.5 * (Yidct + 255); 
+            Cb(i:i+7, j:j+7) = 0.5 * (CBidct + 255);
+            Cr(i:i+7, j:j+7) = 0.5 * (CRidct + 255);
+
+%             % Overwrite tile with the decompressed one
+%             Y(i:i+7, j:j+7) = Yidct; 
+%             Cb(i:i+7, j:j+7) = CBidct;
+%             Cr(i:i+7, j:j+7) = CRidct;
         end
     end
 end

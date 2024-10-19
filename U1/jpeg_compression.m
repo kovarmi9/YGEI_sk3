@@ -19,10 +19,20 @@ function [YT, CBT, CRT] = jpeg_compression(Y, CB, CR, Qy, Qc, transType)
             CBs = CB(i:i+7, j:j+7);
             CRs = CR(i:i+7, j:j+7);
 
+            % Transformation of interval
+            Ys_transformed = 2 * Ys - 255;
+            CBs_transformed = 2 * CBs - 255;
+            CRs_transformed = 2 * CRs - 255;
+
             % Apply DCT
-            Ydct = transFunc(Ys);
-            CBdct = transFunc(CBs);
-            CRdct = transFunc(CRs);
+            Ydct = transFunc(Ys_transformed);
+            CBdct = transFunc(CBs_transformed);
+            CRdct = transFunc(CRs_transformed);
+
+%             % Apply DCT
+%             Ydct = transFunc(Ys);
+%             CBdct = transFunc(CBs);
+%             CRdct = transFunc(CRs);
 
             % Quantisation
             Yq = Ydct ./ Qc;% may be wrong

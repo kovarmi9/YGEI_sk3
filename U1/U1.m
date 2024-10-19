@@ -1,7 +1,7 @@
 clc; clear variables; close all; format long g
 
 % Load the image
-originalImage = imread('Image2.bmp');
+originalImage = imread('colour_2.bmp');
 
 % Display the uncompressed image
 figure(1)
@@ -16,10 +16,10 @@ R = double(originalImage(:,:,1));
 G = double(originalImage(:,:,2));
 B = double(originalImage(:,:,3));
 
-% Testing ZigZag and inverseZigZag
-B_zig=ZigZag.to(B);
-B_zag=ZigZag.from(B_zig);
-disp(B-B_zag)
+% % Testing ZigZag and inverseZigZag
+% B_zig=ZigZag.to(B);
+% B_zag=ZigZag.from(B_zig);
+% disp(B-B_zag)
 
 % Transformation RGB to YCBCR
 Y =   0.2990 * R + 0.5870 * G + 0.1140 * B;
