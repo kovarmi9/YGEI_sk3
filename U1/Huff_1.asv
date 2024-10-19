@@ -41,14 +41,14 @@ StrCode(:,1)="";
 STable=[STable,StrCode];
 
 Code="";
-% for i=1:2
-%     if PomTable{i,3}~=1
-%        Code=Code+PomTable{i,4}
-% 
-%     else
-%        Code=Code+PomTable{i,4}
-%     end
-% end
+for i=1:2
+    if PomTable{i,3}~=1
+       Code=Code+PomTable{i,4}
+       
+    else
+       Code=Code+PomTable{i,4}
+    end
+end
 
 function F = AssignValues(F)
     F = GenerateValue(F);
