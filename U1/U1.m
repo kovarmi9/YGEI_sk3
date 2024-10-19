@@ -25,10 +25,6 @@ CR =  0.5    * R - 0.4187 * G - 0.0813 * B + 128;
 CB_downsampled = Resample.MyDResample2X2(CB);
 CR_downsampled = Resample.MyDResample2X2(CR);
 
-% Expand the chrominance components back to original size
-CB_expanded = expandImage(CB, CB_downsampled);
-CR_expanded = expandImage(CR, CR_downsampled);
-
 % Quantisation matrix
 Qy = [16  11  10  16  24  40  51  61
       12  12  14  19  26  58  60  55
@@ -58,14 +54,17 @@ Qy = (50*Qy)/q;
 
 % JPEG compression with DCT
 [YT, Y_zigzag] = compression(Y, Qc, 'mydct');
-[CBT, CB_zigzag] = compression(CB_expanded, Qy, 'mydct');
-[CRT, CR_zigzag] = compression(CR_expanded, Qy, 'mydct');
-
+[CBT, CB_zigzag] = compression(CB_downsampled, Qy, 'mydct');
+[CRT, CR_zigzag] = compression(CR_downsampled, Qy, 'mydct');
 
 % JPEG decompression with DCT
 [Y] = decompression(Y_zigzag, YT, Qc, 'myidct');
 [Cb] = decompression(CB_zigzag, CBT, Qy, 'myidct');
 [Cr] = decompression(CR_zigzag, CRT, Qy, 'myidct');
+
+% Upsampling chrominance components of picture
+Cb = Resample.MyUResample2X2(Cb);
+Cr = Resample.MyUResample2X2(Cr);
 
 % YCBCR to RGB
 Rd = Y+ 1.4020*(Cr-128);
