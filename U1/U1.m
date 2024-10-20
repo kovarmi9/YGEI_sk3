@@ -11,9 +11,8 @@ title('Uncompressed Image');
 % Compression factor
 q = 50;
 
-% Type of transformation
-transform_to = 'mydwt2';
-transform_from = 'myidwt2';
+% Type of transformation (dct, fft, dwt)
+type_of_trans = 'dct';
 
 % Extract RGB components and convert from uint8 to double
 R = double(originalImage(:,:,1));
@@ -23,7 +22,7 @@ B = double(originalImage(:,:,3));
 % Transformation RGB to YCBCR
 Y =   0.2990 * R + 0.5870 * G + 0.1140 * B;
 CB = -0.1687 * R - 0.3313 * G + 0.5000 * B + 128;
-CR =  0.5    * R - 0.4187 * G - 0.0813 * B + 128;
+CR =  0.5000 * R - 0.4187 * G - 0.0813 * B + 128;
 
 % Downsampling chrominance components of picture
 CB_downsampled = Resample.MyDResample2X2(CB);
@@ -57,14 +56,14 @@ Qy = (50*Qy)/q;
 [m, n] = size(Y);
 
 % JPEG compression with DCT
-[YT, Y_zigzag] = compression(Y, Qc, transform_to);
-[CBT, CB_zigzag] = compression(CB_downsampled, Qy, transform_to);
-[CRT, CR_zigzag] = compression(CR_downsampled, Qy, transform_to);
+[Y_zigzag] = compression(Y, Qy, type_of_trans);
+[CB_zigzag] = compression(CB_downsampled, Qc, type_of_trans);
+[CR_zigzag] = compression(CR_downsampled, Qc, type_of_trans);
 
 % JPEG decompression with DCT
-[Y] = decompression(Y_zigzag, YT, Qc, transform_from);
-[Cb] = decompression(CB_zigzag, CBT, Qy, transform_from);
-[Cr] = decompression(CR_zigzag, CRT, Qy, transform_from);
+[Y] = decompression(Y_zigzag, Qy, type_of_trans);
+[Cb] = decompression(CB_zigzag, Qc, type_of_trans);
+[Cr] = decompression(CR_zigzag, Qc, type_of_trans);
 
 % Upsampling chrominance components of picture
 Cb = Resample.MyUResample2X2(Cb);
@@ -101,7 +100,3 @@ dB2 = dB.^2;
 sigR = sqrt(sum(sum(dR2))/(m*n));
 sigG = sqrt(sum(sum(dG2))/(m*n));
 sigB = sqrt(sum(sum(dB2))/(m*n));
-
-
-
-
