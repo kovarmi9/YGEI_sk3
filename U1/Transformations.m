@@ -1,32 +1,77 @@
-classdef MyTransformations
+classdef Transformations
+    % Transformations Class for various transformations of image.
+    %
+    % This class provides static methods for performing Discrete Cosine Transform (DCT),
+    % Inverse Discrete Cosine Transform (IDCT), Discrete Wavelet Transform (DWT),
+    % Inverse Discrete Wavelet Transform (IDWT), Fast Fourier Transform (FFT),
+    % and Inverse Fast Fourier Transform (IFFT).
+    %
+    % Methods:
+    %   mydct  - Discrete Cosine Transform on an 8x8 block.
+    %   myidct - Inverse Discrete Cosine Transform on an 8x8 block.
+    %   mydwt  - Discrete Wavelet Transform on an 8x8 block.
+    %   myidwt - Inverse Discrete Wavelet Transform on an 8x8 block.
+    %   myfft  - Fast Fourier Transform on a 2D matrix.
+    %   myifft - Inverse Fast Fourier Transform on a 2D matrix.
     methods (Static)
-        function Rt = dct(R)
-            Rt = MyTransformations.mydct(R);
+        function Rt = mydct(R)
+        %   Rt = Transformations.dct(R) performs the DCT on the input
+        %   8x8 block R and returns the transformed block Rt.
+        %
+        %   Example:
+        %       R = rand(8, 8) * 255;
+        %       Rt = Transformations.dct(R);
+            Rt = Transformations.my_dct(R);
         end
         
-        function Rt = idct(R)
-            Rt = MyTransformations.myidct(R);
+        function R = myidct(Rt)
+        %   R = Transformations.idct(Rt) performs the IDCT on the input
+        %   8x8 block Rt and returns the transformed block R.
+        %
+        %   Example:
+        %       R = Transformations.idct(Rt);
+            R = Transformations.my_idct(Rt);
         end
         
-        function output = dwt(block)
-            output = MyTransformations.mydwt2(block);
+        function Rt = mydwt(R)
+        %   Rt = Transformations.dwt(R) performs the DWT on the
+        %   input 8x8 block and returns the transformed block.
+        %
+        %   Example:
+        %       Rt = Transformations.dwt(R);
+            Rt = Transformations.my_dwt2(R);
         end
         
-        function block = idwt(LL)
-            block = MyTransformations.myidwt2(LL);
+        function R = myidwt(Rt)
+        %   R = Transformations.idwt(Rt) performs the IDWT on the
+        %   input 8x8 block Rt and returns the transformed block R.
+        %
+        %   Example:
+        %       R = Transformations.idwt(Rt);
+            R = Transformations.my_idwt2(Rt);
         end
         
-        function F = fft(X)
-            F = MyTransformations.myfft2(X);
+        function Rt = myfft(R)
+        %   Rt = Transformations.fft(R) performs the FFT on the input
+        %   2D matrix R and returns the transformed matrix Rt.
+        %
+        %   Example:
+        %       Rt = Transformations.dft(R);
+            Rt = Transformations.my_fft2(R);
         end
         
-        function x = ifft(X)
-            x = MyTransformations.myifft2(X);
+        function R = myifft(Rt)
+        %   R = Transformations.ifft(Rt) performs the IFFT on the input
+        %   2D matrix Rt and returns the transformed matrix R.
+        %
+        %   Example:
+        %       R = Transformations.idft(Rt);
+            R = Transformations.my_ifft2(Rt);
         end
     end
     
     methods (Static, Access = private)
-        function Rt=mydct(R)
+        function Rt=my_dct(R)
         % Function for directe cosine transformation on 8x8 block
         
             % Initialization of output matrix
@@ -60,7 +105,7 @@ classdef MyTransformations
             end
         end
         
-        function Rt=myidct(R)
+        function Rt=my_idct(R)
         % Function for inverse directe cosine transformation on 8x8 block
         
             % Initialization of output matrix
@@ -95,7 +140,7 @@ classdef MyTransformations
             end
         end
         
-        function output = mydwt2(block)
+        function output = my_dwt2(block)
         % Function for dwt
 
             % Getting size
@@ -134,7 +179,7 @@ classdef MyTransformations
             output = [LL, LH; HL, HH];
         end
         
-        function block = myidwt2(LL)
+        function block = my_idwt2(LL)
         % Function for inverse DWT
 
             % Getting size
@@ -174,7 +219,7 @@ classdef MyTransformations
             end
         end
         
-        function F = myfft(x)
+        function F = my_fft(x)
         % Calculate FFT with recursion
             
             % Length of the input vector
@@ -185,8 +230,8 @@ classdef MyTransformations
                 F = x;
             else
                 % Spliting input into even and odd and another calling of function
-                even = myfft(x(1:2:end));
-                odd = myfft(x(2:2:end));
+                even = Transformations.my_fft(x(1:2:end));
+                odd = Transformations.my_fft(x(2:2:end));
         
                 % Inicialization of F
                 F = zeros(1, n);
@@ -200,7 +245,7 @@ classdef MyTransformations
             end
         end
         
-        function x = myifft(X)
+        function x = my_ifft(X)
         % Calculate IFFT with recursion
         
             n = length(X); % Length of the input vector
@@ -210,8 +255,8 @@ classdef MyTransformations
                x = X;
             else
                 % Spliting input into even and odd and another calling of function
-                even = myifft(X(1:2:end));
-                odd = myifft(X(2:2:end));
+                even = Transformations.my_ifft(X(1:2:end));
+                odd = Transformations.my_ifft(X(2:2:end));
         
                 % Inicialization of x
                 x = zeros(1, n);
@@ -225,7 +270,7 @@ classdef MyTransformations
             end
         end
         
-        function F = myfft2(X)
+        function F = my_fft2(X)
         % Function for my FFT
 
             % Get the size of the matrix
@@ -236,17 +281,17 @@ classdef MyTransformations
         
             % Compute the FFT for each row
             for i = 1:rows
-                F_complex(i, :) = myfft(X(i, :));
+                F_complex(i, :) = Transformations.my_fft(X(i, :));
             end
         
             % Compute the FFT for each column
             for i = 1:cols
-                F_complex(:, i) = fft(F_complex(:, i));
+                F_complex(:, i) = Transformations.my_fft(F_complex(:, i));
             end
             F = F_complex;
         end
         
-        function x = myifft2(X)
+        function x = my_ifft2(X)
         % My FFT
         
             % Get the size of the matrix
@@ -257,12 +302,12 @@ classdef MyTransformations
         
             % Compute the IFFT for each column
             for c = 1:cols
-                x_complex(:, c) = myifft(X(:, c).');
+                x_complex(:, c) = Transformations.my_ifft(X(:, c).');
             end
         
             % Compute the IFFT for each row
             for r = 1:rows
-                x_complex(r, :) = myifft(x_complex(r, :));
+                x_complex(r, :) = Transformations.my_ifft(x_complex(r, :));
             end
         
             x = x_complex;

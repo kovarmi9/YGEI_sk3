@@ -11,8 +11,8 @@ title('Uncompressed Image');
 % Compression factor
 q = 50;
 
-% Type of transformation (dct, fft, dwt)
-type_of_trans = 'dct';
+% Type of transformation (dct, dft, dwt)
+type_of_trans = 'fft';
 
 % Extract RGB components and convert from uint8 to double
 R = double(originalImage(:,:,1));

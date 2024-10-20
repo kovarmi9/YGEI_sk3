@@ -26,7 +26,7 @@ function [Y] = decompression(zigzag, Q, transType)
             dequantized = block .* Q;
             
             % Apply IDCT/IFFT/IDWT
-            Yidct = real(feval(strcat('MyTransformations.i', transType), dequantized));
+            Yidct = real(feval(strcat('Transformations.myi', transType), dequantized));
 
             % Reverse interval transformation
             Y(i:i+7, j:j+7) = 0.5 * (Yidct + 255);

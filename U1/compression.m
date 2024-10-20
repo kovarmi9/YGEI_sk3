@@ -21,7 +21,7 @@ function [zigzag] = compression(component, Q, transType)
             sub = componenti(i:i+7, j:j+7);
 
             % Apply DCT/FFT/DWT
-            transformed = feval(strcat('MyTransformations.', transType), sub);
+            transformed = feval(strcat('Transformations.my', transType), sub);
 
             % Quantisation
             quantized = transformed ./ Q;
