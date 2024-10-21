@@ -4,7 +4,8 @@ classdef MyHuffman
     %   Methods:
     %       CipherHuff    - Cipher sequence of values with Huffman codin
     %       DecipherHuff  - Decipher sequence of Huffman values
-
+    %       ReadFiles     - Reads created files of deciphered values
+    %       WriteFiles    - Writes files with ciphered values
     methods (Static)
         function [TableForCoding,HuffSec] = CipherHuff(Sec)
             %% Cipher sequence with Huffman Coding
@@ -82,6 +83,81 @@ classdef MyHuffman
                     end
                 end
             end
+        end
+
+        function [TableForCoding,HuffSec,Sec]=ReadFiles(ImageName,Band)
+        %%
+        % Read coded .txt and .csv file
+        % Input: ImageName - name of image ["name"]
+        %        Band      - name of band  ["_name"]
+        %
+        %Output: TableForCoding - coding table
+        %        HuffSec        - Huffman sequnece
+        %        Sec            - Deciphered Sequence
+        %%
+            %Declaring names fo files
+            FolderName="result_";
+            TableSufix="_CT";
+            
+            % Generating paths to results
+            Folder=FolderName+ImageName;
+            TableText=Folder+"/"+ImageName+Band+TableSufix+".csv";
+            SequenceText=Folder+"/"+ImageName+Band+".txt";
+            
+            % checks the existence of folder 
+            if ~isfolder(Folder)
+                error('File does not exists')
+            end
+            
+            % Read files
+            TableForCoding = readtable(TableText);
+            FID = fopen(SequenceText, 'r');
+            HuffSec = fscanf(FID, '%d');
+            fclose(FID);
+            disp("Readed files "+ImageName+Band+".txt and "+ImageName+Band+TableSufix+".csv" )
+            %Decode the files into sequence
+            [Sec]=MyHuffman.DecipherHuff(TableForCoding,HuffSec);
+        end
+
+        function [TableForCoding,HuffSec]=WriteFiles(ImageName,Band,HuffSec,TableForCoding)
+        %%
+        % Generating coded .txt and .csv file
+        % Input: ImageName - name of image ["name"]
+        %        Band      - name of band  ["_name"]
+        %        HuffSec   - Huffman sequnece
+        %        TableForCoding - coding table
+        %        *If not inputet HuffSec and TableForCoding input original sequence
+        %        and will create neccesary atributes*
+        %
+        %Output: TableForCoding - coding table
+        %        HuffSec        - Huffman sequnece
+        %%
+            %checks number of input arguments if smaller generates Huffman
+            %secquence and table
+            if nargin < 4
+                [TableForCoding,HuffSec]=MyHuffman.CipherHuff(HuffSec);
+            end
+        
+            %Declaring names fo files
+            FolderName="result_";
+            TableSufix="_CT";
+            
+            % Generating paths to results
+            Folder=FolderName+ImageName;
+            TableText=Folder+"/"+ImageName+Band+TableSufix+".csv";
+            SequenceText=Folder+"/"+ImageName+Band+".txt";
+            
+            % checks the existence of folder 
+            if ~isfolder(Folder)
+                mkdir(Folder);
+            end
+            
+            % Generating files
+            writetable(TableForCoding, TableText);
+            FID = fopen(SequenceText, 'w');
+            fprintf(FID, '%d ', HuffSec);
+            fclose(FID);
+            disp("Generated .txt file and .csv in "+Folder)
         end
     end
 
