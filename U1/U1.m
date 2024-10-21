@@ -8,7 +8,6 @@ figure(1)
 imshow(originalImage);
 title('Uncompressed Image');
 
-
 % Compression factor
 q = 10;
 
