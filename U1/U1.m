@@ -11,9 +11,14 @@ title('Uncompressed Image');
 % Compression factor
 q = 50;
 
-% Type of transformation
-transform_to = 'mydwt2';
-transform_from = 'myidwt2';
+% Type of transformation (dct, fft, dwt)
+type_of_trans = 'dwt';
+
+% Type of reasmpling algorithm (2X2, NN)
+type_of_resample = '2X2';
+
+% Do you want to use Huffman? it might take long time (YES, NO)
+use_huffman = 'YES';
 
 % Extract RGB components and convert from uint8 to double
 R = double(originalImage(:,:,1));
@@ -23,11 +28,11 @@ B = double(originalImage(:,:,3));
 % Transformation RGB to YCBCR
 Y =   0.2990 * R + 0.5870 * G + 0.1140 * B;
 CB = -0.1687 * R - 0.3313 * G + 0.5000 * B + 128;
-CR =  0.5    * R - 0.4187 * G - 0.0813 * B + 128;
+CR =  0.5000 * R - 0.4187 * G - 0.0813 * B + 128;
 
 % Downsampling chrominance components of picture
-CB_downsampled = Resample.MyDResample2X2(CB);
-CR_downsampled = Resample.MyDResample2X2(CR);
+CB_downsampled = feval(strcat('Resample.MyDResample', type_of_resample), CB);
+CR_downsampled = feval(strcat('Resample.MyDResample', type_of_resample), CR);
 
 % Quantisation matrix
 Qy = [16  11  10  16  24  40  51  61
@@ -57,18 +62,61 @@ Qy = (50*Qy)/q;
 [m, n] = size(Y);
 
 % JPEG compression with DCT
-[YT, Y_zigzag] = compression(Y, Qc, transform_to);
-[CBT, CB_zigzag] = compression(CB_downsampled, Qy, transform_to);
-[CRT, CR_zigzag] = compression(CR_downsampled, Qy, transform_to);
+[Y_zigzag] = compression(Y, Qy, type_of_trans);
+[CB_zigzag] = compression(CB_downsampled, Qc, type_of_trans);
+[CR_zigzag] = compression(CR_downsampled, Qc, type_of_trans);
+
+% Testing if id huffman coding selected
+if strcmp(use_huffman, 'YES')
+    % Combine all zigzag arrays into a single cell
+    zigzag = {Y_zigzag, CB_zigzag, CR_zigzag};
+
+    % Initialize cells for Huffman tables and data
+    tables = cell(1, 3);
+    data = cell(1, 3);
+
+    % Loop through each zigzag array
+    for i = 1:3
+        if ~isreal(zigzag{i})
+            % If they are complex, use Huffman for each part separately
+            [table_r, data_r] = MyHuffman.CipherHuff(real(zigzag{i}));
+            [table_i, data_i] = MyHuffman.CipherHuff(imag(zigzag{i}));
+            tables{i} = {table_r, table_i};
+            data{i} = {data_r, data_i};
+        else
+            % If they are not complex, use Huffman directly
+            [tables{i}, data{i}] = MyHuffman.CipherHuff(zigzag{i});
+        end
+    end
+
+    % Decoding using MyHuffman.DecipherHuff
+    decoded_zigzag = cell(1, 3);
+    for i = 1:3
+        if iscell(tables{i})
+            % If the numbers are complex, decode each part separately
+            real_part = MyHuffman.DecipherHuff(tables{i}{1}, data{i}{1});
+            imag_part = MyHuffman.DecipherHuff(tables{i}{2}, data{i}{2});
+            decoded_zigzag{i} = complex(real_part, imag_part);
+        else
+            % If they are not complex, decode directly
+            decoded_zigzag{i} = MyHuffman.DecipherHuff(tables{i}, data{i});
+        end
+    end
+
+    % Assign decoded zigzag arrays back to original variables
+    Y_zigzag = decoded_zigzag{1};
+    CB_zigzag = decoded_zigzag{2};
+    CR_zigzag = decoded_zigzag{3};
+end
 
 % JPEG decompression with DCT
-[Y] = decompression(Y_zigzag, YT, Qc, transform_from);
-[Cb] = decompression(CB_zigzag, CBT, Qy, transform_from);
-[Cr] = decompression(CR_zigzag, CRT, Qy, transform_from);
+[Y] = decompression(Y_zigzag, Qy, type_of_trans);
+[Cb] = decompression(CB_zigzag, Qc, type_of_trans);
+[Cr] = decompression(CR_zigzag, Qc, type_of_trans);
 
 % Upsampling chrominance components of picture
-Cb = Resample.MyUResample2X2(Cb);
-Cr = Resample.MyUResample2X2(Cr);
+Cb = feval(strcat('Resample.MyUResample', type_of_resample), Cb);
+Cr = feval(strcat('Resample.MyUResample', type_of_resample), Cr);
 
 % YCBCR to RGB
 Rd = Y+ 1.4020*(Cr-128);
@@ -101,7 +149,3 @@ dB2 = dB.^2;
 sigR = sqrt(sum(sum(dR2))/(m*n));
 sigG = sqrt(sum(sum(dG2))/(m*n));
 sigB = sqrt(sum(sum(dB2))/(m*n));
-
-
-
-
