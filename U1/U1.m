@@ -11,8 +11,11 @@ title('Uncompressed Image');
 % Compression factor
 q = 50;
 
-% Type of transformation (dct, dft, dwt)
-type_of_trans = 'fft';
+% Type of transformation (dct, fft, dwt)
+type_of_trans = 'dwt';
+
+% Do you want to use Huffman? it might take long time (YES, NO)
+use_huffman = 'YES';
 
 % Extract RGB components and convert from uint8 to double
 R = double(originalImage(:,:,1));
@@ -59,6 +62,48 @@ Qy = (50*Qy)/q;
 [Y_zigzag] = compression(Y, Qy, type_of_trans);
 [CB_zigzag] = compression(CB_downsampled, Qc, type_of_trans);
 [CR_zigzag] = compression(CR_downsampled, Qc, type_of_trans);
+
+if strcmp(use_huffman, 'YES')
+    % Combine all zigzag arrays into a single cell
+    zigzag = {Y_zigzag, CB_zigzag, CR_zigzag};
+
+    % Initialize cells for Huffman tables and data
+    tables = cell(1, 3);
+    data = cell(1, 3);
+
+    % Loop through each zigzag array
+    for i = 1:3
+        if ~isreal(zigzag{i})
+            % If they are complex, use Huffman for each part separately
+            [table_r, data_r] = MyHuffman.CipherHuff(real(zigzag{i}));
+            [table_i, data_i] = MyHuffman.CipherHuff(imag(zigzag{i}));
+            tables{i} = {table_r, table_i};
+            data{i} = {data_r, data_i};
+        else
+            % If they are not complex, use Huffman directly
+            [tables{i}, data{i}] = MyHuffman.CipherHuff(zigzag{i});
+        end
+    end
+
+    % Decoding using MyHuffman.DecipherHuff
+    decoded_zigzag = cell(1, 3);
+    for i = 1:3
+        if iscell(tables{i})
+            % If the numbers are complex, decode each part separately
+            real_part = MyHuffman.DecipherHuff(tables{i}{1}, data{i}{1});
+            imag_part = MyHuffman.DecipherHuff(tables{i}{2}, data{i}{2});
+            decoded_zigzag{i} = complex(real_part, imag_part);
+        else
+            % If they are not complex, decode directly
+            decoded_zigzag{i} = MyHuffman.DecipherHuff(tables{i}, data{i});
+        end
+    end
+
+    % Assign decoded zigzag arrays back to original variables
+    Y_zigzag = decoded_zigzag{1};
+    CB_zigzag = decoded_zigzag{2};
+    CR_zigzag = decoded_zigzag{3};
+end
 
 % JPEG decompression with DCT
 [Y] = decompression(Y_zigzag, Qy, type_of_trans);
