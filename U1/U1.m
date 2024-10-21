@@ -1,7 +1,7 @@
 clc; clear variables; close all; format long g
 
 % Load the image
-originalImage = imread('colour_2.bmp');
+originalImage = imread('images/colour_2.bmp');
 
 % Display the uncompressed image
 figure(1)
@@ -61,7 +61,7 @@ Qy = (50*Qy)/q;
 % Process input easter by sub-matrices
 [m, n] = size(Y);
 
-% JPEG compression with DCT
+% YCbCr compression using specified transformation and quantization
 [Y_zigzag] = compression(Y, Qy, type_of_trans);
 [CB_zigzag] = compression(CB_downsampled, Qc, type_of_trans);
 [CR_zigzag] = compression(CR_downsampled, Qc, type_of_trans);
@@ -109,7 +109,7 @@ if strcmp(use_huffman, 'YES')
     CR_zigzag = decoded_zigzag{3};
 end
 
-% JPEG decompression with DCT
+% zigzag compression using specified transformation and quantization to YCbCr
 [Y] = decompression(Y_zigzag, Qy, type_of_trans);
 [Cb] = decompression(CB_zigzag, Qc, type_of_trans);
 [Cr] = decompression(CR_zigzag, Qc, type_of_trans);
@@ -137,15 +137,18 @@ figure(2)
 imshow(ras2);
 title('Compressed Image');
 
-% Compute standard deviations
+% Compute difference between original and decompressed components
 dR = R - Rd;
 dG = G - Gd;
 dB = B - Bd;
 
-dR2 = dR.^2;
-dG2 = dG.^2;
-dB2 = dB.^2;
+% Compute standard deviations
+sigR = sqrt(sum(sum(dR.^2))/(m*n));
+sigG = sqrt(sum(sum(dG.^2))/(m*n));
+sigB = sqrt(sum(sum(dB.^2))/(m*n));
 
-sigR = sqrt(sum(sum(dR2))/(m*n));
-sigG = sqrt(sum(sum(dG2))/(m*n));
-sigB = sqrt(sum(sum(dB2))/(m*n));
+% Display standard deviations
+disp('Standard deviations:');
+disp(['sigR: ', num2str(sigR)]);
+disp(['sigG: ', num2str(sigG)]);
+disp(['sigB: ', num2str(sigB)]);

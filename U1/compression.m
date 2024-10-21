@@ -1,4 +1,9 @@
 function [zigzag] = compression(component, Q, transType)
+    % COMPRESSION Compresses an image component using specified transformation and quantization
+    %   component - input image component (Y, CB, or CR)
+    %   Q - quantization matrix
+    %   transType - type of transformation ('dct', 'fft', 'dwt')
+    %   zigzag - output vector
 
     % Transformation of interval
     componenti = 2 * component - 255;
