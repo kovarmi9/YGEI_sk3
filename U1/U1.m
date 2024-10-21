@@ -14,6 +14,9 @@ q = 50;
 % Type of transformation (dct, fft, dwt)
 type_of_trans = 'dwt';
 
+% Type of reasmpling algorithm (2X2, NN)
+type_of_resample = '2X2';
+
 % Do you want to use Huffman? it might take long time (YES, NO)
 use_huffman = 'YES';
 
@@ -28,8 +31,8 @@ CB = -0.1687 * R - 0.3313 * G + 0.5000 * B + 128;
 CR =  0.5000 * R - 0.4187 * G - 0.0813 * B + 128;
 
 % Downsampling chrominance components of picture
-CB_downsampled = Resample.MyDResample2X2(CB);
-CR_downsampled = Resample.MyDResample2X2(CR);
+CB_downsampled = feval(strcat('Resample.MyDResample', type_of_resample), CB);
+CR_downsampled = feval(strcat('Resample.MyDResample', type_of_resample), CR);
 
 % Quantisation matrix
 Qy = [16  11  10  16  24  40  51  61
@@ -111,8 +114,8 @@ end
 [Cr] = decompression(CR_zigzag, Qc, type_of_trans);
 
 % Upsampling chrominance components of picture
-Cb = Resample.MyUResample2X2(Cb);
-Cr = Resample.MyUResample2X2(Cr);
+Cb = feval(strcat('Resample.MyUResample', type_of_resample), Cb);
+Cr = feval(strcat('Resample.MyUResample', type_of_resample), Cr);
 
 % YCBCR to RGB
 Rd = Y+ 1.4020*(Cr-128);
