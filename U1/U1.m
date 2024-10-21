@@ -9,16 +9,16 @@ imshow(originalImage);
 title('Uncompressed Image');
 
 % Compression factor
-q = 50;
+q = 10;
 
 % Type of transformation (dct, fft, dwt)
-type_of_trans = 'dwt';
+type_of_trans = 'dct';
 
 % Type of reasmpling algorithm (2X2, NN)
-type_of_resample = '2X2';
+type_of_resample = 'NN';
 
 % Do you want to use Huffman? it might take long time (YES, NO)
-use_huffman = 'YES';
+use_huffman = 'NO';
 
 % Extract RGB components and convert from uint8 to double
 R = double(originalImage(:,:,1));
