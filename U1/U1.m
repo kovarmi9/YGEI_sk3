@@ -66,6 +66,7 @@ Qy = (50*Qy)/q;
 [CB_zigzag] = compression(CB_downsampled, Qc, type_of_trans);
 [CR_zigzag] = compression(CR_downsampled, Qc, type_of_trans);
 
+% Testing if id huffman coding selected
 if strcmp(use_huffman, 'YES')
     % Combine all zigzag arrays into a single cell
     zigzag = {Y_zigzag, CB_zigzag, CR_zigzag};
