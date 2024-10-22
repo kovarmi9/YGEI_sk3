@@ -1,0 +1,40 @@
+\section*{Popis metod:}
+\subsubsection*{Resamplování rastru}
+
+Pro resamplování rastru byla vytvořena třída \texttt{Resample}, která obsahuje metody pro downsampling a pro upsampling. Tyto metody zajišťují, že chrominanční komponenty obrazu jsou správně zmenšeny a následně zvětšeny, což je důležité pro efektivní kompresi a dekompresi. Pro tento účel byla
+vytvořena třída Resample s následujícími metodami:
+\begin{itemize}
+    \item \texttt{MyDResampleNN} - Downsampluje matici pomocí metody nejbližšího souseda.
+    \item \texttt{MyUResampleNN}  - Upsampluje matici pomocí metody nejbližšího souseda.
+    \item \texttt{MyDResample2X2} - Downsampluje matici pomocí kernelu [2x2], nový pixel vznikne jako průměr kernelu.
+    \item \texttt{MyDResample3x3} - Downsampluje matici pomocí kernelu [3x3], nový pixel vznikne jako průměr kernelu.
+    \item \texttt{MyUResample2X2} - Upsampluje matici pomocí kernelu [2x2], nové pixely vznikne pomocí lineární interpolace v kernelu.
+\end{itemize}
+
+\subsubsection*{Konverze pixelů do ZIG-ZAG sekvencí}
+
+Při kompresi byly převedeny bloky 8x8 pixelů do Zig-Zag sekvencí. Tím byla převedena 2D data na 1D. Pro tento účel byla vytvořena třída \texttt{ZigZag} s metodami \texttt{to} a \texttt{from}. Metoda \texttt{to} převádí matici do vektoru pomocí Zig-Zag sekvence a metoda \texttt{from} převádí vektor zpět do matice.
+
+\subsubsection*{Huffmanovo kódování}
+
+Pro další snížení velikosti dat bylo použito Huffmanovo kódování. Tento algoritmus vytváří optimální kód pro každý symbol na základě jeho četnosti, což vede k efektivní kompresi dat. Pro tento účel byla vytvořena třída \texttt{MyHuffman} s následujícími metodami:
+
+\begin{itemize}
+    \item \texttt{CipherHuff} - Komprimuje sekvenci pomocí Huffmanova kódování.
+    \item \texttt{DecipherHuff}  - Dekomprimuje sekvenci Huffmanova kódovaná.
+    \item \texttt{WriteFiles} - Vytvoří složku s výsledky Huffmanova kódování.
+    \item \texttt{ReadFiles} - Ze složky přečte a dekomprimuje data Huffmanovým Kódováním.
+\end{itemize}
+
+\subsubsection*{Transformace}
+
+Pro nejdůležitější krok celé komprese, který představuje převod mezi prostorovými souřadnicemi jednotlivých pixelů do prostorových frekvencí. Pro tento účel byla vytvořena třída Transformace s následujícími metodami:
+
+\begin{itemize}
+    \item \texttt{mydct} - Na datech provede diskrétní kosinovou transformaci.
+    \item \texttt{myidct}  - Na datech provede inverzní diskrétní kosinovou transformaci. 
+    \item \texttt{mydwt} - Na datech provede diskrétní vlnkovou transformaci.
+    \item \texttt{myidwt} - Na datech provede inverzní diskrétní vlnkovou transformaci.
+    \item \texttt{myfft} - Na datech provede diskrétní Fourierovu transformaci.
+    \item \texttt{myifft} - Na datech provede inverzní diskrétní Fourierovu transformaci.
+\end{itemize}

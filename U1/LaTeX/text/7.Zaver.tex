@@ -1,0 +1,37 @@
+\newpage
+\section*{Závěr}
+
+Na základě výše uvedených tabulek lze vidět, že různé metody komprese a resamplování mají odlišný vliv na kvalitu obrazu po dekompresi.
+
+\subsubsection*{Transformace:}
+\begin{itemize}
+    \item \textbf{DCT}: Je vhodná pro různé typy obrazů, ale při nižších kompresních faktorech (např. q = 10) dochází k výraznějšímu zhoršení kvality. Při vyšších kompresních faktorech (q = 50 a q = 70) je kvalita obrazu lepší, ale stále dochází k určité ztrátě detailů.
+    \item \textbf{DWT}: Tato metoda vykazuje vyšší směrodatné odchylky, což naznačuje větší ztrátu kvality než DCT. Je možné že se někde v během výpočtu vyskytla chyba, jelikož podle \cite{JPEG2000Wiki} by měla DWT poskytovat lepší výsledky než DCT.
+    \item \textbf{FFT}: Tato metoda dosahuje nejnižších směrodatných odchylek, což znamená, že nejméně poškozuje komprimovaný rastr. Je vhodná pro obrazy, kde je důležité zachovat co nejvíce detailů. Nevýhodou je, že při kompresi se pracuje s komplexními čísly, které dále komplikují Huffmanovo kódování a představují větší objem dat.
+\end{itemize}
+
+\subsubsection*{Resamplování:}
+\begin{itemize}
+    \item \textbf{2X2}: Tento typ resamplování obecně vykazuje nižší směrodatné odchylky než NN, což znamená, že méně poškozuje výsledný obraz.
+    \item \textbf{NN (Nearest Neighbor)}: Tento typ resamplování má tendenci k vyšším směrodatným odchylkám, což naznačuje větší ztrátu kvality.
+\end{itemize}
+
+\textbf{Doporučení}:
+\begin{itemize}
+    \item Pro barevné fotografie je vhodné volit kompresní faktor alespoň 50-70%, aby se minimalizovala ztráta kvality.
+    \item Pro černobílé fotografie je JPEG komprese méně náchylná k degradaci kvality, protože původní pixely jsou si barevně blíže.
+    \item Pro vektorové kresby a obrazy s ostrými hranami je JPEG komprese méně vhodná, protože může dojít k rozmazání ostrých přechodů.
+\end{itemize}
+
+Pro ideální funkci je nezbytné správně zvolit faktor komprese, aby byl soubor po kompresi co nejmenší a zároveň bylo zachováno co nejvíce obrazových informací.
+
+\subsection*{Další možné neřešené problémy a náměty na vylepšení}
+
+\begin{itemize}
+    \item \textbf{Optimalizace Huffmanova kódování}: Při použití FFT komprese se pracuje s komplexními čísly, což může komplikovat Huffmanovo kódování. Bylo by vhodné prozkoumat možnosti optimalizace tohoto procesu. Momentálně je vektor komplexních čísel rozdělen pomocí podmínky na komplexní a reálnou část a každá část je kódována samostatně.
+    \item \textbf{Adaptivní komprese}: Jako vylepšení by bylo možné přidat adaptivní metody komprese, které by se dynamicky přizpůsoboval obsahu obrazu a optimalizovaly kompresi pro konkrétní rastr.
+    \item \textbf{Zachování barevné věrnosti}: Bylo by možné využít také metody, které by lépe zachovávaly barevnou věrnost obrazu po kompresi, zejména u obrazů s jemnými barevnými přechody.
+    \item \textbf{Vyšší rozlišení}: Bylo by dále možné upravit kód tak, aby lépe komprimoval i rastry s větším rozlišením.
+    \item \textbf{Univerzalita}: Optimalizace procesu tak, aby byl schopen zpracovávat nejen čtvercová data, ale také data s rozměry, které nejsou násobky osmi.
+    \item \textbf{Upsampeling}: Při upsamplingu s využitím kernelu [2x2] aplikovat pokročilejší metodu než lineární interpolaci.
+\end{itemize}
