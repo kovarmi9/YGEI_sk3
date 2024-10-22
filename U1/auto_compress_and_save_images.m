@@ -1,7 +1,7 @@
 clc; clear variables; close all; format long g
 
 % Load the image
-originalImage = imread('images/greyscale_2.bmp');
+originalImage = imread('images/greyscale.bmp');
 
 % Define the configurations
 compression_factors = [10, 50, 70];
@@ -13,7 +13,7 @@ title_prefix = 'Šedotonový rastr';
 filename_prefix = 'sedo';
 
 % Create a directory to save the images if it doesn't exist
-output_dir = 'compressed_images';
+output_dir = 'images/compressed_images';
 if ~exist(output_dir, 'dir')
     mkdir(output_dir);
 end

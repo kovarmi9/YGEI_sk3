@@ -1,7 +1,7 @@
 clc; clear variables; close all; format long g
 
 % Load the image
-originalImage = imread('images/colour_2.bmp');
+originalImage = imread('images/colour.bmp');
 
 % Display the uncompressed image
 figure(1)
@@ -15,10 +15,10 @@ q = 10;
 type_of_trans = 'dct';
 
 % Type of reasmpling algorithm (2X2, NN)
-type_of_resample = 'NN';
+type_of_resample = '2X2';
 
 % Do you want to use Huffman? it might take long time (YES, NO)
-use_huffman = 'NO';
+use_huffman = 'YES';
 
 % Extract RGB components and convert from uint8 to double
 R = double(originalImage(:,:,1));
