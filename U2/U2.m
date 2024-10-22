@@ -51,5 +51,5 @@ hold on
 for i = 1:length(xpeak)
     rectangle('Position', [xpeak(i) - size(template_B, 2), ypeak(i) - size(template_B, 1), size(template_B, 2), size(template_B, 1)], 'EdgeColor', 'r')
 end
-title('Matching areas');
+title(['Matching areas: ',num2str(i)]);
 hold off
