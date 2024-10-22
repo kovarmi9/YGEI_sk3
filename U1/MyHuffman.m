@@ -45,13 +45,16 @@ classdef MyHuffman
                 %sorting table by the frequency
                 PomTable = sortrows(PomTable, 2);
                 % Pick the two smallest and add the frequency
-                nodes = {PomTable(1:2,:),PomTable{1,2}+PomTable{2,2},PomTable{1,3}+PomTable{2,3}};
+                F = MyHuffman.GenerateValue(PomTable(1:2,:));
+            
+                nodes = {F,PomTable{1,2}+PomTable{2,2},PomTable{1,3}+PomTable{2,3}};
+            
                 PomTable(1:2,:)=[];
                 % Creates a new table with added frequencies
                 PomTable=[PomTable;nodes];
             end
-            PomTable = MyHuffman.AssignValues(PomTable);
-            
+            PomTable = sortrows(PomTable, 2);
+            PomTable=MyHuffman.GenerateValue(PomTable(1:2,:));
             
             CodeTable=[];
             [CodeTable] = MyHuffman.CipherValues(PomTable,CodeTable,"");
@@ -102,6 +105,7 @@ classdef MyHuffman
             % Generating paths to results
             Folder=FolderName+ImageName;
             TableText=Folder+"/"+ImageName+Band+TableSufix+".csv";
+            TableCode=Folder+"/"+ImageName+Band+TableSufix+".txt";
             SequenceText=Folder+"/"+ImageName+Band+".txt";
             
             % checks the existence of folder 
@@ -110,10 +114,15 @@ classdef MyHuffman
             end
             
             % Read files
+            Code = string(fileread(TableCode));
+            Code = strsplit(Code, ' ');
+            Code=table(Code(1:end-1)');
             TableForCoding = readtable(TableText);
-            FID = fopen(SequenceText, 'r');
-            HuffSec = fscanf(FID, '%d');
-            fclose(FID);
+            TableForCoding = [TableForCoding, Code] 
+            TableForCoding.Properties.VariableNames{'Var1'} ='Code';
+            HuffSec = string(fileread(SequenceText));
+            HuffSec = strsplit(HuffSec, ' ');
+            HuffSec=HuffSec(1:end-1);
             disp("Readed files "+ImageName+Band+".txt and "+ImageName+Band+TableSufix+".csv" )
             %Decode the files into sequence
             [Sec]=MyHuffman.DecipherHuff(TableForCoding,HuffSec);
@@ -145,6 +154,7 @@ classdef MyHuffman
             % Generating paths to results
             Folder=FolderName+ImageName;
             TableText=Folder+"/"+ImageName+Band+TableSufix+".csv";
+            TableCode=Folder+"/"+ImageName+Band+TableSufix+".txt";
             SequenceText=Folder+"/"+ImageName+Band+".txt";
             
             % checks the existence of folder 
@@ -153,9 +163,14 @@ classdef MyHuffman
             end
             
             % Generating files
-            writetable(TableForCoding, TableText);
+            writetable(TableForCoding(:,1:2), TableText);
+
+            FID = fopen(TableCode, 'w');
+            fprintf(FID, '%s ', TableForCoding.Code);
+            fclose(FID);
+        
             FID = fopen(SequenceText, 'w');
-            fprintf(FID, '%d ', HuffSec);
+            fprintf(FID, '%s ', HuffSec);
             fclose(FID);
             disp("Generated .txt file and .csv in "+Folder)
         end
@@ -192,7 +207,7 @@ classdef MyHuffman
         function HuffSec = CipherSec(TableForCoding,Sec)
            %Creates an empty array of the same size as a imput array
            HuffSec=zeros(length(Sec),1);
-           HuffSec=HuffSec';
+           HuffSec=string(HuffSec');
            % runs for each number in sequention
            for i=1:length(Sec)
                % runs for each unique value
@@ -206,59 +221,20 @@ classdef MyHuffman
            end
         end
 
-        function F = AssignValues(F)
-            % Generates value 0|1 for each leaf
-            F = MyHuffman.GenerateValue(F);
-            % Goes for two leafs
-            for i=1:2
-                % Checks number of leafs
-                if F{i,3}~=1
-                    % if is not in the bottom goes one level down
-                    F{i,1} = MyHuffman.AssignValues(F{i,1});
-                end
-            end
-        end
 
         function F = GenerateValue(F)
             %Assingn 0|1
-            if (F{1,3}~=1 || F{2,3}~=1) && abs(F{1,3}-F{2,3})/abs(F{1,2}-F{2,2})>=(F{1,3}+F{2,3})/(F{1,2}+F{2,2})
-                % Checks number of leafs and if ratio od differences is greater
-                % than ration fo sum
-                % Sort value primarly on the number of leafs
-                F=sortrows(sortrows(F, 2), 3);
-                % Assign value of 0|1
-                B=[F(1,:),'0']; 
-                E=[F(2,:),'1'];
-            else
-                % If its on a bottom Sort primarly sortin on frequency
-                F=sortrows(F,2);
-                % Assign value of 0|1
-                B=[F(1,:),'1'];
-                E=[F(2,:),'0'];
-            end
+            F=sortrows(F,2);
+            B=[F(1,:),'1'];
+            E=[F(2,:),'0'];
             F=[B;E];
         end
 
         function [TableForCoding] = GenerateTable(CodeTable)
-            % How many values are used
-            n=size(CodeTable,1);
-            % Creates an empty arrays
-            Value=zeros(n,1);
-            Frequency=zeros(n,1);
-            Code=zeros(n,1);
-            % Fill Empty arrays
-            for i=1:n
-                code=char(CodeTable(i,3));
-                % Checking if Code beggins with 0
-                if code(1)==0
-                    % Reduce beginig zero
-                    code=code(2:end);
-                end
-                Code(i)=string(code);
-                Value(i) = str2double(CodeTable(i,1));
-                Frequency(i) = CodeTable(i,2);
-            end
-            % Generate table
+            % Generates Coding Table
+            Value=str2double(CodeTable(:,1));
+            Frequency=double(CodeTable(:,2));
+            Code=CodeTable(:,3);
             TableForCoding = table(Value,Frequency,Code);
         end
     end
