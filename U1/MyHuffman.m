@@ -221,7 +221,7 @@ classdef MyHuffman
 
         function F = GenerateValue(F)
             %Assingn 0|1
-            if (F{1,3}~=1 && F{2,3}~=1) && abs(F{1,3}-F{2,3})/abs(F{1,2}-F{2,2})>=(F{1,3}+F{2,3})/(F{1,2}+F{2,2})
+            if (F{1,3}~=1 || F{2,3}~=1) && abs(F{1,3}-F{2,3})/abs(F{1,2}-F{2,2})>=(F{1,3}+F{2,3})/(F{1,2}+F{2,2})
                 % Checks number of leafs and if ratio od differences is greater
                 % than ration fo sum
                 % Sort value primarly on the number of leafs
