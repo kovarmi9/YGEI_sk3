@@ -6,6 +6,9 @@ im=imread('testing_image.jpg');
 % Setting up crelation limit
 limit = 0.5;
 
+% Setting up radius for filtering multiple searching
+radius = 10;
+
 % Getting size of rows columns and depth from 3D matricx
 [row, col, dep] = size(im);
 
@@ -53,12 +56,27 @@ vals = c(sub2ind(size(c), rows, cols));
 % Combine vals, rows, and cols and sort by vals in descending order
 positions = sortrows([vals, rows, cols], -1);
 
+% Setting the first unique position as the one with the highest correlation
+unique_positions = positions(1, :);
+
+for i = 1:length(positions)
+    
+    % Calculate distances between the current position and all unique positions
+    distances = sqrt(sum(((unique_positions(:, 2:3) - positions(i, 2:3))').^2)');
+    
+    % Check if all distances from the current point are greater than the radius
+    if all(distances > radius)
+        % If true, add the current position to the vector of unique positions
+        unique_positions = [unique_positions; positions(i, :)];% change size
+    end
+end
+
 % Display the matching areas
 subplot(2,2,4)
 imshow(im)
 hold on
-for i = 1:length(cols)
-    rectangle('Position', [cols(i) - size(template_B, 2), rows(i) - size(template_B, 1), size(template_B, 2), size(template_B, 1)], 'EdgeColor', 'r')
+for i = 1:size(unique_positions, 1)
+    rectangle('Position', [unique_positions(i, 3) - size(template_B, 2), unique_positions(i, 2) - size(template_B, 1), size(template_B, 2), size(template_B, 1)], 'EdgeColor', 'r')
 end
 title(['Matching areas: ',num2str(i)]);
 hold off
