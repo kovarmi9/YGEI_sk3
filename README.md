@@ -11,18 +11,16 @@ This repository contains projects for the course **[155YGEI Geoinformatics](http
 ## Repository Contents
 
 ### [U1 - JPEG Raster Compression](https://github.com/kovarmi9/YGEI_sk3/tree/main/U1)
-This folder contains the implementation of the algorithms for JPEG compression and decompression of raster images in MATLAB. It includes:
-- Code for transforming to the Y CB CR model
-- Discrete Cosine Transform (DCT)
+This folder contains the implementation of the algorithms for JPEG compression and decompression of raster images in MATLAB. It includes the following steps and their inverse operations:
+- Transformation from RGB to Y Cb Cr
+- Interval transformation
+- Resampling of raster using 2X2 and Nearest Neigbour 
+- Discrete Cosine Transform (DCT), Discrete Fourier Transform (DFT) or with Discrete Wavelet Transform (DWT)
 - Quantization of coefficients
+- Conversion of pixels to ZIG-ZAG sequences
+- Huffman coding
 - Testing results on various types of rasters (grayscale, color) with different compression factors
 - Evaluation of results
 
-Additionally, this folder includes the following optional tasks:
-- Resampling of raster using 2X2 and Nearest Neigbour 
-- Conversion of pixels to ZIG-ZAG sequences
-- Huffman coding
-- Replacement of DCT with Discrete Fourier Transform (DFT)
-- Replacement of DCT with Discrete Wavelet Transform (DWT)
-
+### [U2 - Automated Object Recognition in Maps](https://github.com/kovarmi9/YGEI_sk3/tree/main/U2)
 
