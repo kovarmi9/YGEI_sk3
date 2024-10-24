@@ -12,10 +12,10 @@ This repository contains projects for the course **[155YGEI Geoinformatics](http
 
 ### [U1 - JPEG Raster Compression](https://github.com/kovarmi9/YGEI_sk3/tree/main/U1)
 This folder contains the implementation of the algorithms for JPEG compression and decompression of raster images in MATLAB. It includes the following steps and their inverse operations:
-- Transformation from RGB to Y Cb Cr
+- Transformation from RGB to YCbCr
 - Interval transformation
-- Resampling of raster using 2X2 and Nearest Neigbour 
-- Discrete Cosine Transform (DCT), Discrete Fourier Transform (DFT) or with Discrete Wavelet Transform (DWT)
+- Resampling of raster using 2X2 or Nearest Neigbour 
+- Discrete Cosine Transform (DCT), Discrete Fourier Transform (DFT) or Discrete Wavelet Transform (DWT)
 - Quantization of coefficients
 - Conversion of pixels to ZIG-ZAG sequences
 - Huffman coding
