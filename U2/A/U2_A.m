@@ -56,20 +56,36 @@ vals = c(sub2ind(size(c), rows, cols));
 % Combine vals, rows, and cols and sort by vals in descending order
 positions = sortrows([vals, rows, cols], -1);
 
-% Setting the first unique position as the one with the highest correlation
-unique_positions = positions(1, :);
+% Preallocate memory for unique positions
+unique_positions = zeros(size(positions));
 
-for i = 1:length(positions)
+% Setting the first unique position as the one with the highest correlation
+unique_positions(1, :) = positions(1, :);
+
+% Setting the initial number of unique values
+unique_count = 1;
+
+for i = 2:length(positions)
     
-    % Calculate distances between the current position and all unique positions
-    distances = sqrt(sum(((unique_positions(:, 2:3) - positions(i, 2:3))').^2)');
+    % Calculate difference between the current position and all unique positions
+    differences = unique_positions(1:unique_count, 2:3) - positions(i, 2:3);
+
+    % Calcualte distances
+    distances = sqrt(sum(differences'.^2));
     
     % Check if all distances from the current point are greater than the radius
     if all(distances > radius)
-        % If true, add the current position to the vector of unique positions
-        unique_positions = [unique_positions; positions(i, :)];% change size
+        
+        % Counting of unique values
+        unique_count = unique_count + 1;
+
+        % Add the current position to the vector of unique positions
+        unique_positions(unique_count, :) = positions(i, :);
     end
 end
+
+% Remove unused preallocated rows
+unique_positions = unique_positions(1:unique_count, :);
 
 % Display the matching areas
 subplot(2,2,4)
