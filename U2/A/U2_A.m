@@ -1,19 +1,22 @@
 clc; clear variables; close all; format long g
 
 % Load the image
-im = imread('testing_image.jpg');
+im = imread('MMC14_sk3.jpg');
 
 % Setting up correlation limit
-limit = 0.5;
+limit = 0.7;
+
+% Select chanel
+sel = 'Y';
 
 % Number of samples
-num_samples = 3;
+num_samples = 5;
 
 % Setting up radius for filtering multiple searching
 radius = 10;
 
 % Turn on/off interactive selection
-interactive_selection = 'YES';
+interactive_selection = 'NO';
 
 % Getting size of rows columns and depth from 3D matrix
 [row, col, dep] = size(im);
@@ -22,11 +25,6 @@ interactive_selection = 'YES';
 imR = im(:,:,1);
 imG = im(:,:,2);
 imB = im(:,:,3);
-
-% Rect for non-interactive selection
-% Rect = [6386 1891 32 80;
-%         1607 2033 33 76;
-%         3320 5462 34 80];
 
 if strcmp(interactive_selection, 'YES')
     % Interactive selection of samples
@@ -40,31 +38,66 @@ if strcmp(interactive_selection, 'YES')
         title(['Sample ', num2str(j)]);
     end
 else
-    % Non-interactive selection of a predefined template
-    template = imcrop(im, [267, 65, 40, 80]);
+%     % Non-interactive selection of a predefined templates for testing image
+%     rects = [267, 65, 42, 78; 
+%              265, 63, 42, 78;
+%              269, 63, 42, 78;
+%              267, 60, 42, 78; 
+%              268, 61, 42, 78];
+
+
+
+    % Non-interactive selection of a predefined templates
+    rects = [6388 1891 30 80;
+             1607 2033 30 80;
+             3320 5462 34 80
+             1758 4828 34 80
+             2990 3050 34 80];
+
+    templates = cell(1, num_samples);
+    for i = 1:num_samples
+        templates{i} = imcrop(im, rects(i, :));
+    end
 end
 
+% Resize all templates to the size of the first template
+template_size = size(templates{1});
+for i = 1:num_samples
+    templates{i} = imresize(templates{i}, template_size(1:2));
+end
+
+% Calculate the average template
+template = zeros(template_size, 'double'); % Initialize as double
+for i = 1:num_samples
+    template = template + double(templates{i});
+end
+template = uint8(template / num_samples); % Convert back to uint8
+
+% Showing template
+figure(1)
+imshow(template)
+title('Average template');
+
 % Showing original image
+figure(2)
 subplot(2,2,1)
 imshow(im)
 title('Original image');
 
-% Showing template
-if strcmp(interactive_selection, 'YES')
-    template = templates{1}; % Use the first template for demonstration
-end
-subplot(2,2,3)
-imshow(template)
-title('Template');
+% Convert the image and template to selected channel
+im_sel = convert_colour(im, sel);
+template_sel = convert_colour(template, sel);
 
-% Extract of blue colour from template
-template_B = template(:,:,3);
+% Showing converted picture
+subplot(2,2,2)
+imshow(im_sel)
+title('Converted picture');
 
 % Calculation of correlation
-c = normxcorr2(template_B, imB);
+c = normxcorr2(template_sel, im_sel);
 
 % Showing correlation
-subplot(2,2,2)
+subplot(2,2,3)
 imshow(c)
 title('Correlation');
 
@@ -85,7 +118,17 @@ subplot(2,2,4)
 imshow(im)
 hold on
 for k = 1:size(unique_positions, 1)
-    rectangle('Position', [unique_positions(k, 3) - size(template_B, 2), unique_positions(k, 2) - size(template_B, 1), size(template_B, 2), size(template_B, 1)], 'EdgeColor', 'r')
+    rectangle('Position', [unique_positions(k, 3) - size(template_sel, 2), unique_positions(k, 2) - size(template_sel, 1), size(template_sel, 2), size(template_sel, 1)], 'EdgeColor', 'r')
+end
+title(['Matching areas: ', num2str(size(unique_positions, 1))]);
+hold off
+
+% Display the matching areas in new figure
+figure(3)
+imshow(im)
+hold on
+for k = 1:size(unique_positions, 1)
+    rectangle('Position', [unique_positions(k, 3) - size(template_sel, 2), unique_positions(k, 2) - size(template_sel, 1), size(template_sel, 2), size(template_sel, 1)], 'EdgeColor', 'r')
 end
 title(['Matching areas: ', num2str(size(unique_positions, 1))]);
 hold off
