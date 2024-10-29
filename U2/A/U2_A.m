@@ -7,7 +7,7 @@ im = imread('MMC14_sk3.jpg');
 limit = 0.7;
 
 % Select chanel
-sel = 'Y';
+sel = 'gaussian';
 
 % Number of samples
 num_samples = 5;
@@ -16,7 +16,7 @@ num_samples = 5;
 radius = 10;
 
 % Turn on/off interactive selection
-interactive_selection = 'YES';
+interactive_selection = 'NO';
 
 % Getting size of rows columns and depth from 3D matrix
 [row, col, dep] = size(im);

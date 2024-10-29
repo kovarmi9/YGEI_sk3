@@ -24,6 +24,16 @@ function output_image = convert_colour(im, component)
             % Convert to CIELAB and return L channel
             lab_image = rgb2lab(im);
             output_image = lab_image(:,:,1);
+
+        case 'median'
+            % Apply median kernel
+            gray_image = rgb2gray(im);
+            output_image = medfilt2(gray_image, [3 3]);
+            
+        case 'gaussian'
+            % Apply gaussian kernel
+            gray_image = rgb2gray(im);
+            output_image = imgaussfilt(gray_image, 2);
             
         otherwise
             error('Invalid method. Choose from ''K'', ''adjustedRGB'', ''Y'', or ''L''.');
