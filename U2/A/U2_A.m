@@ -16,7 +16,7 @@ num_samples = 5;
 radius = 10;
 
 % Turn on/off interactive selection
-interactive_selection = 'NO';
+interactive_selection = 'YES';
 
 % Getting size of rows columns and depth from 3D matrix
 [row, col, dep] = size(im);
@@ -30,29 +30,29 @@ if strcmp(interactive_selection, 'YES')
     % Interactive selection of samples
     [templates, rects] = select_samples(im, num_samples);
 
-    % Display all selected samples in one figure
-    figure(1);
-    for j = 1:num_samples
-        subplot(1, num_samples, j);
-        imshow(templates{j});
-        title(['Sample ', num2str(j)]);
-    end
+%     % Display all selected samples in one figure
+%     figure(1);
+%     for j = 1:num_samples
+%         subplot(1, num_samples, j);
+%         imshow(templates{j});
+%         title(['Sample ', num2str(j)]);
+%     end
 else
-%     % Non-interactive selection of a predefined templates for testing image
+    % Non-interactive selection of a predefined templates for testing image
 %     rects = [267, 65, 42, 78; 
 %              265, 63, 42, 78;
 %              269, 63, 42, 78;
 %              267, 60, 42, 78; 
 %              268, 61, 42, 78];
-
+% 
 
 
     % Non-interactive selection of a predefined templates
     rects = [6388 1891 30 80;
              1607 2033 30 80;
-             3320 5462 34 80
-             1758 4828 34 80
-             2990 3050 34 80];
+             3320 5462 30 80
+             1758 4828 30 80
+             2990 3050 30 80];
 
     templates = cell(1, num_samples);
     for i = 1:num_samples
@@ -103,6 +103,11 @@ title('Correlation');
 
 % Find locations with correlation above limit
 [rows, cols] = find(c >= limit);
+
+% Check if any matching locations were found
+if isempty(rows)
+    error('No matching areas on the map that correspond for correlation coefficient.');
+end
 
 % Extract correlation values at these locations
 vals = c(sub2ind(size(c), rows, cols));
