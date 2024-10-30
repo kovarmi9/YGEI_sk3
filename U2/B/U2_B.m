@@ -1,7 +1,7 @@
 clc; clear variables; close all; format long g
 
 % Load the image
-im = imread('TM25_sk3.jpg');
+im = imread('TM25_sk3_edit.jpg');
 
 % Getting size of rows, columns, and depth from 3D matrix
 [row, col, dep] = size(im);
