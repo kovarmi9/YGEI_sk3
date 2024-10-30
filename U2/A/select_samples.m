@@ -4,8 +4,8 @@ function [templates, rects] = select_samples(im, num_samples)
     rects = cell(1, num_samples); % Create a cell array to store the coordinates of the selected templates
 
     % Create a figure for interactive selection
-    window = figure('Name', 'Selection Window'); % Open a new figure window named 'Selection Window'
-    image = imshow(im); % Display the input image in the figure window
+    window = figure('Name', 'Selection Window', 'WindowState', 'maximized', 'SizeChangedFcn', @(src, event) resizeUI(src)); % Open a new figure window named 'Selection Window'
+    image = imshow(im, 'InitialMagnification', 'fit'); % Display the input image in the figure window
     title('Select the first sample'); % Set the title of the figure window
 
     % Add instructions as text in the figure
@@ -26,11 +26,6 @@ function [templates, rects] = select_samples(im, num_samples)
     if size(templates{1}, 3) ~= 3
         templates{1} = repmat(templates{1}, [1, 1, 3]); % If the template does not have three channels, replicate it to create a three-channel image
     end
-
-%     % Display the first sample in a new figure
-%     figure('Name', 'Sample Display'); % Open a new figure window named 'Sample Display'
-%     imshow(templates{1}); % Display the first selected template
-%     title('Sample 1'); % Set the title of the figure window
 
     % Select more samples with the same size
     for i = 2:num_samples
@@ -56,11 +51,6 @@ function [templates, rects] = select_samples(im, num_samples)
         if size(templates{i}, 3) ~= 3
             templates{i} = repmat(templates{i}, [1, 1, 3]); % If the template does not have three channels, replicate it to create a three-channel image
         end
-
-%         % Display the selected sample in the same figure
-%         figure('Name', 'Sample Display'); % Bring the sample display window to the front
-%         imshow(templates{i}); % Display the current selected template
-%         title(['Sample ', num2str(i)]); % Update the title to indicate the current sample number
     end
 
     % Close the selection figure after selection
@@ -83,9 +73,48 @@ function addButtons(fig)
     % Calculate the center position for the buttons
     centerX = figPos(3) / 2;
 
+    % Buttons sizes
+    buttonWidth = 120;
+    buttonHeight = 40;
+    spacing = 20; % Space between buttons
+
+    % Calculate positions for the buttons
+    zoomButtonX = centerX - buttonWidth - spacing / 2;
+    selectButtonX = centerX + spacing / 2;
+
     % Add buttons to switch between zooming and selecting
-    uicontrol(fig, 'Style', 'pushbutton', 'String', 'Start Zooming', 'Position', [centerX - 140, 20, 120, 40], 'TooltipString', 'Enable zoom mode to magnify the image.', 'Callback', @(~,~) startZooming(fig));
-    uicontrol(fig, 'Style', 'pushbutton', 'String', 'Start Selecting', 'Position', [centerX + 20, 20, 120, 40], 'TooltipString', 'Enable selection mode to choose a sample area.', 'Callback', @(~,~) startSelecting(fig));
+    uicontrol(fig, 'Style', 'pushbutton', 'String', 'Start Zooming', 'Position', [zoomButtonX, 20, buttonWidth, buttonHeight], 'TooltipString', 'Enable zoom mode to magnify the image.', 'Callback', @(~,~) startZooming(fig));
+    uicontrol(fig, 'Style', 'pushbutton', 'String', 'Start Selecting', 'Position', [selectButtonX, 20, buttonWidth, buttonHeight], 'TooltipString', 'Enable selection mode to choose a sample area.', 'Callback', @(~,~) startSelecting(fig));
+end
+
+function resizeUI(fig)
+    % Get the figure position
+    figPos = get(fig, 'Position');
+    % Calculate the center position for the text and buttons
+    centerX = figPos(3) / 2;
+
+    % Buttons sizes
+    buttonWidth = 120;
+    buttonHeight = 40;
+    spacing = 20; % Space between buttons
+
+    % Calculate positions for the buttons
+    zoomButtonX = centerX - buttonWidth - spacing / 2;
+    selectButtonX = centerX + spacing / 2;
+
+    % Update button positions
+    zoomButton = findobj(fig, 'String', 'Start Zooming');
+    selectButton = findobj(fig, 'String', 'Start Selecting');
+
+    set(zoomButton, 'Position', [zoomButtonX, 20, buttonWidth, buttonHeight]);
+    set(selectButton, 'Position', [selectButtonX, 20, buttonWidth, buttonHeight]);
+
+    % Update text positions
+    text1 = findobj(fig, 'String', 'The size of this sample will be used for next samples.');
+    text2 = findobj(fig, 'String', 'Confirm the first sample with a double-click.');
+
+    set(text1, 'Position', [centerX - 150, 80, 300, 20]);
+    set(text2, 'Position', [centerX - 150, 60, 300, 20]);
 end
 
 function startZooming(fig)

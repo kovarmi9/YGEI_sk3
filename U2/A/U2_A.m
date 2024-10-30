@@ -16,7 +16,7 @@ num_samples = 5;
 radius = 10;
 
 % Turn on/off interactive selection
-interactive_selection = 'NO';
+interactive_selection = 'YES';
 
 % Getting size of rows columns and depth from 3D matrix
 [row, col, dep] = size(im);
