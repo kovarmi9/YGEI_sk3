@@ -7,7 +7,10 @@ im = imread('MMC14_sk3.jpg');
 limit = 0.7;
 
 % Select chanel
-sel = 'gaussian';
+channel = 'Y';
+
+% Select kernel
+kernel = 'gaussian';
 
 % Number of samples
 num_samples = 5;
@@ -29,30 +32,13 @@ imB = im(:,:,3);
 if strcmp(interactive_selection, 'YES')
     % Interactive selection of samples
     [templates, rects] = select_samples(im, num_samples);
-
-%     % Display all selected samples in one figure
-%     figure(1);
-%     for j = 1:num_samples
-%         subplot(1, num_samples, j);
-%         imshow(templates{j});
-%         title(['Sample ', num2str(j)]);
-%     end
 else
-    % Non-interactive selection of a predefined templates for testing image
-%     rects = [267, 65, 42, 78; 
-%              265, 63, 42, 78;
-%              269, 63, 42, 78;
-%              267, 60, 42, 78; 
-%              268, 61, 42, 78];
-% 
-
-
     % Non-interactive selection of a predefined templates
-    rects = [6388 1891 30 80;
-             1607 2033 30 80;
-             3320 5462 30 80
-             1758 4828 30 80
-             2990 3050 30 80];
+    rects = [6388 1890 29 81;
+             1229 1562 29 81;
+             3321 5460 29 81
+             1758 4828 29 81
+             2990 3045 29 81];
 
     templates = cell(1, num_samples);
     for i = 1:num_samples
@@ -84,9 +70,9 @@ subplot(2,2,1)
 imshow(im)
 title('Original image');
 
-% Convert the image and template to selected channel
-im_sel = convert_colour(im, sel);
-template_sel = convert_colour(template, sel);
+% Convert the image and template to selected channel and apply kernel
+im_sel = process_image(im, channel, kernel);
+template_sel = process_image(template, channel, kernel);
 
 % Showing converted picture
 subplot(2,2,2)
@@ -137,3 +123,10 @@ for k = 1:size(unique_positions, 1)
 end
 title(['Matching areas: ', num2str(size(unique_positions, 1))]);
 hold off
+
+% Extract pixel coordinates of matching areas
+pixel_coordinates = unique_positions(:, 2:3) - size(template_sel) / 2;
+
+% Display pixel coordinates
+disp('Center pixels of matching areas:');
+disp(pixel_coordinates);
