@@ -7,7 +7,7 @@ This repository contains projects for the course **[155YGEI Geoinformatics](http
 #### Group 3
 - **[Michal Kovář](https://github.com/kovarmi9)**
 - **[Filip Roučka](https://github.com/fifi1ous)**
-- **[Magdaléna Soukupová]**
+- **Magdaléna Soukupová**
 
 ## Repository Contents
 
