@@ -10,8 +10,8 @@ function [Data_C,Data_L] = Segment_kmeans(img,nazevC,nazevL)
     ab = reshape(ab, nrows * ncols, 2);
     
     % Apply K-means clustering to segment colors
-    nColors = 10; % Number of clusters (adjust if needed)
-    [cluster_idx] = kmeans(ab, nColors, 'distance', 'sqEuclidean', 'Replicates', 10);
+    nColors = 12; % Number of clusters 
+    [cluster_idx] = kmeans(ab, nColors, 'distance', 'sqEuclidean', 'Replicates',10);
     
     % Reshape cluster indices to match image dimensions
     pixel_labels = reshape(cluster_idx, nrows, ncols);

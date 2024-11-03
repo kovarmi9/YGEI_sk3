@@ -20,60 +20,65 @@ end
 for i=1:length(DataC.Data)
     figure(i)
     imshow(DataC.Data{i})
+    impixelinfo
 end
 
+predel = 3150;
 L=0;
 [L] = generate_bands(t,L,"Les");
 les=DataL.Data{L};
-figure(20)
-subplot(2, 3, 1);
-imshow(les)
-title('Les')
+
+L1=0;
+[L1] = generate_bands(t,L1,"Les1");
+les1=DataL.Data{L1};
 
 C=0;
 [C] = generate_bands(t,C,"Cesta");
 cesta=DataL.Data{C};
-subplot(2, 3, 2);
-imshow(cesta)
-title('Cesta')
+
+C2=0;
+[C2] = generate_bands(t,C2,"Cesta2");
+cesta2=DataL.Data{C2};
+
 
 E=0;
 [E] = generate_bands(t,E,"Extra");
 extra=DataL.Data{E};
-subplot(2, 3, 3);
-imshow(extra)
-title('Extra')
 
 V=0;
 [V] = generate_bands(t,V,"Voda");
 voda=DataL.Data{V};
-subplot(2, 3, 4);
-imshow(voda)
-title('Voda')
 
-Vr=0;
-[Vr] = generate_bands(t,Vr,"Vrstevnice");
-vrstevnice=DataL.Data{Vr};
-subplot(2, 3, 5);
-imshow(vrstevnice)
-title('Vrstevnice')
+VrIn=0;
+[Vr_in] = generate_bands(t,VrIn,"VrstevniceIn");
+vrstevniceIn=DataL.Data{Vr_in};
 
-Lev=0;
-[Lev] = generate_bands(t,Lev,"Leva");
-leva=DataL.Data{Lev};
-subplot(2, 3, 6);
-imshow(leva)
-title('Leva')
+VrOt=0;
+[Vr_ot] = generate_bands(t,VrOt,"VrstevniceOt");
+vrstevniceOt=DataL.Data{Vr_ot};
+
+CestaIn=0;
+[CestaIn] = generate_bands(t,CestaIn,"CestaIn");
+CestaIn=DataL.Data{CestaIn};
 
 
 
 diskFilter = fspecial('disk', 5);
 % Apply the disk filter using imfilter
-les = imfilter(les, diskFilter, 'replicate');
+les1 = imfilter(les1, diskFilter, 'replicate');
 
-les = imdilate(les, strel('square', 5));
-figure(10)
-imshow(les)
+les = les | les1;
+les = les | vrstevniceIn;
+les = les & ~vrstevniceOt;
+les = les & ~voda;
+les = les & ~CestaIn;
+les = les & ~cesta;
+
+diskFilter = fspecial('disk', 5);
+% Apply the disk filter using imfilter
+les = imfilter(les, diskFilter, 'replicate');
+figure(20)
+imshow(les);
 
 
 les=uint8(les);
