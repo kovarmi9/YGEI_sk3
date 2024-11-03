@@ -23,4 +23,15 @@ This folder contains the implementation of the algorithms for JPEG compression a
 - Evaluation of results
 
 ### [U2 - Automated Object Recognition in Maps](https://github.com/kovarmi9/YGEI_sk3/tree/main/U2)
+This folder contains the implementation of algorithms for automated object recognition in maps using MATLAB. The task is divided into two main parts:
+#### Part A: Pattern Recognition in Müller’s Map of Bohemia
+  - Interactive selection of templates as a search sample using the function [`select_samples`](https://github.com/kovarmi9/YGEI_sk3/tree/main/U2/A/select_sample.m) or using predefined templates
+  - Calculation of an average template as the mean of the selected templates
+  - Using the function [`process_image.m`](https://github.com/kovarmi9/YGEI_sk3/tree/main/U2/A/process_image.m) to convert the image to the Y channel of the YCbCr color space and applying a Gaussian kernel
+  - Calculation of the correlation coefficient between the template and parts of the map using the MATLAB function [`normxcorr2`](https://www.mathworks.com/help/images/ref/normxcorr2.html)
+  - Identification of locations with correlation values above the limit
+  - Searching of all positions of villages with churches on the map
+  - Filtering out duplicate positions using the function [`find_unique_positions.m`](https://github.com/kovarmi9/YGEI_sk3/tree/main/U2/A/find_unique_positions.m)
+  - Displaying and printing the pixel coordinates
 
+#### Part B: Image Segmentation Using k-Means
