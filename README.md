@@ -7,6 +7,7 @@ This repository contains projects for the course **[155YGEI Geoinformatics](http
 #### Group 3
 - **[Michal Kovář](https://github.com/kovarmi9)**
 - **[Filip Roučka](https://github.com/fifi1ous)**
+- **[Magdaléna Soukupová]**
 
 ## Repository Contents
 
@@ -36,7 +37,7 @@ This folder contains the implementation of algorithms for automated object recog
 
 #### Part B: Image Segmentation Using k-Means
   - Input image edited
-  - With function [`Segment_kmeans`](https://github.com/kovarmi9/YGEI_sk3/blob/main/U2/B/Segment_kmeans.m) input image converted from RGB to CIA Labs by function [`makecform`] (https://www.mathworks.com/help/images/ref/makecform.html) and [`applycform`](https://www.mathworks.com/help/images/ref/applycform.html). Clustering performed by k-means clustering function [`kmeans`](https://github.com/kovarmi9/YGEI_sk3/blob/main/U2/B/Segment_kmeans.m). For faster calculations results are saved into structure mfiles.
+  - With function [`Segment_kmeans`](https://github.com/kovarmi9/YGEI_sk3/blob/main/U2/B/Segment_kmeans.m) input image converted from RGB to CIA Labs by function [`makecform`](https://www.mathworks.com/help/images/ref/makecform.html) and [`applycform`](https://www.mathworks.com/help/images/ref/applycform.html). Clustering performed by k-means clustering function [`kmeans`](https://github.com/kovarmi9/YGEI_sk3/blob/main/U2/B/Segment_kmeans.m). For faster calculations results are saved into structure mfiles.
   - Function [`generate_bands`](https://github.com/kovarmi9/YGEI_sk3/blob/main/U2/B/generate_bands.m), creates variables with cluster band for faster and more automatic usage
   - Filtering and Computations with clustered images
   - Export of results
