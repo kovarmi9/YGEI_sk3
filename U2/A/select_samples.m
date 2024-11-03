@@ -1,4 +1,23 @@
 function [templates, rects] = select_samples(im, num_samples)
+    % SELECT_SAMPLES Interactively select multiple samples from an image.
+    %
+    %   [templates, rects] = SELECT_SAMPLES(im, num_samples) allows the user to interactively select
+    %   'num_samples' regions from the input image 'im'. The function returns the selected templates
+    %   and their coordinates.
+    %
+    %   Input:
+    %       im          - The input image from which samples are to be selected.
+    %       num_samples - The number of samples to select.
+    %
+    %   Output:
+    %       templates - A cell array containing the selected image regions (templates).
+    %       rects     - A cell array containing the coordinates of the selected regions.
+    %
+    % Example:
+    %   [templates, rects] = select_samples(im, 3);
+    %
+    % This example reads an image and allows the user to select three regions from the image.
+
     % Initialize cell arrays to store the templates and their coordinates
     templates = cell(1, num_samples); % Create a cell array to store the selected templates
     rects = cell(1, num_samples); % Create a cell array to store the coordinates of the selected templates

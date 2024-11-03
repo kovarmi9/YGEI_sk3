@@ -1,4 +1,25 @@
 function unique_positions = find_unique_positions(positions, radius)
+    % FIND_UNIQUE_POSITIONS Find unique positions within a specified radius.
+    %
+    %   unique_positions = FIND_UNIQUE_POSITIONS(positions, radius) returns a matrix of unique positions
+    %   from the input 'positions' matrix, where each position is considered unique if it is at least
+    %   'radius' distance away from all previously found unique positions.
+    %
+    %   Input:
+    %       positions - A matrix of positions where each row represents a position with at least two columns
+    %                   for the x and y coordinates. Additional columns are allowed but not used in distance calculation.
+    %       radius    - A scalar value specifying the minimum distance required between unique positions.
+    %
+    %   Output:
+    %       unique_positions - A matrix containing the unique positions that are at least 'radius' distance
+    %                          apart from each other.
+    %
+    % Example:
+    %   unique_positions = find_unique_positions(positions, radius);
+    %
+    % This example finds unique positions from the 'positions' matrix where each unique position is at least
+    % 2 units away from all other unique positions.
+
     % Preallocate memory for unique positions
     unique_positions = zeros(size(positions));
 
