@@ -14,8 +14,8 @@ ncols = size(ab, 2);
 ab = reshape(ab, nrows * ncols, 2);
 
 % Apply K-means clustering to segment colors
-nColors = 6; % Number of clusters (adjust if needed)
-[cluster_idx, cluster_center] = kmeans(ab, nColors, 'distance', 'sqEuclidean', 'Replicates', 6);
+nColors = 10; % Number of clusters (adjust if needed)
+[cluster_idx, cluster_center] = kmeans(ab, nColors, 'distance', 'sqEuclidean', 'Replicates', 10);
 
 % Reshape cluster indices to match image dimensions
 pixel_labels = reshape(cluster_idx, nrows, ncols);
@@ -28,8 +28,6 @@ for i = 1:nColors
     cluster_mask = (pixel_labels == i);
     % Apply the mask to the original image
     Data = [Data,bsxfun(@times, img, cast(cluster_mask, 'like', img))];
-    figure(i)
-    imshow(Data{i})
 end
 
 
