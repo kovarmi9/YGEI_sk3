@@ -64,7 +64,6 @@ CestaIn=DataL.Data{CestaIn};
 
 
 diskFilter = fspecial('disk', 5);
-% Apply the disk filter using imfilter
 les1 = imfilter(les1, diskFilter, 'replicate');
 
 les = les | les1;
@@ -75,15 +74,14 @@ les = les & ~CestaIn;
 les = les & ~cesta;
 
 diskFilter = fspecial('disk', 5);
-% Apply the disk filter using imfilter
 les = imfilter(les, diskFilter, 'replicate');
 figure(20)
 imshow(les);
 
+les = uint8(les); 
+les = les * 255;  
+imwrite(les, 'IMG_LES.tif');
 
-les=uint8(les);
-imwrite(les, 'IMG_LES.jpg');
-img_4band = cat(3, im, les);
+img_4band = cat(3, im, les); 
+
 imwrite(img_4band, 'TM25_sk3_Result.tif');
-
-im = imread('TM25_sk3_Result.tif');
