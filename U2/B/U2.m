@@ -84,5 +84,6 @@ imshow(les);
 les=uint8(les);
 imwrite(les, 'IMG_LES.jpg');
 img_4band = cat(3, im, les);
-imwrite(les, 'TM25_sk3_Result.jpg');
+imwrite(img_4band, 'TM25_sk3_Result.tif');
 
+im = imread('TM25_sk3_Result.tif');
