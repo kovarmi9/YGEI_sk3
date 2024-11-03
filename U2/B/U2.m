@@ -78,10 +78,12 @@ les = imfilter(les, diskFilter, 'replicate');
 figure(20)
 imshow(les);
 
+imwrite(les, 'IMG_LES.tif');
 les = uint8(les); 
 les = les * 255;  
-imwrite(les, 'IMG_LES.tif');
 
 img_4band = cat(3, im, les); 
+im(:,:,3) = les;
 
-imwrite(img_4band, 'TM25_sk3_Result.tif');
+imwrite(im, 'TM25_sk3_Result.tif');
+
