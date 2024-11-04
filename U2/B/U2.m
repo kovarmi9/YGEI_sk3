@@ -15,6 +15,9 @@ else
     DataC.Data=DataC1.Data_C;
     DataL1 = load(NameL+".mat");
     DataL.Data=DataL1.Data_L;
+    if ~exist("Bands",'dir')
+        t=1;
+    end
 end
 
 for i=1:length(DataC.Data)
@@ -40,7 +43,6 @@ C2=0;
 [C2] = generate_bands(t,C2,"Cesta2");
 cesta2=DataL.Data{C2};
 
-
 E=0;
 [E] = generate_bands(t,E,"Extra");
 extra=DataL.Data{E};
@@ -60,8 +62,6 @@ vrstevniceOt=DataL.Data{Vr_ot};
 CestaIn=0;
 [CestaIn] = generate_bands(t,CestaIn,"CestaIn");
 CestaIn=DataL.Data{CestaIn};
-
-
 
 diskFilter = fspecial('disk', 5);
 les1 = imfilter(les1, diskFilter, 'replicate');
