@@ -1,0 +1,113 @@
+
+\subsection*{Část A}
+Zpracování probíhalo v software MATLAB.
+
+
+\subsection*{Zobrazení průměrného vzorku}
+Průměrný vzorek je zobrazen:
+\begin{verbatim}
+figure(1)
+imshow(template)
+title('Average template');
+\end{verbatim}
+
+\subsection*{Převod obrázku a vzorku do vybraného kanálu a aplikace kernelu}
+Obrázek a vzorek jsou převedeny do vybraného kanálu a je aplikován kernel:
+\begin{verbatim}
+im_sel = process_image(im, channel, kernel);
+template_sel = process_image(template, channel, kernel);
+\end{verbatim}
+
+\subsection*{Zobrazení převedeného obrázku}
+Převedený obrázek je zobrazen:
+\begin{verbatim}
+figure(2)
+subplot(2,2,2)
+imshow(im_sel)
+title('Converted picture');
+\end{verbatim}
+
+\subsection*{Výpočet korelace}
+Korelace mezi vzorkem a obrázkem je vypočítána:
+\begin{verbatim}
+c = normxcorr2(template_sel, im_sel);
+\end{verbatim}
+
+\subsection*{Zobrazení korelace}
+Korelace je zobrazena:
+\begin{verbatim}
+subplot(2,2,3)
+imshow(c)
+title('Correlation');
+\end{verbatim}
+
+\subsection*{Vyhledání pozic s vysokou korelací}
+Pozice s korelací nad stanoveným limitem jsou nalezeny:
+\begin{verbatim}
+[rows, cols] = find(c >= limit);
+\end{verbatim}
+
+\subsection*{Kontrola nalezených pozic}
+Pokud nejsou nalezeny žádné odpovídající oblasti, je vyvolána chyba:
+\begin{verbatim}
+if isempty(rows)
+    error('No matching areas on the map that correspond for correlation coefficient.');
+end
+\end{verbatim}
+
+\subsection*{Extrahování hodnot korelace}
+Hodnoty korelace na nalezených pozicích jsou extrahovány:
+\begin{verbatim}
+vals = c(sub2ind(size(c), rows, cols));
+\end{verbatim}
+
+\subsection*{Seřazení pozic podle hodnot korelace}
+Pozice jsou seřazeny podle hodnot korelace v sestupném pořadí:
+\begin{verbatim}
+positions = sortrows([vals, rows, cols], -1);
+\end{verbatim}
+
+\subsection*{Odstranění vícenásobných opakování}
+Vícenásobné opakování jsou odstraněny pomocí funkce \texttt{find\_unique\_positions}:
+\begin{verbatim}
+unique_positions = find_unique_positions(positions, radius);
+\end{verbatim}
+
+\subsection*{Zobrazení nalezených oblastí}
+Nalezené oblasti jsou zobrazeny v původním obrázku:
+\begin{verbatim}
+subplot(2,2,4)
+imshow(im)
+hold on
+for k = 1:size(unique_positions, 1)
+    rectangle('Position', [unique_positions(k, 3) - size(template_sel, 2), unique_positions(k, 2) - size(template_sel, 1), size(template_sel, 2), size(template_sel, 1)], 'EdgeColor', 'r')
+end
+title(['Matching areas: ', num2str(size(unique_positions, 1))]);
+hold off
+\end{verbatim}
+
+\subsection*{Zobrazení nalezených oblastí v novém obrázku}
+Nalezené oblasti jsou zobrazeny v novém obrázku:
+\begin{verbatim}
+figure(3)
+imshow(im)
+hold on
+for k = 1:size(unique_positions, 1)
+    rectangle('Position', [unique_positions(k, 3) - size(template_sel, 2), unique_positions(k, 2) - size(template_sel, 1), size(template_sel, 2), size(template_sel, 1)], 'EdgeColor', 'r')
+end
+title(['Matching areas: ', num2str(size(unique_positions, 1))]);
+hold off
+\end{verbatim}
+
+\subsection*{Extrahování pixelových souřadnic}
+Pixelové souřadnice nalezených oblastí jsou extrahovány:
+\begin{verbatim}
+pixel_coordinates = unique_positions(:, 2:3) - size(template_sel) / 2;
+\end{verbatim}
+
+\subsection*{Zobrazení pixelových souřadnic}
+Pixelové souřadnice jsou zobrazeny:
+\begin{verbatim}
+disp('Center pixels of matching areas:');
+disp(pixel_coordinates);
+\end{verbatim}

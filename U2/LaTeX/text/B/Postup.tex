@@ -1,0 +1,42 @@
+\subsection*{Část B}
+\begin{itemize}
+    \item \textbf{Segmentace:}
+    Byla vytvořena funkce \texttt{Segment\_kmeans.m} která převede vstupní data z $RGB$ do $CIE Lab$ a provede segmentaci pomocí vestavěné funkce \texttt{kmeans}. Původně probíhal výpočet s 6 clustry, následně kvůli zelenějšímu zbarvení části mapy byl počet navýšen na 12 clusterů. \\ 
+    Navýšení počtu clusterů prodloužilo dobu segmentace, proto pro urychlení času byly výsledky uloženy jako typ \texttt{Structure array} do souborů \texttt{*.mat} tím se výpočet pro daný počet clusterů provede pouze jednou. Tento postup funguje i na jiných zařízeních. 
+    \item \textbf{Identifikace segmentů:}
+    Jelikož výsledky funkce \texttt{kmeans} mají při každém použití různé pořadí výsledků a pro následné použití nelze využít předem nastavené hodnoty. Proto byla vytvořena funkce \texttt{generate\_bands.m}, která zobrazeným výsledkům vytvoří proměnou s číslem vrstvy na základě uživatelských vstupů. Funkce ukládá proměnné do souborů \texttt{*.mat} pro opakované použití.
+    \item \textbf{Filtrace:}
+    Na filtraci dat byl použit $low-pass$ vyhlazovací filter, který využíval kernel velikosti $[5x5]$:\\
+    % $$\begin{bmatrix}
+    % 0 & 0.2 & 0.5 & 0.2 & 0 \\
+    % 0.2 & 0.5 & 0.8 & 0.5 & 0.2 \\
+    % 0.5 & 0.8 & 1.0 & 0.8 & 0.5 \\
+    % 0.2 & 0.5 & 0.8 & 0.5 & 0.2 \\
+    % 0 & 0.2 & 0.5 & 0.2 & 0 \\
+    % \end{bmatrix}$$
+    \renewcommand{\arraystretch}{2}
+    \setlength{\tabcolsep}{7pt}
+    \[
+    \begin{array}{|c|c|c|c|c|}
+        \hline
+        0 & 0.2 & 0.5 & 0.2 & 0 \\
+        \hline
+        0.2 & 0.5 & 0.8 & 0.5 & 0.2 \\
+        \hline
+        0.5 & 0.8 & 1.0 & 0.8 & 0.5 \\
+        \hline
+        0.2 & 0.5 & 0.8 & 0.5 & 0.2 \\
+        \hline
+        0 & 0.2 & 0.5 & 0.2 & 0 \\
+        \hline
+    \end{array}
+    \] 
+    \item \textbf{Mapová algebra:}
+    Pro odstranění vzniklých děr po textech a vrstevnicích byly k rastru lesu připočteny rastry obsahující vrstevnice a texty. Od výsledného rastru byly odečteny rastry obsahující cesty, mýtiny a vodstvo.
+    \item \textbf{Export dat:}
+    Výsledně byly exportovány data v podobě formátu \texttt{tif}, který obsahuje pouze segmentovanou plochu lesa. Druhý výsledek je také \texttt{tif}, který obsahuje vrstvy R,G a segmentovaný les pro následnou georeferenci.
+    \item \textbf{Segmentovaný obraz pomocí metody Graph Cut:}
+    Segmentace plochy lesa z obrazu mapy byla provedena v softare Matlab pomocí funkce Graph Cut v aplikaci Image Segmenter. Jedná se o poloautomatickou techniku segmentace, kterou můžeme použít k rozdělení obrazu na prvky popředí a pozadí. Aplikace rozdělí obrázek na segmenty na základě nakreslených čar, jež lze déle zpřesňovat kreslením dalších linií do obrázku, dokud nejsme s výsledkem spokojeni. Tyto inicializační body nakreslených čáry představují pevná omezení a ostatní pixely jsou rozdělena globálně pomocí vypočtených podmínek, které určují, zda určitý pixel reprezentuje popředí nebo pozadí. Je vhodné označovat pixely reprezentující popředí takovým způsobem, aby pokryl celé barevné spektrum popředí. \cite{mathworksGraphCut}
+    \item \textbf{Vytvoření GeoPackage v systému UTM:}
+    Soubor ve formátu \texttt{tif}, obsahující vrstvy R,G a binaární masku lesa byl nahrán do programu ArcGis pro, vrstvy R, G a B byly ponechány kvůli georeferenci. Gereferencovaný \texttt{tif} byl transformovaný do systému UTM. Pomocí funkce \texttt{Extract Bands} byla extrahována binární maska lesa. Funkcí \texttt{Raster to Polygon} byl vytvořen polygon lesa. Pomocí  \texttt{Create SQLite Database} byl vytvořen soubor \texttt{Les.gpkg} obsahující vrstvu lesa v systému UTM.
+\end{itemize}
