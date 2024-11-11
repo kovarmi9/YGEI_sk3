@@ -1,6 +1,6 @@
-\section*{Postup}
+\section{Postup}
 
-\subsection*{Načtení a zobrazení obrázku}
+\subsection{Načtení a zobrazení obrázku}
 Obrázek je načten pomocí funkce \texttt{imread} a zobrazen pomocí \texttt{imshow}:
 \begin{verbatim}
 originalImage = imread('colour_2.bmp');
@@ -9,7 +9,7 @@ imshow(originalImage);
 title('Uncompressed Image');
 \end{verbatim}
 
-\subsection*{Volba parametrů komprese}
+\subsection{Volba parametrů komprese}
 Jsou nastaveny parametry komprese, jako je faktor komprese \texttt{q}, typ transformace \texttt{type\_of\_trans}, typ resamplingu \texttt{type\_of\_resample} a zda se má použít Huffmanovo kódování \texttt{use\_huffman}:
 \begin{verbatim}
 q = 50;
@@ -18,7 +18,7 @@ type_of_resample = '2X2';
 use_huffman = 'YES';
 \end{verbatim}
 
-\subsection*{Transformace RGB do YCBCR modelu}
+\subsection{Transformace RGB do YCBCR modelu}
 RGB složky obrázku jsou převedeny do YCBCR modelu pomocí následujících rovnic\cite{pIDhmNtdwMgbcGoe}\cite{ygeiGeoinf2}:
 \[
 \begin{pmatrix}
@@ -45,14 +45,14 @@ B
 \end{pmatrix}
 \]
 
-\subsection*{Downsampling chrominančních složek}
+\subsection{Downsampling chrominančních složek}
 Chrominanční složky (Cb a Cr) jsou downsamplovány pomocí zvolené metody (2X2 nebo NN):
 \begin{verbatim}
 CB_downsampled = feval(strcat('Resample.MyDResample', type_of_resample), CB);
 CR_downsampled = feval(strcat('Resample.MyDResample', type_of_resample), CR);
 \end{verbatim}
 
-\subsection*{Kvantizace koeficientů}
+\subsection{Kvantizace koeficientů}
 Jsou definovány kvantizační matice pro Y a C složky a aktualizovány podle faktoru komprese \texttt{q}\cite{pIDhmNtdwMgbcGoe}\cite{ygeiGeoinf2}:
 \[
 Qy = \frac{50}{q} \cdot \begin{pmatrix}
@@ -79,7 +79,7 @@ Qc = \frac{50}{q} \cdot \begin{pmatrix}
 \end{pmatrix}
 \]
 
-\subsection*{JPEG komprese a dekomprese}
+\subsection{JPEG komprese a dekomprese}
 Provedení JPEG komprese a dekomprese zahrnuje transformaci, kvantizaci a případné Huffmanovo kódování:
 \begin{verbatim}
 [Y_zigzag] = compression(Y, Qy, type_of_trans);
@@ -96,14 +96,14 @@ end
 [Cr] = decompression(CR_zigzag, Qc, type_of_trans);
 \end{verbatim}
 
-\subsection*{Upsampling Chrominančích složek}
-Chrominančí složky jsou upsamplovány zpět na původní velikost:
+\subsection{Upsampling Chrominančích složek}
+Chrominanční složky jsou upsamplovány zpět na původní velikost:
 \begin{verbatim}
 Cb = feval(strcat('Resample.MyUResample', type_of_resample), Cb);
 Cr = feval(strcat('Resample.MyUResample', type_of_resample), Cr);
 \end{verbatim}
 
-\subsection*{Transformace zpět do RGB}
+\subsection{Transformace zpět do RGB}
 YCBCR složky jsou převedeny zpět do RGB formátu\cite{pIDhmNtdwMgbcGoe}\cite{ygeiGeoinf2}:
 \[
 \begin{pmatrix}
@@ -142,7 +142,7 @@ imshow(ras2);
 title('Compressed Image');
 \end{verbatim}
 
-\subsection*{Výpočet střední kvadratické odchylky}
+\subsection{Výpočet střední kvadratické odchylky}
 Střední kvadratická odchylka jednotlivých RGB složek je vypočtena podle následujícího vzorce:
 \[
 m = \sqrt{\frac{\sum_{i=0}^{m \cdot n} (z_i - z'_i)^2}{m \cdot n}}
@@ -170,10 +170,239 @@ Kde:
 
 Tímto způsobem je možné kvantifikovat rozdíly mezi původním a dekomprimovaným obrazem pro každou složku RGB.
 
-\subsubsection*{Náhrada DCT s využitím diskrétní Fourierovy transformace (DFT)}
+\subsection{Náhrada DCT s využitím diskrétní Fourierovy transformace (DFT)}
 
-Jako alternativa k diskrétní kosinové transformaci (DCT) byla implementována diskrétní Fourierova transformace (DFT). DFT byla implementováná pomocí algoritmu fft.\cite{FFTWiki}
+Jako alternativa k diskrétní kosinové transformaci (DCT) byla implementována diskrétní Fourierova transformace (DFT). DFT byla implementováná pomocí algoritmu FFT.\cite{FFTWiki} Diskrétní Fourierova transformace (DFT) je definována jako:
 
-\subsubsection*{Náhrada DCT s využitím diskrétní vlnkové transformace (DWT)}
+\[
+X(k) = \sum_{n=0}^{N-1} x(n) \cdot e^{-j \frac{2\pi}{N} kn}
+\]
+kde:
+\begin{itemize}
+    \item \( X(k) \) je k-tý koeficient ve frekvenční doméně,
+    \item \( x(n) \) je n-tý vzorek v prostorové doméně,
+    \item \( N \) je počet vzorků,
+    \item \( j \) je imaginární jednotka \((j = \sqrt{-1})\).
+\end{itemize}
 
-Další alternativou k DCT diskrétní vlnková transformace (DWT). DWT je schopna lépe zachytit detaily v obraze a může být výhodnější pro kompresi obrazů s vysokým rozlišením nebo složitými texturami.\cite{WaveletWiki}
+\subsubsection{2D Fourierova transformace}
+Pro zpracování obrazu (2D matice) se využívá 2D DFT, která je definována jako:
+\[
+X(u, v) = \sum_{x=0}^{M-1} \sum_{y=0}^{N-1} f(x, y) \cdot e^{-j 2\pi \left( \frac{ux}{M} + \frac{vy}{N} \right)}
+\]
+kde:
+\begin{itemize}
+    \item \( X(u, v) \) je koeficient ve frekvenční doméně,
+    \item \( f(x, y) \) je hodnota pixelu v prostorové doméně,
+    \item \( M \) a \( N \) jsou rozměry obrazu,
+    \item \( j \) je imaginární jednotka (j = \(\sqrt{-1}\)).
+\end{itemize}
+
+\subsubsection{Rychlá Fourierova transformace (FFT)}
+Rychlá Fourierova transformace (FFT) je optimalizovaný algoritmus pro výpočet DFT, který výrazně snižuje počet potřebných operací. FFT využívá rekurzi k rozdělení DFT na menší části. Matematicky je FFT definována jako:
+\[
+X(k) = \sum_{m=0}^{N/2-1} x(2m) \cdot e^{-j \frac{2\pi}{N/2} km} + e^{-j \frac{2\pi}{N} k} \sum_{m=0}^{N/2-1} x(2m+1) \cdot e^{-j \frac{2\pi}{N/2} km}
+\]
+
+\subsubsection{Použité proměnné}
+\begin{itemize}
+    \item \( X(k) \): Výsledek FFT pro k-tou frekvenci.
+    \item \( x(n) \): Vstupní signál v časové (prostorové) doméně.
+    \item \( N \): Počet vzorků (délka vstupního signálu).
+    \item \( k \): Index frekvence, pro kterou se FFT počítá.
+    \item \( m \): Index pro iteraci přes polovinu vzorků.
+    \item \( j \): Imaginární jednotka \((j = \sqrt{-1})\).
+\end{itemize}
+
+\subsubsection*{Rekurze v FFT}
+FFT algoritmus využívá rekurzi k rozdělení DFT na menší části. Tento přístup umožňuje efektivní výpočet transformace i pro velké množství dat. Rekurzivní algoritmus FFT je definován jako:
+\begin{verbatim}
+function F = fft(x)
+    n = length(x);
+    if n <= 1
+        F = x;
+    else
+        even = fft(x(1:2:end));
+        odd = fft(x(2:2:end));
+        F = zeros(1, n);
+        for k = 1:n/2
+            t = exp(-2i * pi * (k-1) / n) * odd(k);
+            F(k) = even(k) + t;
+            F(k + n/2) = even(k) - t;
+        end
+    end
+end
+\end{verbatim}
+
+\subsubsection{Dvourozměrná Fourierova transformace (FFT2)}
+Funkce \texttt{fft2} provádí dvourozměrnou Fourierovu transformaci na matici. Nejprve se provede FFT na každém řádku matice a poté na každém sloupci výsledné matice.
+\newpage
+\begin{verbatim}
+function F = fft2(X)
+    [rows, cols] = size(X);
+    F_complex = zeros(rows, cols);
+    for i = 1:rows
+        F_complex(i, :) = fft(X(i, :));
+    end
+    for i = 1:cols
+        F_complex(:, i) = fft(F_complex(:, i));
+    end
+    F = F_complex;
+end
+\end{verbatim}
+
+\subsubsection{Inverzní dvourozměrná Fourierova transformace (IFFT2)}
+Funkce \texttt{ifft2} provádí inverzní dvourozměrnou Fourierovu transformaci na matici. Nejprve se provede IFFT na každém sloupci matice a poté na každém řádku výsledné matice.
+
+\begin{verbatim}
+function x = ifft2(X)
+    [rows, cols] = size(X);
+    x_complex = zeros(rows, cols);
+    for c = 1:cols
+        x_complex(:, c) = ifft(X(:, c).');
+    end
+    for r = 1:rows
+        x_complex(r, :) = ifft(x_complex(r, :));
+    end
+    x = x_complex;
+end
+\end{verbatim}
+
+\subsubsection{Inverzní Fourierova transformace (IFFT)}
+Inverzní Fourierova transformace (IFFT) převádí obraz z frekvenční domény zpět do prostorové domény. Matematicky je definována jako:
+\[
+x(n) = \frac{1}{N} \sum_{k=0}^{N-1} X(k) \cdot e^{j \frac{2\pi}{N} kn}
+\]
+kde:
+\begin{itemize}
+    \item \( x(n) \) je n-tý vzorek v prostorové doméně,
+    \item \( X(k) \) je k-tý koeficient ve frekvenční doméně,
+    \item \( N \) je počet vzorků,
+    \item \( j \) je imaginární jednotka \((j = \sqrt{-1})\).
+\end{itemize}
+
+Algoritmus IFFT je podobný FFT, ale s opačným znaménkem v exponentu:
+\begin{verbatim}
+function x = ifft(X)
+    n = length(X);
+    if n <= 1
+        x = X;
+    else
+        even = ifft(X(1:2:end));
+        odd = ifft(X(2:2:end));
+        x = zeros(1, n);
+        for k = 1:n/2
+            t = exp(2i * pi * (k-1) / n) * odd(k);
+            x(k) = (even(k) + t) / 2;
+            x(k + n/2) = (even(k) - t) / 2;
+        end
+    end
+end
+\end{verbatim}
+
+
+\subsection{Náhrada DCT s využitím diskrétní vlnkové transformace (DWT)}
+
+Další alternativou k DCT je diskrétní vlnková transformace (DWT). DWT je schopna lépe zachytit detaily v obraze a může být výhodnější pro kompresi obrazů s vysokým rozlišením nebo složitými texturami.\cite{WaveletWiki} Matematicky je DWT definována jako:
+
+\[
+W_{\psi}[j, k] = \sum_{n=0}^{N-1} x[n] \psi_{j,k}[n]
+\]
+
+kde:
+\begin{itemize}
+    \item \(j\) je měřítko (scale),
+    \item \(k\) je posun (translation),
+    \item \(\psi_{j,k}[n]\) je diskrétní vlnková funkce.
+\end{itemize}
+
+\subsubsection{Použitý druh vlnky}
+V této implementaci byla použita Haarova vlnka, která je poměrně jednoduchá. Haarova vlnka je definována jako:
+
+\[
+\psi(t) = \begin{cases} 
+1 & \text{pro } 0 \leq t < \frac{1}{2} \\
+-1 & \text{pro } \frac{1}{2} \leq t < 1 \\
+0 & \text{jinak}
+\end{cases}
+\]
+
+\[
+\phi(t) = \begin{cases} 
+1 & \text{pro } 0 \leq t < 1 \\
+0 & \text{jinak}
+\end{cases}
+\]
+
+\subsubsection{Dvourozměrná diskrétní vlnková transformace (DWT2)}
+Pro zpracování obrazu se využívá DWT2, která se provádí aplikací DWT na řádky a následně na sloupce obrazu. Výsledkem jsou čtyři sub-pásma: LL (nízkopásmové), LH (nízkopásmové horizontální), HL (nízkopásmové vertikální) a HH (vysokopásmové). Algoritmus 2D DWT pro zpracování obrazu je následující:
+\begin{verbatim}
+function output = dwt2(block)
+    [rows, cols] = size(block);
+    L = zeros(rows, cols/2);
+    H = zeros(rows, cols/2);
+    for i = 1:rows
+        even_cols = block(i, 1:2:end);
+        odd_cols = block(i, 2:2:end);
+        L(i, :) = (even_cols + odd_cols) / 2;
+        H(i, :) = (even_cols - odd_cols) / 2;
+    end
+    LL = zeros(rows/2, cols/2);
+    LH = zeros(rows/2, cols/2);
+    HL = zeros(rows/2, cols/2);
+    HH = zeros(rows/2, cols/2);
+    for j = 1:cols/2
+        even_rows_L = L(1:2:end, j);
+        odd_rows_L = L(2:2:end, j);
+        even_rows_H = H(1:2:end, j);
+        odd_rows_H = H(2:2:end, j);
+        LL(:, j) = (even_rows_L + odd_rows_L) / 2;
+        LH(:, j) = (even_rows_L - odd_rows_L) / 2;
+        HL(:, j) = (even_rows_H + odd_rows_H) / 2;
+        HH(:, j) = (even_rows_H - odd_rows_H) / 2;
+    end
+    output = [LL, LH; HL, HH];
+end
+\end{verbatim}
+
+\subsubsection{Inverzní 2D DWT (IDWT2)}
+Inverzní diskrétní vlnková transformace (IDWT) obnovuje původní signál z jeho vlnkových koeficientů. Matematicky je IDWT definována jako:
+
+\[
+x[n] = \sum_{j,k} W_{\psi}[j, k] \psi_{j,k}[n]
+\]
+
+kde:
+\begin{itemize}
+    \item \(W_{\psi}[j, k]\) jsou vlnkové koeficienty,
+    \item \(\psi_{j,k}[n]\) jsou diskrétní vlnkové funkce.
+\end{itemize}
+Algoritmus 2D IDWT pro zpracování obrazu je následující:
+\begin{verbatim}
+function block = idwt2([LL, LH; HL, HH])
+    [rows, cols] = size(LL);
+    LL_sub = LL(1:4, 1:4);
+    LH_sub = LL(1:4, 5:8);
+    HL_sub = LL(5:8, 1:4);
+    HH_sub = LL(5:8, 5:8);
+    L = zeros(rows, cols/2);
+    H = zeros(rows, cols/2);
+    for j = 1:cols/2
+        even_rows_L = LL_sub(:, j) + LH_sub(:, j);
+        odd_rows_L = LL_sub(:, j) - LH_sub(:, j);
+        even_rows_H = HL_sub(:, j) + HH_sub(:, j);
+        odd_rows_H = HL_sub(:, j) - HH_sub(:, j);
+        L(1:2:end, j) = even_rows_L;
+        L(2:2:end, j) = odd_rows_L;
+        H(1:2:end, j) = even_rows_H;
+        H(2:2:end, j) = odd_rows_H;
+    end
+    block = zeros(rows, cols);
+    for i = 1:rows
+        even_cols = L(i, :) + H(i, :);
+        odd_cols = L(i, :) - H(i, :);
+        block(i, 1:2:end) = even_cols;
+        block(i, 2:2:end) = odd_cols;
+    end
+end
+\end{verbatim}

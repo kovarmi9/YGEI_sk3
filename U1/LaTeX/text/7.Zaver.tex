@@ -1,16 +1,16 @@
 \newpage
-\section*{Závěr}
+\section{Závěr}
 
 Na základě výše uvedených tabulek lze vidět, že různé metody komprese a resamplování mají odlišný vliv na kvalitu obrazu po dekompresi.
 
-\subsubsection*{Transformace:}
+\subsection{Transformace:}
 \begin{itemize}
     \item \textbf{DCT}: Je vhodná pro různé typy obrazů, ale při nižších kompresních faktorech (např. q = 10) dochází k výraznějšímu zhoršení kvality. Při vyšších kompresních faktorech (q = 50 a q = 70) je kvalita obrazu lepší, ale stále dochází k určité ztrátě detailů.
     \item \textbf{DWT}: Tato metoda vykazuje vyšší směrodatné odchylky, což naznačuje větší ztrátu kvality než DCT. Je možné že se někde v během výpočtu vyskytla chyba, jelikož podle \cite{JPEG2000Wiki} by měla DWT poskytovat lepší výsledky než DCT.
     \item \textbf{FFT}: Tato metoda dosahuje nejnižších směrodatných odchylek, což znamená, že nejméně poškozuje komprimovaný rastr. Je vhodná pro obrazy, kde je důležité zachovat co nejvíce detailů. Nevýhodou je, že při kompresi se pracuje s komplexními čísly, které dále komplikují Huffmanovo kódování a představují větší objem dat.
 \end{itemize}
 
-\subsubsection*{Resamplování:}
+\subsection{Resamplování:}
 \begin{itemize}
     \item \textbf{2X2}: Tento typ resamplování obecně vykazuje nižší směrodatné odchylky než NN, což znamená, že méně poškozuje výsledný obraz.
     \item \textbf{NN (Nearest Neighbor)}: Tento typ resamplování má tendenci k vyšším směrodatným odchylkám, což naznačuje větší ztrátu kvality.
@@ -25,7 +25,7 @@ Na základě výše uvedených tabulek lze vidět, že různé metody komprese a
 
 Pro ideální funkci je nezbytné správně zvolit faktor komprese, aby byl soubor po kompresi co nejmenší a zároveň bylo zachováno co nejvíce obrazových informací.
 
-\subsection*{Další možné neřešené problémy a náměty na vylepšení}
+\subsection{Další možné neřešené problémy a náměty na vylepšení}
 
 \begin{itemize}
     \item \textbf{Optimalizace Huffmanova kódování}: Při použití FFT komprese se pracuje s komplexními čísly, což může komplikovat Huffmanovo kódování. Bylo by vhodné prozkoumat možnosti optimalizace tohoto procesu. Momentálně je vektor komplexních čísel rozdělen pomocí podmínky na komplexní a reálnou část a každá část je kódována samostatně.

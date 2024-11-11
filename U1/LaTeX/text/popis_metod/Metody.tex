@@ -1,5 +1,5 @@
-\section*{Popis metod:}
-\subsubsection*{Resamplování rastru}
+\section{Popis metod:}
+\subsection{Resamplování rastru}
 
 Pro resamplování rastru byla vytvořena třída \texttt{Resample}, která obsahuje metody pro downsampling a pro upsampling. Tyto metody zajišťují, že chrominanční komponenty obrazu jsou správně zmenšeny a následně zvětšeny, což je důležité pro efektivní kompresi a dekompresi. Pro tento účel byla
 vytvořena třída Resample s následujícími metodami:
@@ -11,11 +11,11 @@ vytvořena třída Resample s následujícími metodami:
     \item \texttt{MyUResample2X2} - Upsampluje matici pomocí kernelu [2x2], nové pixely vznikne pomocí lineární interpolace v kernelu.
 \end{itemize}
 
-\subsubsection*{Konverze pixelů do ZIG-ZAG sekvencí}
+\subsection{Konverze pixelů do ZIG-ZAG sekvencí}
 
 Při kompresi byly převedeny bloky 8x8 pixelů do Zig-Zag sekvencí. Tím byla převedena 2D data na 1D. Pro tento účel byla vytvořena třída \texttt{ZigZag} s metodami \texttt{to} a \texttt{from}. Metoda \texttt{to} převádí matici do vektoru pomocí Zig-Zag sekvence a metoda \texttt{from} převádí vektor zpět do matice.
 
-\subsubsection*{Huffmanovo kódování}
+\subsection{Huffmanovo kódování}
 
 Pro další snížení velikosti dat bylo použito Huffmanovo kódování. Tento algoritmus vytváří optimální kód pro každý symbol na základě jeho četnosti, což vede k efektivní kompresi dat. Pro tento účel byla vytvořena třída \texttt{MyHuffman} s následujícími metodami:
 
@@ -26,7 +26,7 @@ Pro další snížení velikosti dat bylo použito Huffmanovo kódování. Tento
     \item \texttt{ReadFiles} - Ze složky přečte a dekomprimuje data Huffmanovým Kódováním.
 \end{itemize}
 
-\subsubsection*{Transformace}
+\subsection{Transformace}
 
 Pro nejdůležitější krok celé komprese, který představuje převod mezi prostorovými souřadnicemi jednotlivých pixelů do prostorových frekvencí. Pro tento účel byla vytvořena třída Transformace s následujícími metodami:
 
