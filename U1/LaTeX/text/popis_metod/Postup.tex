@@ -177,8 +177,7 @@ Jako alternativa k diskrétní kosinové transformaci (DCT) byla implementována
 \[
 X(k) = \sum_{n=0}^{N-1} x(n) \cdot e^{-j \frac{2\pi}{N} kn}
 \]
-kde:
-\begin{itemize}
+kde:\begin{itemize}
     \item \( X(k) \) je k-tý koeficient ve frekvenční doméně,
     \item \( x(n) \) je n-tý vzorek v prostorové doméně,
     \item \( N \) je počet vzorků,
@@ -190,32 +189,37 @@ Pro zpracování obrazu (2D matice) se využívá 2D DFT, která je definována 
 \[
 X(u, v) = \sum_{x=0}^{M-1} \sum_{y=0}^{N-1} f(x, y) \cdot e^{-j 2\pi \left( \frac{ux}{M} + \frac{vy}{N} \right)}
 \]
-kde:
-\begin{itemize}
+kde:\begin{itemize}
     \item \( X(u, v) \) je koeficient ve frekvenční doméně,
     \item \( f(x, y) \) je hodnota pixelu v prostorové doméně,
     \item \( M \) a \( N \) jsou rozměry obrazu,
-    \item \( j \) je imaginární jednotka (j = \(\sqrt{-1}\)).
+    \item \( j \) je imaginární jednotka \((j = \sqrt{-1})\).
 \end{itemize}
 
 \subsubsection{Rychlá Fourierova transformace (FFT)}
-Rychlá Fourierova transformace (FFT) je optimalizovaný algoritmus pro výpočet DFT, který výrazně snižuje počet potřebných operací. FFT využívá rekurzi k rozdělení DFT na menší části. Matematicky je FFT definována jako:
+Rychlá Fourierova transformace (FFT) je optimalizovaný algoritmus pro výpočet DFT, který výrazně snižuje počet potřebných operací. Konkrétně byl využit Cooley-Tukeyův algoritmus, který má časovou složitost \( O(n \log n) \) na rozdíl od přímého výpočtu Fourierovy transformace, který má časovou náročnost \( O(n^2) \). Cooley-Tukeyův algoritmu využívá rekurzi k rozdělení FFT na menší části.\cite{CooleyTukeyFFTWiki} Matematicky je FFT definována jako:
 \[
-X(k) = \sum_{m=0}^{N/2-1} x(2m) \cdot e^{-j \frac{2\pi}{N/2} km} + e^{-j \frac{2\pi}{N} k} \sum_{m=0}^{N/2-1} x(2m+1) \cdot e^{-j \frac{2\pi}{N/2} km}
+F(k) = \begin{cases} 
+x(k) & \text{pro } n \leq 1 \\
+\text{FFT}(x_{\text{sudý}}) + e^{-2i\pi(k-1)/n} \cdot \text{FFT}(x_{\text{lichý}}) & \text{pro } 1 \leq k \leq \frac{n}{2} \\
+\text{FFT}(x_{\text{sudý}}) - e^{-2i\pi(k-1)/n} \cdot \text{FFT}(x_{\text{lichý}}) & \text{pro } \frac{n}{2} < k \leq n
+\end{cases}
 \]
+
+kde:\begin{itemize}
+    \item \( x_{\text{sudý}} \) jsou sudé indexy vstupního vektoru \( x \)
+    \item \( x_{\text{lichý}} \) jsou liché indexy vstupního vektoru \( x \)
+\end{itemize}
 
 \subsubsection{Použité proměnné}
 \begin{itemize}
-    \item \( X(k) \): Výsledek FFT pro k-tou frekvenci.
+    \item \( F(k) \): Výsledek FFT pro k-tou frekvenci.
     \item \( x(n) \): Vstupní signál v časové (prostorové) doméně.
-    \item \( N \): Počet vzorků (délka vstupního signálu).
+    \item \( n \): Počet vzorků (délka vstupního signálu).
     \item \( k \): Index frekvence, pro kterou se FFT počítá.
-    \item \( m \): Index pro iteraci přes polovinu vzorků.
     \item \( j \): Imaginární jednotka \((j = \sqrt{-1})\).
 \end{itemize}
 
-\subsubsection*{Rekurze v FFT}
-FFT algoritmus využívá rekurzi k rozdělení DFT na menší části. Tento přístup umožňuje efektivní výpočet transformace i pro velké množství dat. Rekurzivní algoritmus FFT je definován jako:
 \begin{verbatim}
 function F = fft(x)
     n = length(x);
@@ -234,9 +238,13 @@ function F = fft(x)
 end
 \end{verbatim}
 
-\subsubsection{Dvourozměrná Fourierova transformace (FFT2)}
-Funkce \texttt{fft2} provádí dvourozměrnou Fourierovu transformaci na matici. Nejprve se provede FFT na každém řádku matice a poté na každém sloupci výsledné matice.
-\newpage
+\subsubsection{Dvourozměrná rychlá Fourierova transformace (FFT2)}
+Funkce \texttt{fft2} provádí dvourozměrnou Fourierovu transformaci na matici. Nejprve se provede FFT na každém řádku matice a poté na každém sloupci výsledné matice. Matematicky je dvourozměrná rychlá Fourierova transformace definována jako:
+
+\[
+F(u, v) = \text{FFT2}(f(x, y)) = \text{FFT} \left( \text{FFT}(f(x, y)) \right)
+\]
+
 \begin{verbatim}
 function F = fft2(X)
     [rows, cols] = size(X);
@@ -299,7 +307,6 @@ function x = ifft(X)
     end
 end
 \end{verbatim}
-
 
 \subsection{Náhrada DCT s využitím diskrétní vlnkové transformace (DWT)}
 
