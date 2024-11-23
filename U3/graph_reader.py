@@ -22,7 +22,7 @@ def read_graph(file_name):
     def pointsToIDs(P):
         D = {}
         for i in range(len(P)):
-            D[(P[i][0], P[i][1])] = i
+            D[(P[i][0], P[i][1])] = i + 1  # Start IDs from 1
         return D
 
     # Function to convert edges to a graph
@@ -39,7 +39,6 @@ def read_graph(file_name):
     # Merge lists of points and remove duplicates
     PSE = PS + PE
     PSE = unique(PSE, axis=0).tolist()
-    PSE.insert(0, [1000000, 1000000])  # Adding a special point
 
     # Create a map of points to IDs
     D = pointsToIDs(PSE)
