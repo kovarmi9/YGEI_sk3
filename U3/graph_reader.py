@@ -47,4 +47,7 @@ def read_graph(file_name):
     # Create the graph from edges
     G = edgesToGraph(D, PS, PE, W)
     
-    return G  # Return the graph
+    # Create coordinates dictionary
+    C = {D[(x, y)]: [x, y] for x, y in PSE}
+    
+    return G, C  # Return the graph and coordinates

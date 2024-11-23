@@ -14,7 +14,8 @@ file = './U3/data/bayer_graph.txt'
 # For example, if you're in 'YGEI_sk3', use './U3/data/bayer_graph.txt'
 
 # Read the graph from the file
-G = read_graph(file)
+G, C = read_graph(file)
 
 # Printing the graph
 print(G)
+print(C)
