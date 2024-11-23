@@ -69,7 +69,7 @@ def dijkstra(G, u, v):
                 P[neighbor] = u
                 PQ.put((D[neighbor], neighbor))
                 
-    return P, D[v] # Return full distance array instead of just D[v]
+    return P, D[v] # Return predecessor and distance to target
 
 P, dmin = dijkstra(G, 1, 9)
 
