@@ -114,5 +114,3 @@ SP.plot_graph(C)
 SP.plot_path(path,C)
 plt.show()
 
-#paths = allPaths(G)
-#print(paths)
