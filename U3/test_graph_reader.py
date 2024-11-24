@@ -6,7 +6,7 @@ from graph_reader import read_graph  # type: ignore
 file = r'C:\Users\kovar\Desktop\Soubory\1.semestr\GEI\YGEI_sk3\U3\data\bayer_graph.txt'
 
 # Relative path to the file in the 'data' subfolder (relative path example)
-file = './U3/data/bayer_graph.txt'
+file = './U3/data/graph_unweighted.txt'
 
 # Check the current directory:
 # If you have opened 'YGEI_sk3' in VS Code your current directory will be 'YGEI_sk3'
@@ -21,26 +21,21 @@ G, C = read_graph(file)
 print(G)
 print(C)
 
-# Plotting the graph
-def PlotGraph(G, C):
-    plt.figure(figsize=(8, 6))
-    
-    # Plot the nodes
-    for node, (x, y) in C.items():
-        plt.scatter(x, y, color='red')
-        plt.text(x+5, y, str(node), fontsize=12, ha='left')
-    
-    # Plot the edges
-    for node, neighbors in G.items():
-        x_start, y_start = C[node]
+# Plot the graph with edges and nodes
+plt.figure(figsize=(10, 10))
+for node, neighbors in G.items():
+    # Check if coordinates exist for the current node
+    if node in C:
+        x, y = C[node]
         for neighbor in neighbors:
-            x_end, y_end = C[neighbor]
-            plt.plot([x_start, x_end], [y_start, y_end], 'k-', lw=1)  # Line between nodes
-    
-    plt.xlabel("X-axis")
-    plt.ylabel("Y-axis")
-    plt.grid(True)
-    plt.show()
+            # Check if coordinates exist for the neighbor
+            if neighbor in C:
+                nx, ny = C[neighbor]
+                plt.plot([x, nx], [y, ny], 'b-', alpha=0.5)  # Plot edges
 
-# Plot the graph
-PlotGraph(G, C)
+        plt.plot(x, y, 'ro')  # Plot nodes
+
+plt.title("Graph Representation of the Road Network")
+plt.xlabel("Longitude")
+plt.ylabel("Latitude")
+plt.show()
