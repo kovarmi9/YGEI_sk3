@@ -60,7 +60,7 @@ class SP:
                     P = [0]
                     d = 0
                     print("Graph contains negative cycle")
-                    return P, d,True
+                    return P, d, True
         
         # Return the shortest distance and the path
         return p, d[target] , False

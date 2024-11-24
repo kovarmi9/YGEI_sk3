@@ -1,5 +1,4 @@
-from queue import PriorityQueue
-from math import inf
+from SP import SP
 
 G = {
     1 : {2:-8, 3:4, 5:2},
@@ -13,33 +12,8 @@ G = {
     9 : {4:3, 6:10, 8:1}
 }
 
-def dijkstra(G, u, v):
-    n = len(G)
-    P = [-1] * n
-    D = [inf] * n
-    V = [-1] * n
-    PQ = PriorityQueue()
-        
-    PQ.put((0, u))
-    D[u] = 0
-        
-    while not PQ.empty():
-        du, current_node = PQ.get()
-            
-        if current_node == v:
-            break
-            
-        if du > D[current_node]:
-            continue
-            
-        for neighbor, weight in G[current_node].items():
-            if (D[neighbor] > D[current_node] + weight) and (V[u] == -1):
-                D[neighbor] = D[current_node] + weight
-                P[neighbor] = current_node
-                PQ.put((D[neighbor], neighbor))
-                V[u] = 1
-        
-    return P, D[v]
+sp_solver = SP()
 
-P, dmin = dijkstra(G, 1, 2)
+P, dmin, T = sp_solver.belmanFord(G, 1, 2)
+
 print(P, dmin)
