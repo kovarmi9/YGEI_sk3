@@ -1,5 +1,6 @@
 from math import inf
 from queue import PriorityQueue
+from shortest_paths import ShortestPath
 
 G = {
     1 : {2:8, 3:4, 5:2},
@@ -8,8 +9,8 @@ G = {
     4 : {2:2, 9:3},
     5 : {1:2, 6:5},
     6 : {3:3, 5:5, 7:5, 8:7, 9:10},
-    7 : {2:6, 3:4, 6:5, 8:3},
-    8 : {2:7, 6:7, 7:3, 9:1},
+    7 : {2:6, 3:4, 6:5, 8:10},
+    8 : {2:7, 6:7, 7:10, 9:1},
     9 : {4:3, 6:10, 8:1}
 }
 
@@ -71,10 +72,10 @@ def dijkstra(G, u, v):
                 
     return P, D[v] # Return predecessor and distance to target
 
-P, dmin = dijkstra(G, 1, 9)
+#P, dmin = dijkstra(G, 1, 9)
 
-path = rec(1,2,P)
-print(path,dmin)
+#path = rec(1,2,P)
+#print(path,dmin)
 
 def allPaths(G):
     paths = {}
@@ -88,5 +89,10 @@ def allPaths(G):
     return paths
 
 
-paths = allPaths(G)
-print(paths)
+sp_solver = ShortestPath()
+
+P, dmin = sp_solver.shortest_path(G, 1,7)
+
+print(dmin)
+#paths = allPaths(G)
+#print(paths)
