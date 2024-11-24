@@ -1,8 +1,8 @@
 from queue import PriorityQueue
 from math import inf
 
-class ShortestPath:
-    def shortest_path(self, G: dict, u: int, v: int) -> tuple[list, float]:
+class GraphPathFinder:
+    def shortest_cost_path(self, G: dict, start: int, target: int) -> tuple[list, float]:
         """
         Find the shortest path between two nodes in a graph.
         
@@ -15,18 +15,18 @@ class ShortestPath:
             tuple[list, float]: Parent array and distance to target
         """
         # If the start and end are the same, return an empty path and distance 0
-        if u == v:
+        if start == target:
             print("begin and end are the same")
             return [-1], 0
 
         # If the graph has negative edges, use Bellman-Ford, otherwise use Dijkstra
         if self._has_negative_edges(G):
-            p, d = self.bellman_ford(G, u, v)
+            p, d = self.bellman_ford(G, start, target)
         else:
-            p, d = self.dijkstra(G, u, v)
+            p, d = self.dijkstra(G, start, target)
         return p, d
 
-    def dijkstra(self, G, start, target):
+    def dijkstra(self, G: dict, start: int, target: int) -> tuple[list, float]:
         """
         Dijkstra's algorithm to find the shortest path in a graph.
         

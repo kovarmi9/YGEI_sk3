@@ -1,6 +1,9 @@
 from math import inf
 from queue import PriorityQueue
-from shortest_paths import ShortestPath
+
+from matplotlib import pyplot as plt
+from graph_path_finder import GraphPathFinder
+from shortest_path import ShortestPath
 
 G = {
     1 : {2:8, 3:4, 5:2},
@@ -89,10 +92,27 @@ def allPaths(G):
     return paths
 
 
-sp_solver = ShortestPath()
+GPF = GraphPathFinder()
+SP = ShortestPath(G)
 
-P, dmin = sp_solver.shortest_path(G, 1,7)
+P, dmin = GPF.shortest_cost_path(G, 1,7)
 
 print(dmin)
+
+P = SP.BFS(1)
+print(P)
+P = SP.DFS(1)
+print(P)
+
+paths = SP.all_shortest_paths()
+print(paths)
+
+path = SP.rec_path(1,2,P)
+print(path)
+
+SP.plot_graph(C)
+SP.plot_path(path,C)
+plt.show()
+
 #paths = allPaths(G)
 #print(paths)
