@@ -34,6 +34,17 @@ for nodeS in V:
     for nodeE, weight in G[nodeS].items():
         E.append([nodeS,nodeE,weight])
 
+
+def make_list(G):
+    V = G.keys()
+    E = [];
+    for nodeS in V:
+        for nodeE, weight in G[nodeS].items():
+            E.append([nodeS,nodeE,weight])
+    return V,E
+
+V, E = make_list(G)
+
 def find(u,P):
     # Find parent node for u
     while P[u] != u:
@@ -78,8 +89,7 @@ def boruvka (V,E):
     # Inicialization trees
     for v in V:
         P[v] = v
-
-    
+ 
     # sort edges
     ES = sorted(E, key=lambda it:it[2])
     
