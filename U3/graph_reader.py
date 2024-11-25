@@ -50,3 +50,24 @@ def read_graph(file_name):
     C = {D[(x, y)]: [x, y] for x, y in PSE}
     
     return G, C  # Return the graph and coordinates
+
+
+def read_nodes_names(file_name):
+    municipalities = {}
+    try:
+        with open(file_name, 'r', encoding='utf-8') as f:
+            for line in f:
+                parts = line.strip().split(',')
+                if len(parts) == 3:  # Ensure the correct format
+                    name, x, y = parts
+                    try:
+                        municipalities[name] = (float(x), float(y))
+                    except ValueError:
+                        print(f"Skipping invalid line (could not convert coordinates): {line}")
+                else:
+                    print(f"Skipping malformed line: {line}")
+    except FileNotFoundError:
+        print(f"Error: Municipalities file '{file_name}' not found.")
+    except UnicodeDecodeError as e:
+        print(f"Error reading file '{file_name}': {e}")
+    return municipalities
