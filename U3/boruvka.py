@@ -35,11 +35,13 @@ for nodeS in V:
         E.append([nodeS,nodeE,weight])
 
 def find(u,P):
-    # Find parent node for u
-    while P[u] != u:
-        
-        # Traverse to predecesor
-        u=P[u]
+    while (P[u] != u): #Find root
+        u = P[u]
+    root = u
+    while u != root:
+        up = P[u] #Store predecessor
+        P[u] = root #Change predecessor to root
+        u = up #Go to parent
     return u
 
 def union(u,v,P):
