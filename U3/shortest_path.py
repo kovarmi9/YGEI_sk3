@@ -83,11 +83,22 @@ class ShortestPath(GraphPathFinder):
         return paths
     
 
-    def plot_graph(self, C:dict):
+    def plot_graph(self, C:dict, points: str = 'red', line: str = 'k-'):
+        """
+        Plots a graph based on the given data.
+
+        Parameters:
+            C (dict): A dictionary containing coordinates.
+            points (str): The color or style of the points. Default is 'red'.
+            line (str): The color or style of the line. Default is 'k-'.
+
+        Returns:
+            None
+        """
         # Plot the nodes
         plt.figure(figsize=(8, 6))
         for node, (x, y) in C.items():
-            plt.scatter(x, y, color='red')
+            plt.scatter(x, y, color=points)
             plt.text(x+5, y, str(node), fontsize=12, ha='left')
 
         # Plot the edges
@@ -95,18 +106,18 @@ class ShortestPath(GraphPathFinder):
             x_start, y_start = C[node]
             for neighbor in neighbors:
                 x_end, y_end = C[neighbor]
-                plt.plot([x_start, x_end], [y_start, y_end], 'k-', lw=1)  # Line between nodes
+                plt.plot([x_start, x_end], [y_start, y_end], line, lw=1)  # Line between nodes
 
         plt.xlabel("X-axis")
         plt.ylabel("Y-axis")
         plt.grid(True)
         pass
 
-    def plot_path(self, path:list, C:dict):
+    def plot_path(self, path:list, C:dict, line: str = 'r-'):
         for node in range(len(path)-1):
             x_start, y_start = C[path[node]]
             x_end, y_end = C[path[node+1]]
-            plt.plot([x_start, x_end], [y_start, y_end], 'r-', lw=1)
+            plt.plot([x_start, x_end], [y_start, y_end], line , lw=1)
 
         pass
     

@@ -2,14 +2,14 @@ from queue import PriorityQueue
 from math import inf
 
 class GraphPathFinder:
-    def shortest_cost_path(self, G: dict, start: int, target: int) -> tuple[list, float]:
+    def shortest_cost_path(self, G: dict, start: int, target: int):
         """
         Find the shortest path between two nodes in a graph.
         
         Parameters:
             G (dict): Adjacency list representation of the graph
-            u (int): Starting node
-            v (int): Target node
+            start (int): Starting node
+            target (int): Target node
         
         Returns:
             tuple[list, float]: Parent array and distance to target
@@ -26,7 +26,7 @@ class GraphPathFinder:
             p, d = self.dijkstra(G, start, target)
         return p, d
 
-    def dijkstra(self, G: dict, start: int, target: int) -> tuple[list, float]:
+    def dijkstra(self, G: dict, start: int, target: int):
         """
         Dijkstra's algorithm to find the shortest path in a graph.
         
@@ -36,9 +36,8 @@ class GraphPathFinder:
             target (int): Target node.
         
         Returns:
-            tuple: 
-                - P (list): Parent array representing the shortest path tree.
-                - D[target] (float): Distance to the target node.
+            list  - Parent array
+            float - distance
         """
         # If the start and end are the same, return an empty path and distance 0
         if start == target:
@@ -73,17 +72,18 @@ class GraphPathFinder:
         
         return P, D[target]
     
-    def bellman_ford(self, G: dict, start: int, target: int) -> tuple[list, float]:
+    def bellman_ford(self, G: dict, start: int, target: int):
         """
         Bellman-Ford algorithm to find shortest path in a graph with negative edges.
         
         Parameters:
             G (dict): Adjacency list representation of the graph
-            source (int): Starting node
+            start (int): Starting node
             target (int): Target node
         
         Returns:
-            tuple[list, float]: Parent array and distance to target
+            list  - Parent array
+            float - distance
         
         Raises:
             ValueError: If a negative cycle is detected
