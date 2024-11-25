@@ -1,4 +1,3 @@
-from math import *
 import matplotlib.pyplot as plt
 
 G = {
@@ -26,13 +25,6 @@ C = {
     8 : [333, 225],
     9 : [412, 196]
 }
-
-
-V = G.keys()
-E = []
-for nodeS in V:
-    for nodeE, weight in G[nodeS].items():
-        E.append([nodeS,nodeE,weight])
 
 
 def make_list(G):
