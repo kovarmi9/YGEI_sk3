@@ -68,7 +68,7 @@ def weighted_union(u, v, p, r):
     return p,r
 
 
-def mst (V,E):
+def boruvka (V,E):
     T = [] # tree
     wt = 0 # line weight
     n = len(V)
@@ -98,7 +98,7 @@ def mst (V,E):
             wt = wt + w
     return wt, T
 
-wt, T = mst (V,E)
+wt, T = boruvka (V,E)
 
 print (wt,T)
 
