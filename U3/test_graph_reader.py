@@ -2,17 +2,8 @@ import matplotlib.pyplot as plt
 # Importing the function from graph_reader.py
 from graph_reader import read_graph  # type: ignore
 
-# Path to the file (absolute path example) if some subfolder begins with number 'r' is important
-file = r'C:\Users\kovar\Desktop\Soubory\1.semestr\GEI\YGEI_sk3\U3\data\bayer_graph.txt'
-
-# Relative path to the file in the 'data' subfolder (relative path example)
+# Path to the graph file
 file = './U3/data/graph_unweighted.txt'
-
-# Check the current directory:
-# If you have opened 'YGEI_sk3' in VS Code your current directory will be 'YGEI_sk3'
-# If you opened just the 'U3' directory your current directory will be 'U3'
-# Make sure that the file path corresponds to the directory you are currently in
-# For example, if you're in 'YGEI_sk3', use './U3/data/bayer_graph.txt'
 
 # Read the graph from the file
 G, C = read_graph(file)
@@ -21,8 +12,32 @@ G, C = read_graph(file)
 print(G)
 print(C)
 
-# Plot the graph with edges and nodes
+# Read the municipalities data from the text file
+municipalities_file = './U3/data/municipalities_nearest_nodes.txt'
+
+municipalities = {}
+try:
+    with open(municipalities_file, 'r', encoding='utf-8') as f:
+        for line in f:
+            # Split the line into name and coordinates
+            parts = line.strip().split(',')
+            if len(parts) == 3:  # Check if line has the expected format
+                name, x, y = parts
+                try:
+                    municipalities[name] = (float(x), float(y))
+                except ValueError:
+                    print(f"Skipping invalid line (could not convert coordinates): {line}")
+            else:
+                print(f"Skipping malformed line: {line}")
+except FileNotFoundError:
+    print(f"Error: File '{municipalities_file}' not found.")
+except UnicodeDecodeError as e:
+    print(f"Error reading file '{municipalities_file}': {e}")
+
+# Plot the graph with edges and municipalities as red dots
 plt.figure(figsize=(10, 10))
+
+# Plot the graph edges
 for node, neighbors in G.items():
     # Check if coordinates exist for the current node
     if node in C:
@@ -33,9 +48,12 @@ for node, neighbors in G.items():
                 nx, ny = C[neighbor]
                 plt.plot([x, nx], [y, ny], 'b-', alpha=0.5)  # Plot edges
 
-        plt.plot(x, y, 'ro')  # Plot nodes
+# Plot the municipalities as red dots
+for municipality, (x, y) in municipalities.items():
+    plt.plot(x, y, 'ro')
 
-plt.title("Graph Representation of the Road Network")
-plt.xlabel("Longitude")
-plt.ylabel("Latitude")
+# Title and labels
+plt.title("Graph Representation of the Road Network with Municipalities")
+
+# Show the plot
 plt.show()
