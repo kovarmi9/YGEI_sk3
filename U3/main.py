@@ -2,8 +2,8 @@ import matplotlib.pyplot as plt
 from graph_reader import read_graph, read_nodes_names  # Import graph loading functions
 from graph_path_finder import GraphPathFinder  # Class for working with paths
 
-# Path to the graph file (with weights or unweighted)
-file = './U3/data/graph_unweighted.txt'
+# Path to the graph file (with weights or uncosted)
+file = './U3/data/graph_uncosted.txt'
 
 # Path to the municipality file
 municipalities_file = './U3/data/municipalities_nearest_nodes.txt'
@@ -45,10 +45,10 @@ C = {
 municipalities = {
     'Kostelec': [95, 322],
     'Skořice': [272, 331], 
-    #'Bukovník': [173, 298], 
+    'Bukovník': [173, 298], 
     'Dobršín': [361, 299], 
     'Přestavlky': [82, 242], 
-    #'Milínov': [163, 211], 
+    'Milínov': [163, 211], 
     'Žákava': [244, 234], 
     'Hněvnice': [333, 225], 
     'Bílov': [412, 196], 
