@@ -98,14 +98,14 @@ class MST:
         # return the minimum spanning tree (T) and its total weight (wt)
         return T, wt
     
-    def plot_mst(self,C:dict, T:list, line:str = 'k-') -> None:
+    def plot_mst(self,C:dict, T:list, line:str = 'b-') -> None:
         """
         Plot the Minimum Spanning Tree (MST) on a 2D graph.
 
         Parameters:
             C (dict): A dictionary mapping nodes to their (x, y) coordinates.
             T (list): A list of edges in the MST (start_node, end_node, weight).
-            line (str): The color or style of the line. Default is 'k-'.
+            line (str): The color or style of the line. Default is 'b-'.
 
         Returns:
             None
@@ -129,8 +129,6 @@ class MST:
         # set the axes to have equal scaling for a proportional display
         plt.axis("equal")
 
-        # the 'pass' statement indicates the end of the block; here, it does nothing
-        pass
 
     def _make_list(self) -> tuple[list,list]:
         """

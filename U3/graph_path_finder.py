@@ -149,7 +149,6 @@ class GraphPathFinder(ShortestPath,MST):
         plt.xlabel("X-axis")
         plt.ylabel("Y-axis")
         plt.grid(True)
-        pass
 
     def plot_path(self, path:list, C:dict, line: str = 'r-')-> None:
         """
@@ -163,12 +162,15 @@ class GraphPathFinder(ShortestPath,MST):
         Returns:
             None
         """
-        for node in range(len(path)-1):
-            x_start, y_start = C[path[node]]
-            x_end, y_end = C[path[node+1]]
-            plt.plot([x_start, x_end], [y_start, y_end], line , lw=1)
+        x_coords = []
+        y_coords = []
 
-        pass
+        for node in path:
+            x, y = C[node]
+            x_coords.append(x)
+            y_coords.append(y)
+
+        plt.plot(x_coords, y_coords, line, lw=1)
     
     def rec_path(self, start:int, target:int, P:list) ->list:
         """
