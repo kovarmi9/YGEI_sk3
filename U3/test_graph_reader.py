@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 from graph_reader import read_graph, read_nodes_names  # type: ignore
 
 # Path to the graph file
-file = './U3/data/graph_unweighted.txt'
+file = './U3/data/graph_uncosted.txt'
 
 # Read the graph from the file
 G, C = read_graph(file)
