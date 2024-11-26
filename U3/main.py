@@ -14,6 +14,7 @@ G, C = read_graph(file)
 # Load municipalities
 municipalities = read_nodes_names(municipalities_file)
 
+""""
 ##########
 # Example graph (G) and coordinates (C) for testing
 G = {
@@ -54,6 +55,7 @@ municipalities = {
     'Bílov': [412, 196], 
 }
 ###########
+"""
 
 # Print the graph and coordinates
 print("Graph (G):", G)
@@ -98,7 +100,7 @@ print("All shortest paths:", all_paths)
 
 # Find the specific path from node 1 to 9
 start_node = 1
-end_node = 9
+end_node = 192
 
 # Check if path exists and use rec_path to get it
 path = SP.rec_path(start_node, end_node, SP.BFS(start_node))  # Path from 1 to 9
@@ -130,7 +132,7 @@ path = SP.rec_path(start_node, 9, SP.BFS(start_node))  # Path from 1 to 9
 print("Path from", start_node, "to 9:", path)
 
 # Dijkstra's algorithm from node 1 to 9
-p, d = SP.dijkstra(1, 9)
+p, d = SP.dijkstra(1, 192)
 print(f"Shortest path from {start_node} to 2: {p} with distance {d}")
 
 # Minimum spanning tree (Prim or Borůvka)
