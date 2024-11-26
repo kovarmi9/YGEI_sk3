@@ -104,18 +104,16 @@ end_node = 9
 path = SP.rec_path(start_node, end_node, SP.BFS(start_node))  # Path from 1 to 9
 print(f"Path from {start_node} to {end_node}:", path)
 
-# Plot the graph and the path using the ShortestPath class's plotting methods
-plt.figure(figsize=(12, 12))
-
 # First, plot the graph
-SP.plot_graph(C)  # This assumes that plot_graph uses the 'C' coordinates to plot the graph
+SP.plot_graph(C)
 
-# Then, plot the shortest path
-SP.plot_path(path, C)  # This will plot the path using the 'path' and the 'C' coordinates
+# Then, plot the shortest path if it exists
+if path:
+    SP.plot_path(path, C)  # This will plot the path using the 'path' and the 'C' coordinates
 
-# Optionally, plot municipalities as red points
+# Optionally, plot municipalities as black points
 for municipality, (x, y) in municipalities.items():
-    plt.plot(x, y, 'ro')
+    plt.plot(x, y, 'ko')
     plt.text(x, y, municipality, fontsize=9, ha='right')
 
 # Set title and show the plot
