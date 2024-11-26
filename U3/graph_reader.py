@@ -51,13 +51,27 @@ def read_graph(file_name):
     
     return G, C  # Return the graph and coordinates
 
-
 def read_nodes_names(file_name):
-    nodes = {}
-    with open(file_name) as f:
+    nodes = {}  # Create an empty dictionary to store node names and coordinates
+
+    # Open the file in read mode with UTF-8 encoding
+    with open(file_name, 'r', encoding='utf-8') as f:
         for line in f:
+            # Remove extra spaces at the beginning and end, then split the line by spaces
             parts = line.strip().split()
+
+            # Check if the line contains exactly 3 parts: name, x, and y
             if len(parts) == 3:
                 name, x, y = parts
-                nodes[name] = (float(x), float(y))
-    return nodes
+
+                # Try to convert the x and y values to float
+                try:
+                    nodes[name] = (float(x), float(y))  # Store the name and coordinates in the dictionary
+                except ValueError:
+                    # If x or y cannot be converted to a float, skip this line
+                    continue
+            # If the line does not have exactly 3 parts, skip it
+            else:
+                continue
+
+    return nodes  # Return the dictionary of nodes
