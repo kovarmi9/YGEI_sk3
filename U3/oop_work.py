@@ -2,7 +2,7 @@ from math import inf
 from queue import PriorityQueue
 
 from matplotlib import pyplot as plt
-from shortest_path import ShortestPath
+from graph_path_finder import GraphPathFinder
 from mst import MST
 
 G = {
@@ -31,7 +31,7 @@ C = {
 }
 
 #GPF = GraphPathFinder()
-SP = ShortestPath(G)
+SP = GraphPathFinder(G)
 
 #P, dmin = GPF.shortest_cost_path(G, 1,7)
 
