@@ -54,23 +54,10 @@ def read_graph(file_name):
 
 def read_nodes_names(file_name):
     nodes = {}
-    try:
-        with open(file_name, 'r', encoding='utf-8') as f:
-            for line in f:
-                # Odstraní případné mezery na začátku a konci řádku a rozdělí podle mezer
-                parts = line.strip().split()
-                if len(parts) == 3:  # Zajištění správného formátu (název uzlu, x, y)
-                    name, x, y = parts
-                    try:
-                        # Převod souřadnic na float a uložení do slovníku
-                        nodes[name] = (float(x), float(y))
-                    except ValueError:
-                        print(f"Skipping invalid line (could not convert coordinates): {line}")
-                else:
-                    print(f"Skipping malformed line: {line}")
-    except FileNotFoundError:
-        print(f"Error: Nodes file '{file_name}' not found.")
-    except UnicodeDecodeError as e:
-        print(f"Error reading file '{file_name}': {e}")
-    
+    with open(file_name) as f:
+        for line in f:
+            parts = line.strip().split()
+            if len(parts) == 3:
+                name, x, y = parts
+                nodes[name] = (float(x), float(y))
     return nodes
