@@ -2,7 +2,20 @@ from collections import defaultdict
 from numpy import unique
 
 def read_graph(file_name):
-    # Function for loading edges
+    """
+    Reads a graph from a file, generating an adjacency dictionary representation and a coordinates dictionary.
+
+    Parameters:
+        file_name (str): Path to the file containing graph edges. Each line in the file should follow the format:
+                         x1 y1 x2 y2 w
+                         where (x1, y1) and (x2, y2) are coordinates of edge endpoints, and w is the weight of the edge.
+
+    Returns:
+        A tuple containing:
+            - G (dict): Adjacency dictionary representing the graph. 
+                        Keys are node IDs, and values are dictionaries mapping neighboring nodes to edge weights.
+            - C (dict): Coordinates dictionary mapping node IDs to their coordinates [x, y].
+    """
     def loadEdges(file_name):
         PS = []  # List of starting points
         PE = []  # List of ending points
@@ -27,6 +40,18 @@ def read_graph(file_name):
 
     # Function to convert edges to a graph
     def edgesToGraph(D, PS, PE, W):
+        """
+        Load edges from the file, separating starting points, ending points, and weights.
+
+        Parameters:
+            file_name (str): Path to the file containing graph edges.
+
+        Returns:
+            tuple: Three lists:
+                - PS (list): Starting points as coordinate tuples [(x1, y1), ...].
+                - PE (list): Ending points as coordinate tuples [(x2, y2), ...].
+                - W (list): Weights of the edges [w1, w2, ...].
+        """
         G = defaultdict(dict)
         for i in range(len(PS)):
             G[D[PS[i]]][D[PE[i]]] = W[i]
@@ -52,6 +77,17 @@ def read_graph(file_name):
     return G, C  # Return the graph and coordinates
 
 def read_nodes_names(file_name):
+    """
+    Reads a file containing node names and their corresponding coordinates.
+
+    Parameters:
+        file_name (str): Path to the file containing node data. Each line should follow the format:
+                         name x y
+                         where `name` is the node name, and `x` and `y` are its coordinates.
+
+    Returns:
+        dict: A dictionary where keys are node names (str), and values are coordinate tuples (x, y).
+    """
     nodes = {}  # Create an empty dictionary to store node names and coordinates
 
     # Open the file in read mode with UTF-8 encoding
