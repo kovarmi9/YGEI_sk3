@@ -1,5 +1,5 @@
 import matplotlib.pyplot as plt
-from graph_reader import read_graph, read_nodes_names  # Import graph loading functions
+from graph_reader import read_graph, read_nodes_names, node_name_to_node  # Import graph loading functions
 from graph_path_finder import GraphPathFinder  # Class for working with paths
 
 # Path to the graph file (with weights or uncosted)
@@ -13,6 +13,19 @@ G, C = read_graph(file)
 
 # Load municipalities
 municipalities = read_nodes_names(municipalities_file)
+
+# Take input for the starting and ending nodes
+start_node_name = input("Enter the starting node name: ")
+end_node_name = input("Enter the ending node name: ")
+
+# start_node_name = "Němčovice"
+# end_node_name = "Rokycany"
+
+# Find the corresponding nodes for the start and end node names using the new function
+start_node = node_name_to_node(start_node_name, municipalities, C)
+end_node = node_name_to_node(end_node_name, municipalities, C)
+
+print(start_node," ",end_node)
 
 """"
 ##########
@@ -85,7 +98,7 @@ for municipality, node in municipality_to_node.items():
 SP = GraphPathFinder(G)
 
 # BFS and DFS for the starting node
-start_node = 1  # Starting node
+# start_node = 1  # Starting node
 P = SP.BFS(start_node)
 print("BFS Path from Node", start_node, ":", P)
 
@@ -99,8 +112,8 @@ all_paths = SP.all_shortest_paths()
 print("All shortest paths:", all_paths)
 
 # Find the specific path from node 1 to 9
-start_node = 1
-end_node = 192
+# start_node = 1
+# end_node = 192
 
 # Check if path exists and use rec_path to get it
 path = SP.rec_path(start_node, end_node, SP.BFS(start_node))  # Path from 1 to 9
@@ -128,11 +141,11 @@ all_paths = SP.all_shortest_paths()
 print("All shortest paths:", all_paths)
 
 # Find a specific path
-path = SP.rec_path(start_node, 9, SP.BFS(start_node))  # Path from 1 to 9
-print("Path from", start_node, "to 9:", path)
+path = SP.rec_path(start_node, end_node, SP.BFS(start_node))
+print("Path from",{start_node},"to",{end_node},":", path)
 
 # Dijkstra's algorithm from node 1 to 9
-p, d = SP.dijkstra(1, 192)
+p, d = SP.dijkstra(start_node, end_node)
 print(f"Shortest path from {start_node} to 2: {p} with distance {d}")
 
 # Minimum spanning tree (Prim or Borůvka)

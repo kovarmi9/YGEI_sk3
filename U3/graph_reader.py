@@ -75,3 +75,29 @@ def read_nodes_names(file_name):
                 continue
 
     return nodes  # Return the dictionary of nodes
+
+def node_name_to_node(node_name, node_names, C, tolerance=1e-6):
+    """
+    Function to convert a node name to its corresponding node number based on coordinates.
+    
+    :param node_name: The name of the node (string).
+    :param node_names: Dictionary of node names and their coordinates.
+    :param C: Dictionary of node numbers and their coordinates.
+    :param tolerance: A tolerance value for comparing coordinates to account for small precision differences.
+    
+    :return: Node number (integer) or None if no match is found.
+    """
+    # Check if the node name exists in the node_names dictionary
+    if node_name in node_names:
+        node_coords = node_names[node_name]
+        print(f"Looking for {node_name} with coordinates {node_coords}")
+        
+        # Iterate through the nodes in C and find the matching coordinates
+        for node, coords in C.items():
+            print(f"Checking node {node} with coordinates {coords}")
+            
+            # Compare the coordinates with a tolerance to handle small rounding errors
+            if abs(coords[0] - node_coords[0]) < tolerance and abs(coords[1] - node_coords[1]) < tolerance:
+                return node
+    
+    return None  # Return None if no matching node is found
