@@ -129,8 +129,6 @@ class MST:
         # set the axes to have equal scaling for a proportional display
         plt.axis("equal")
 
-        # the 'pass' statement indicates the end of the block; here, it does nothing
-        pass
 
     def _make_list(self) -> tuple[list,list]:
         """
