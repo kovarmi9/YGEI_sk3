@@ -1,154 +1,202 @@
-from queue import PriorityQueue
-from math import inf
+import matplotlib.pyplot as plt
+from shortest_path import ShortestPath
+from mst import MST
 
-class GraphPathFinder:
+class GraphPathFinder(ShortestPath,MST):
     def __init__(self, G:dict):
         """
-        Initialize the graph path finder with a given graph.
+        Initialize the ShortestPath class that combines functionalities
+        of finding shortest paths and minimum spanning trees.
 
         Parameters:
             G (dict): Adjacency list representation of the graph where 
                       G[u] = {v: weight, ...} maps neighbors v of node u to their edge weights.
         """
+        super().__init__(G)
         self.G = G
 
-    def shortest_cost_path(self, start: int, target: int) -> tuple[list, float]:
+    def DFS(self,start:int) -> list:
         """
-        Find the shortest path between two nodes in a graph, if you dont know data about the graph.
-        
-        Parameters:
-            start (int): Starting node
-            target (int): Target node
-        
-        Returns:
-            tuple[list, float]: 
-                - Parent array representing the shortest path tree.
-                - Distance to the target node from the start node.
-        """
-
-        # check if the graph contains negative-weight edges
-        if self._has_negative_edges():
-            # use the Bellman-Ford algorithm if negative edges are present
-            # bellman-Ford works even with negative weights and can detect negative weight cycles
-            p, d = self.bellman_ford(start, target)
-        else:
-            # use Dijkstra's algorithm if all edge weights are non-negative
-            # dijkstra's algorithm is more efficient for graphs with only non-negative weights
-            p, d = self.dijkstra(start, target)
-
-        # return the parent array and the shortest distance to the target node
-        return p, d
-
-    def dijkstra(self, start: int, target: int) -> tuple[list, float]:
-        """
-        Dijkstra's algorithm to find the shortest path in a graph with non-negative weights.
+        Perform Depth First Search (DFS) on the graph.
 
         Parameters:
-            start (int): Starting node.
-            target (int): Target node.
+            start (int): Starting node for the DFS.
 
         Returns:
-            tuple[list, float]: 
-                - Parent array representing the shortest path tree.
-                - Distance to the target node from the start node.
+            list: Parent array representing the DFS tree.
         """
-        # if the start and end are the same, return an empty path and distance 0
-        if start == target:
-            print("begin and end are the same")
-            return [-1], 0  # no path needed if start == target
+        n = len(self.G)     # number of nodes in the graph
+        P = [-1] * (n + 1)  # parent array: stores the predecessor of each node (-1 indicates no predecessor)
+        S = [0] * (n + 1)   # status array: 0 = unvisited, 1 = visiting, 2 = fully processed
+        St = []             # stack to manage the nodes during traversal (depth-first)
 
-        n = len(self.G)                 # number of nodes in the graph
-        P = [-1] * (n + 1)              # parent array to store the path reconstruction
-        D = [float('inf')] * (n + 1)    # distance array, initialized to infinity
-        PQ = PriorityQueue()            # priority queue for processing nodes in order of distance
+        # add the starting node to the stack
+        St.append(start)
 
-        # start from the given starting node
-        PQ.put((0, start))      # add the start node with distance 0
-        D[start] = 0            # the distance to the start node is 0
-
-        # main loop: process each node
-        while not PQ.empty():
-            current_distance, current_node = PQ.get()  # get the node with the smallest distance
+        # process nodes until the stack is empty
+        while St:
+            # remove the last node from the stack (LIFO behavior for depth-first traversal)
+            start = St.pop()
             
-            # if we already found a shorter path to this node, skip further processing
-            if current_distance > D[current_node]:
-                continue
+            # mark the current node as being visited
+            S[start] = 1
             
-            # if we've reached the target node, we can stop early
-            if current_node == target:
-                break
+            # visit all neighbors of the current node
+            for v in reversed(self.G[start]):  # Reversing ensures consistent processing order
+                # if the neighbor node is unvisited
+                if S[v] == 0:
+                    P[v] = start  # set the current node as the parent of the neighbor
+                    St.append(v)  # add the neighbor to the stack for further processing
             
-            # explore neighbors of the current node
-            for neighbor, weight in self.G[current_node].items():
-                # relax the edge: check if a shorter path to 'neighbor' is found
-                if D[neighbor] > D[current_node] + weight:
-                    D[neighbor] = D[current_node] + weight  # update the distance
-                    P[neighbor] = current_node              # set the current node as the parent
-                    PQ.put((D[neighbor], neighbor))         # add the neighbor to the priority queue
+            # mark the current node as fully processed
+            S[start] = 2
 
-        # return the parent array and the shortest distance to the target node
-        return P, D[target]
+        # return the parent array, which represents the DFS tree
+        return P
     
-    def bellman_ford(self, start: int, target: int)-> tuple[list, float]:
+    def BFS(self,start:int) -> list:
         """
-        Dijkstra's algorithm to find the shortest path in a graph with non-negative weights.
+        Perform Breadth First Search (BFS) on the graph.
 
         Parameters:
-            start (int): Starting node.
-            target (int): Target node.
+            start (int): Starting node for the BFS.
 
         Returns:
-            tuple[list, float]: 
-                - Parent array representing the shortest path tree.
-                - Distance to the target node from the start node.
-        
-        Raises:
-            ValueError: If a negative cycle is detected
+            list: Parent array representing the BFS tree.
         """
-        # if the start and end are the same, return an empty path and distance 0
-        if start == target:
-            print("begin and end are the same")
-            return [-1], 0
-        
-        n = len(self.G)                 # number of nodes in the graph
-        d = [float('inf')] * (n + 1)    # distance array, initialized to infinity
-        p = [-1] * (n + 1)              # parent array to reconstruct paths
-        d[start] = 0                    # distance to the start node is 0
+        n = len(self.G)     # number of nodes in the graph
+        P = [-1] * (n + 1)  # parent array: stores the predecessor of each node (-1 indicates no predecessor)
+        S = [0] * (n + 1)   # status array: 0 = unvisited, 1 = visiting, 2 = fully processed
+        Q = []              # queue to manage the nodes during traversal (FIFO behavior for BFS)
 
-        # relax all edges |V|-1 times
-        for _ in range(n - 1):  # the variable is not used, but it is the number of edges
-            for u in self.G:    # for each vertex
-                for v, weight in self.G[u].items():  # for each edge
+        # mark the starting node as visiting and enqueue it
+        S[start] = 1
+        Q.append(start)
 
-                    # if the distance to the current node is not infinity and the distance to the neighbor is greater than the distance to the current node plus the weight of the edge, update the distance and parent
-                    if d[u] != float('inf') and d[u] + weight < d[v]:  
-                        d[v] = d[u] + weight
-                        p[v] = u
+        # process nodes until the queue is empty
+        while Q:
+            # remove the first node from the queue (FIFO behavior for breadth-first traversal)
+            start = Q.pop(0)
+            
+            # visit all neighbors of the current node
+            for v in self.G[start]:
+                # if the neighbor node is unvisited
+                if S[v] == 0:
+                    S[v] = 1         # mark the neighbor as visiting
+                    P[v] = start     # set the current node as the parent of the neighbor
+                    Q.append(v)      # enqueue the neighbor for further processing
+            
+            # mark the current node as fully processed
+            S[start] = 2
 
-        # check for negative cycles
-        for u in self.G:
-            for v, weight in self.G[u].items():
-                # if the distance to the current node is not infinity and the distance to the neighbor is greater than the distance to the current node plus the weight of the edge, raise an error
-                if d[u] != float('inf') and d[u] + weight < d[v]:
-                    raise ValueError("Negative cycle detected in the graph")
+        # return the parent array, which represents the BFS tree
+        return P
 
-        # return the parent array and the shortest distance to the target node
-        return p, d[target]
-    
-    
-    def _has_negative_edges(self) -> bool:
+    def all_shortest_paths(self) -> dict:
         """
-        Check if the graph contains any negative edges.
-        
+        Compute the shortest paths between all pairs of nodes in the graph.
+
+        Returns:
+            dict: A dictionary where keys are (start, target) pairs and values are 
+                  tuples containing the path and value of minimum distance.
+        """
+        paths = {}
+
+        # get all keys (nodes) in the graph
+        keys = list(self.G.keys())
+
+        # iterate over all pairs of nodes in the graph
+        for i in range(len(keys)):
+            for j in range(i + 1, len(keys)):  # consider pairs (i, j) where i < j to avoid duplication
+                # compute the shortest-cost path from keys[i] to keys[j]
+                P, dmin = self.shortest_cost_path(keys[i], keys[j])
+                
+                # reconstruct the path from the parent array
+                path = self.rec_path(keys[i], keys[j], P)
+                
+                # store the path and its cost in the dictionary, keyed by the node pair
+                paths[keys[i], keys[j]] = (path, dmin)
+
+        # return the dictionary containing all paths and their associated costs
+        return paths
+    
+
+    def plot_graph(self, C:dict, points: str = 'red', line: str = 'k-') -> None:
+        """
+        Plots a graph based on the given data.
+
         Parameters:
-        
+            C (dict): A dictionary containing coordinates.
+            points (str): The color or style of the points. Default is 'red'.
+            line (str): The color or style of the line. Default is 'k-'.
+
         Returns:
-            bool: True if negative edges exist, False otherwise
+            None
         """
-        # iterate through all vertices and their edges
-        for vertex in self.G:
-            for neighbor, weight in self.G[vertex].items():
-                # check if any edge weight is negative
-                if weight < 0:
-                    return True
-        return False
+        # Plot the nodes
+        plt.figure(figsize=(8, 6))
+        for node, (x, y) in C.items():
+            plt.scatter(x, y, color=points)
+            plt.text(x+5, y, str(node), fontsize=12, ha='left')
+
+        # Plot the edges
+        for node, neighbors in self.G.items():
+            x_start, y_start = C[node]
+            for neighbor in neighbors:
+                x_end, y_end = C[neighbor]
+                plt.plot([x_start, x_end], [y_start, y_end], line, lw=1)  # Line between nodes
+
+        plt.xlabel("X-axis")
+        plt.ylabel("Y-axis")
+        plt.grid(True)
+        pass
+
+    def plot_path(self, path:list, C:dict, line: str = 'r-')-> None:
+        """
+        Plot a specific path on the graph.
+
+        Parameters:
+            path (list): List of nodes representing the path.
+            C (dict): A dictionary mapping nodes to their (x, y) coordinates.
+            line (str): Style/color for plotting the path. Default is 'r-'.
+
+        Returns:
+            None
+        """
+        for node in range(len(path)-1):
+            x_start, y_start = C[path[node]]
+            x_end, y_end = C[path[node+1]]
+            plt.plot([x_start, x_end], [y_start, y_end], line , lw=1)
+
+        pass
+    
+    def rec_path(self, start:int, target:int, P:list) ->list:
+        """
+        Reconstruct the path from start to target using the parent array.
+
+        Parameters:
+            start (int): Starting node of the path.
+            target (int): Target node of the path.
+            P (list): Parent array representing the shortest path tree.
+
+        Returns:
+            list: The reconstructed path as a list of nodes.
+        """
+        path = []
+        
+        # initialize path reconstruction
+        while target != start and target != -1:
+            # append the current target node to the path
+            path.append(target)
+            # move to the parent of the current target node
+            target = P[target]
+
+        # append the start node to complete the path
+        path.append(target)
+
+        # check if the path is valid
+        if target != start:
+            print('Incorrect path')  # the path is invalid if it doesn't trace back to the start node
+
+        # return the reconstructed path
+        return path 

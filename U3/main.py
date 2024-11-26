@@ -1,6 +1,6 @@
 import matplotlib.pyplot as plt
 from graph_reader import read_graph, read_nodes_names  # Import graph loading functions
-from shortest_path import ShortestPath  # Class for working with paths
+from graph_path_finder import GraphPathFinder  # Class for working with paths
 
 # Path to the graph file (with weights or unweighted)
 file = './U3/data/graph_unweighted.txt'
@@ -80,7 +80,7 @@ for municipality, node in municipality_to_node.items():
 ########## PATH CALCULATION ###########
 
 # Create an object to work with shortest paths
-SP = ShortestPath(G)
+SP = GraphPathFinder(G)
 
 # BFS and DFS for the starting node
 start_node = 1  # Starting node
