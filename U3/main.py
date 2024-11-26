@@ -1,7 +1,6 @@
 import matplotlib.pyplot as plt
 from graph_reader import read_graph, read_nodes_names  # Import graph loading functions
 from shortest_path import ShortestPath  # Class for working with paths
-from mst import MST  # Class for Minimum Spanning Tree (MST)
 
 # Path to the graph file (with weights or unweighted)
 file = './U3/data/graph_unweighted.txt'
@@ -85,8 +84,44 @@ SP = ShortestPath(G)
 
 # BFS and DFS for the starting node
 start_node = 1  # Starting node
-print("BFS Path from Node", start_node, ":", SP.BFS(start_node))
-print("DFS Path from Node", start_node, ":", SP.DFS(start_node))
+P = SP.BFS(start_node)
+print("BFS Path from Node", start_node, ":", P)
+
+P = SP.DFS(start_node)
+print("DFS Path from Node", start_node, ":", P)
+
+
+##############
+# Find all shortest paths
+all_paths = SP.all_shortest_paths()
+print("All shortest paths:", all_paths)
+
+# Find the specific path from node 1 to 9
+start_node = 1
+end_node = 9
+
+# Check if path exists and use rec_path to get it
+path = SP.rec_path(start_node, end_node, SP.BFS(start_node))  # Path from 1 to 9
+print(f"Path from {start_node} to {end_node}:", path)
+
+# Plot the graph and the path using the ShortestPath class's plotting methods
+plt.figure(figsize=(12, 12))
+
+# First, plot the graph
+SP.plot_graph(C)  # This assumes that plot_graph uses the 'C' coordinates to plot the graph
+
+# Then, plot the shortest path
+SP.plot_path(path, C)  # This will plot the path using the 'path' and the 'C' coordinates
+
+# Optionally, plot municipalities as red points
+for municipality, (x, y) in municipalities.items():
+    plt.plot(x, y, 'ro')
+    plt.text(x, y, municipality, fontsize=9, ha='right')
+
+# Set title and show the plot
+plt.title(f"Shortest Path from {start_node} to {end_node}")
+plt.show()
+##############
 
 # Find all shortest paths
 all_paths = SP.all_shortest_paths()
