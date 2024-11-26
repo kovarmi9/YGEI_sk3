@@ -1,5 +1,5 @@
 import matplotlib.pyplot as plt
-from graph_reader import read_graph, read_nodes_names, node_name_to_node  # Import graph loading functions
+from graph_reader import read_graph, read_nodes_names  # Import graph loading functions
 from graph_path_finder import GraphPathFinder  # Class for working with paths
 
 # Path to the graph file (with weights or uncosted)
@@ -14,68 +14,14 @@ G, C = read_graph(file)
 # Load municipalities
 municipalities = read_nodes_names(municipalities_file)
 
+# Print the graph, coordinates and municipalities
+# print("Graph (G):", G)
+# print("Coordinates (C):", C)
+# print("Municipalities:", municipalities)
+
 # Take input for the starting and ending nodes
 start_node_name = input("Enter the starting node name: ")
 end_node_name = input("Enter the ending node name: ")
-
-# start_node_name = "Němčovice"
-# end_node_name = "Rokycany"
-
-# Find the corresponding nodes for the start and end node names using the new function
-start_node = node_name_to_node(start_node_name, municipalities, C)
-end_node = node_name_to_node(end_node_name, municipalities, C)
-
-print(start_node," ",end_node)
-
-""""
-##########
-# Example graph (G) and coordinates (C) for testing
-G = {
-    1 : {2:8, 3:4, 5:2},
-    2 : {1:8, 3:5, 4:2, 7:6, 8:7},
-    3 : {1:4, 2:5, 6:3, 7:4},
-    4 : {2:2, 9:3},
-    5 : {1:2, 6:5},
-    6 : {3:3, 5:5, 7:5, 8:7, 9:10},
-    7 : {2:6, 3:4, 6:5, 8:10},
-    8 : {2:7, 6:7, 7:10, 9:1},
-    9 : {4:3, 6:10, 8:1}
-}
-
-# Coordinates for plotting
-C = {
-    1 : [95, 322],
-    2 : [272, 331],
-    3 : [173, 298],
-    4 : [361, 299],
-    5 : [82, 242],
-    6 : [163, 211],
-    7 : [244, 234],
-    8 : [333, 225],
-    9 : [412, 196]
-}
-
-# Municipality names and their coordinates
-municipalities = {
-    'Kostelec': [95, 322],
-    'Skořice': [272, 331], 
-    'Bukovník': [173, 298], 
-    'Dobršín': [361, 299], 
-    'Přestavlky': [82, 242], 
-    'Milínov': [163, 211], 
-    'Žákava': [244, 234], 
-    'Hněvnice': [333, 225], 
-    'Bílov': [412, 196], 
-}
-###########
-"""
-
-# Print the graph and coordinates
-print("Graph (G):", G)
-print("Coordinates (C):", C)
-
-# Print municipalities
-print("Municipalities:", municipalities)
 
 # Create an empty dictionary for municipalities and their corresponding nodes
 municipality_to_node = {}
@@ -88,9 +34,13 @@ for municipality, (x, y) in municipalities.items():
         if coords == [x, y]:
             municipality_to_node[municipality] = node
 
-# Print each municipality and its corresponding node
-for municipality, node in municipality_to_node.items():
-    print(f"Municipality: {municipality}, Node: {node}")
+print(municipality_to_node)
+
+# Find the corresponding nodes for the start and end municipalities
+start_node = municipality_to_node.get(start_node_name, None)
+end_node = municipality_to_node.get(end_node_name, None)
+
+print(start_node," ",end_node)
 
 ########## PATH CALCULATION ###########
 
@@ -98,7 +48,6 @@ for municipality, node in municipality_to_node.items():
 SP = GraphPathFinder(G)
 
 # BFS and DFS for the starting node
-# start_node = 1  # Starting node
 P = SP.BFS(start_node)
 print("BFS Path from Node", start_node, ":", P)
 
@@ -111,9 +60,7 @@ print("DFS Path from Node", start_node, ":", P)
 all_paths = SP.all_shortest_paths()
 print("All shortest paths:", all_paths)
 
-# Find the specific path from node 1 to 9
-# start_node = 1
-# end_node = 192
+# Find the specific path from node start to end
 
 # Check if path exists and use rec_path to get it
 path = SP.rec_path(start_node, end_node, SP.BFS(start_node))  # Path from 1 to 9
