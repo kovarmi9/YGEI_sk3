@@ -1,9 +1,9 @@
-import matplotlib.pyplot as plt
+from matplotlib import pyplot as plt
 from graph_reader import read_graph, read_nodes_names  # Import graph loading functions
 from graph_path_finder import GraphPathFinder  # Class for working with paths
 
 # Path to the graph file (with weights or uncosted)
-file = './U3/data/graph_length_cost.txt'
+file = './U3/data/graph_uncosted.txt'
 
 # Path to the municipality file
 municipalities_file = './U3/data/municipalities_nearest_nodes.txt'
