@@ -129,7 +129,7 @@ with open(output_file_path, 'w') as file:
     for _, row in municipalities.iterrows():
         name = row['NAZ_OBEC']  # Column for municipality name
         nearest_node = row['nearest_node_coords']
-        file.write(f"{name} {nearest_node.x} {nearest_node.y}\n")
+        file.write(f"{name},{nearest_node.x},{nearest_node.y}\n")
 
 # Export of road graphs
 create_graph_file(roads, 'length_cost', 'data/graph_length_cost.txt')  # Cost based on length
