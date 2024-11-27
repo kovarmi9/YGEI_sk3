@@ -126,7 +126,7 @@ def on_button_click():
     SP.plot_node_names(municipalities)
 
     # SP.plot_path(path, C)
-    SP.plot_mst(C, mst_p)
+    SP.plot_mst(C, mst_p, line='r-')
 
     # Set title, axis and show the plot
     plt.title("MST according to Prim's algorithm")
@@ -147,7 +147,7 @@ def on_button_click():
     SP.plot_node_names(municipalities)
 
     # SP.plot_path(path, C)
-    SP.plot_mst(C, mst_b)
+    SP.plot_mst(C, mst_b, line='r-')
 
     # Set title, axis and show the plot
     plt.title("MST according to Borůvka's algorithm")
