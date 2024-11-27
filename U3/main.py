@@ -35,15 +35,22 @@ print(municipality_to_node)
 start_node = municipality_to_node.get(start_node_name, None)
 end_node = municipality_to_node.get(end_node_name, None)
 
+# Check if both start and end nodes are valid
+if start_node is None:
+    print(f"Start node '{start_node_name}' not found.")
+if end_node is None:
+    print(f"End node '{end_node_name}' not found.")
+
 print(start_node," ",end_node)
 
 # Create an object to work with shortest paths
 SP = GraphPathFinder(G)
 
-# BFS and DFS for the starting node
+# BFS for the starting node
 P = SP.BFS(start_node)
 print("BFS Path from Node", start_node, ":", P)
 
+# DFS for the starting node
 P = SP.DFS(start_node)
 print("DFS Path from Node", start_node, ":", P)
 
@@ -55,67 +62,73 @@ print("All shortest paths:", all_paths)
 path = SP.rec_path(start_node, end_node, SP.BFS(start_node))
 print(f"Path from {start_node} to {end_node}:", path)
 
-# Nastavení velikosti figury na velikost monitoru
-plt.figure(1, figsize=(8, 8))  # Vytvoření figury na velikost monitoru
+# Set the figure size
+plt.figure(1, figsize=(8, 8))
 
 # First, plot the graph
 SP.plot_graph(C)
 
 # Plot the starting and ending nodes as larger red dots
-if start_node and start_node in C:
-    start_x, start_y = C[start_node]
-    plt.plot(start_x, start_y, 'ro', markersize=8)  # Larger red dot for the start node
+SP.plot_red_nodes({start_node, end_node}, C)
 
-if end_node and end_node in C:
-    end_x, end_y = C[end_node]
-    plt.plot(end_x, end_y, 'ro', markersize=8)  # Larger red dot for the end node
-
-# Then, plot the shortest path if it exists
+# If path exist then, plot the shortest path if it exists
 if path:
-    SP.plot_path(path, C)  # This will plot the path using the 'path' and the 'C' coordinates
+    SP.plot_path(path, C)
 
 # Plot the municipality names in black with small font, white halo, and thin black text
 SP.plot_node_names(municipalities)
 
-# Set title and show the plot
+# Set title, axis and show the plot
 plt.title(f"Shortest Path from {start_node_name} to {end_node_name}")
-plt.gca().set_aspect('equal', adjustable='box')  # Equal aspect ratio for X and Y axes
-plt.show()
+plt.gca().set_aspect('equal', adjustable='box')
+plt.show(block=False)
 
 # Dijkstra's algorithm
 p, d = SP.dijkstra(start_node, end_node)
-print(f"Shortest path from {start_node} to 2: {p} with distance {d}")
+print(f"Shortest path using Dijkstra's algorithm from {start_node} to {p} with cost {d}")
 
 # Belman-Ford's algorithm
 p, d = SP.bellman_ford(start_node, end_node)
-print(f"Shortest path from {start_node} to 2: {p} with distance {d}")
+print(f"Shortest path using Belman-Ford's algorithm from {start_node} to {p} with cost {d}")
 
-# Minimum spanning tree (Prim or Borůvka)
-mst, weight = SP.prim()  # Prim's algorithm
-print("Prim's MST:", mst, "with weight:", weight)
+# Minimum spanning tree Prim's algorithm
+mst_p, weight_p = SP.prim()
+print("Prim's MST:", mst_p, "with weight:", weight_p)
 
-mst_b, weight_b = SP.boruvka()  # Borůvka's algorithm
-print("Borůvka's MST:", mst_b, "with weight:", weight_b)
+# Plot the graph
+plt.figure(2, figsize=(8, 8))
 
-# # Plot the graph
-# plt.figure(figsize=(12, 12))
+# First, plot the graph
+SP.plot_graph(C)
 
-# # Plot the graph edges
-# for node, neighbors in G.items():
-#     if node in C:
-#         x, y = C[node]
-#         for neighbor in neighbors:
-#             if neighbor in C:
-#                 nx, ny = C[neighbor]
-#                 plt.plot([x, nx], [y, ny], 'b-', alpha=0.5)
-
-# # Plot the municipalities
-# for municipality, (x, y) in municipalities.items():
-#     plt.plot(x, y, 'ro')
-#     plt.text(x, y, municipality, fontsize=9, ha='right')
+# Plot the municipality names in black with small font, white halo, and thin black text
+SP.plot_node_names(municipalities)
 
 # SP.plot_path(path, C)
-# SP.plot_mst(C, mst)
+SP.plot_mst(C, mst_p)
 
-# plt.title("Graph Representation of the Road Network with Municipalities")
-# plt.show()
+# Set title, axis and show the plot
+plt.title("MST according to Prim's algorithm")
+plt.gca().set_aspect('equal', adjustable='box')
+plt.show(block=False)
+
+# Minimum spanning tree Borůvka's algorithm
+mst_b, weight_b = SP.boruvka() 
+print("Borůvka's MST:", mst_b, "with weight:", weight_b)
+
+# Plot the graph
+plt.figure(3, figsize=(8, 8))
+
+# First, plot the graph
+SP.plot_graph(C)
+
+# Plot the municipality names in black with small font, white halo, and thin black text
+SP.plot_node_names(municipalities)
+
+# SP.plot_path(path, C)
+SP.plot_mst(C, mst_b)
+
+# Set title, axis and show the plot
+plt.title("MST according to Borůvka's algorithm")
+plt.gca().set_aspect('equal', adjustable='box')  # Equal aspect ratio for X and Y axes
+plt.show()

@@ -98,7 +98,7 @@ class MST:
         # return the minimum spanning tree (T) and its total weight (wt)
         return T, wt
     
-    def plot_mst(self,C:dict, T:list, line:str = 'b-') -> None:
+    def plot_mst(self,C:dict, T:list, line:str = 'r-') -> None:
         """
         Plot the Minimum Spanning Tree (MST) on a 2D graph.
 

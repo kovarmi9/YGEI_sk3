@@ -172,16 +172,43 @@ class GraphPathFinder(ShortestPath,MST):
 
         plt.plot(x_coords, y_coords, line, lw=1)
 
-    def plot_node_names(self, municipalities: dict) -> None:
-        for municipality, (x, y) in municipalities.items():
-            plt.plot(x, y, 'ko', markersize=2)  # Black dots for municipalities
+    def plot_node_names(self, node_names: dict) -> None:
+        """
+        Plot node names on the graph.
+
+        Parameters:
+            node_names (dict): A dictionary mapping node names to their (x, y) coordinates.
+
+        Returns:
+            None
+        """
+        for node, (x, y) in node_names.items():
+            plt.plot(x, y, 'ko', markersize=2)  # Black dots for node_names
 
             # Plot white text as a halo with offsets
             for dx, dy in [(-10, 100), (10, 100), (0, 90), (0, 110), (-10, 90), (10, 110), (-10, 110), (10, 90)]:
-                plt.text(x + dx, y + dy, municipality, fontsize=7, ha='center', color='white', weight='light')
+                plt.text(x + dx, y + dy, node, fontsize=7, ha='center', color='white', weight='light')
 
                 # Plot black text over the white halo
-                plt.text(x, y + 100, municipality, fontsize=7, ha='center', color='black', weight='light')
+                plt.text(x, y + 100, node, fontsize=7, ha='center', color='black', weight='light')
+
+
+    def plot_red_nodes(self, nodes: list, C: dict, size: int = 8) -> None:
+        """
+        Plot specified nodes as larger red dots on the graph.
+
+        Parameters:
+            nodes (list): List of node IDs to be plotted as red dots.
+            C (dict): A dictionary mapping node IDs to their (x, y) coordinates.
+            size (int): Size of the red dots. Default is 8.
+
+        Returns:
+            None
+        """
+        for node in nodes:
+            if node in C:
+                x, y = C[node]
+                plt.plot(x, y, 'ro', markersize=size)  # Red dot for each specified node
 
     
     def rec_path(self, start:int, target:int, P:list) ->list:
