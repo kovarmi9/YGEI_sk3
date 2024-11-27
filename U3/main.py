@@ -55,37 +55,11 @@ print("All shortest paths:", all_paths)
 path = SP.rec_path(start_node, end_node, SP.BFS(start_node))
 print(f"Path from {start_node} to {end_node}:", path)
 
-# # First, plot the graph
-# SP.plot_graph(C)
+# Nastavení velikosti figury na velikost monitoru
+plt.figure(1, figsize=(8, 8))  # Vytvoření figury na velikost monitoru
 
-# # Then, plot the shortest path if it exists
-# if path:
-#     SP.plot_path(path, C)  # This will plot the path using the 'path' and the 'C' coordinates
-
-# # Optionally, plot municipalities as black points
-# for municipality, (x, y) in municipalities.items():
-#     plt.plot(x, y, 'ko')
-#     plt.text(x, y, municipality, fontsize=9, ha='right')
-
-# # Set title and show the plot
-# plt.title(f"Shortest Path from {start_node} to {end_node}")
-# plt.show()
-
-# Set the figure size for the graph (maximized to full screen)
-plt.figure(figsize=(18, 18))  # Maximized graph to full screen
-
-# Plot all edges in blue
-for node, neighbors in G.items():
-    if node in C:
-        x, y = C[node]
-        for neighbor in neighbors:
-            if neighbor in C:
-                nx, ny = C[neighbor]
-                plt.plot([x, nx], [y, ny], 'b-', alpha=0.5)  # Blue edges
-
-# Plot all nodes as small blue dots
-for node, (x, y) in C.items():
-    plt.plot(x, y, 'bo', markersize=2)  # Small blue dots for nodes
+# First, plot the graph
+SP.plot_graph(C)
 
 # Plot the starting and ending nodes as larger red dots
 if start_node and start_node in C:
@@ -96,29 +70,16 @@ if end_node and end_node in C:
     end_x, end_y = C[end_node]
     plt.plot(end_x, end_y, 'ro', markersize=8)  # Larger red dot for the end node
 
-# Plot the found path in red
+# Then, plot the shortest path if it exists
 if path:
-    for i in range(len(path) - 1):
-        x1, y1 = C[path[i]]
-        x2, y2 = C[path[i + 1]]
-        plt.plot([x1, x2], [y1, y2], 'r-', linewidth=3)  # Red path
+    SP.plot_path(path, C)  # This will plot the path using the 'path' and the 'C' coordinates
 
 # Plot the municipality names in black with small font, white halo, and thin black text
-for municipality, (x, y) in municipalities.items():
-    plt.plot(x, y, 'ko')  # Black dots for municipalities
-    
-    # Plot white text as a halo with offsets
-    for dx, dy in [(-0.1, 0), (0.1, 0), (0, -0.1), (0, 0.1), (-0.1, -0.1), (0.1, 0.1), (-0.1, 0.1), (0.1, -0.1)]:
-        plt.text(x + dx, y + dy, municipality, fontsize=7, ha='center', color='white', weight='bold')
+SP.plot_node_names(municipalities)
 
-    # Plot black text over the white halo
-    plt.text(x, y, municipality, fontsize=7, ha='center', color='black', weight='light')
-
-# Set the aspect ratio of the axes to be equal
-plt.gca().set_aspect('equal', adjustable='box')  # Equal aspect ratio for X and Y axes
-
-# Set the title and display the graph
+# Set title and show the plot
 plt.title(f"Shortest Path from {start_node_name} to {end_node_name}")
+plt.gca().set_aspect('equal', adjustable='box')  # Equal aspect ratio for X and Y axes
 plt.show()
 
 # Dijkstra's algorithm

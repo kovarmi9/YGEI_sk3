@@ -121,7 +121,7 @@ class GraphPathFinder(ShortestPath,MST):
         return paths
     
 
-    def plot_graph(self, C:dict, points: str = 'red', line: str = 'k-') -> None:
+    def plot_graph(self, C:dict, points: str = 'blue', line: str = 'b-', point_size: int = 2) -> None:
         """
         Plots a graph based on the given data.
 
@@ -134,10 +134,10 @@ class GraphPathFinder(ShortestPath,MST):
             None
         """
         # Plot the nodes
-        plt.figure(figsize=(8, 6))
+        # plt.figure(figsize=(8, 6))
         for node, (x, y) in C.items():
-            plt.scatter(x, y, color=points)
-            plt.text(x+5, y, str(node), fontsize=12, ha='left')
+            plt.scatter(x, y, color=points, s=point_size)
+            plt.text(x+5, y, str(node), fontsize=5, ha='left')
 
         # Plot the edges
         for node, neighbors in self.G.items():
@@ -171,6 +171,18 @@ class GraphPathFinder(ShortestPath,MST):
             y_coords.append(y)
 
         plt.plot(x_coords, y_coords, line, lw=1)
+
+    def plot_node_names(self, municipalities: dict) -> None:
+        for municipality, (x, y) in municipalities.items():
+            plt.plot(x, y, 'ko', markersize=2)  # Black dots for municipalities
+
+            # Plot white text as a halo with offsets
+            for dx, dy in [(-10, 100), (10, 100), (0, 90), (0, 110), (-10, 90), (10, 110), (-10, 110), (10, 90)]:
+                plt.text(x + dx, y + dy, municipality, fontsize=7, ha='center', color='white', weight='light')
+
+                # Plot black text over the white halo
+                plt.text(x, y + 100, municipality, fontsize=7, ha='center', color='black', weight='light')
+
     
     def rec_path(self, start:int, target:int, P:list) ->list:
         """
