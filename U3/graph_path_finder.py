@@ -127,8 +127,8 @@ class GraphPathFinder(ShortestPath,MST):
 
         Parameters:
             C (dict): A dictionary containing coordinates.
-            points (str): The color or style of the points. Default is 'red'.
-            line (str): The color or style of the line. Default is 'k-'.
+            points (str): The color or style of the points. Default is 'blue'.
+            line (str): The color or style of the line. Default is 'b-'.
 
         Returns:
             None
