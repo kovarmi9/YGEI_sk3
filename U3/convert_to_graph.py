@@ -15,6 +15,10 @@ plt.figure(figsize=(10, 10))
 roads.plot(color='blue', linewidth=0.5)
 municipalities.plot(ax=plt.gca(), color='red', markersize=10)  # Plot municipalities in red
 plt.title("Road Network with Municipalities")
+plt.xlabel("Y-axis")
+plt.ylabel("X-axis")
+plt.grid(True)
+#plt.savefig('road_network_with_municipalities.eps', format='eps')
 plt.show()
 
 def calculate_curvature(row):
@@ -61,7 +65,7 @@ def create_graph_file(roads, cost_column, output_file, default_cost=None):
                     file.write(f"{start[0]} {start[1]} {end[0]} {end[1]} {cost}\n")
 
 # Map road classes (speed limits based on road classification)
-speed_mapping = {1: 130, 2: 110, 3: 90, 4: 70, 5: 50}
+speed_mapping = {1: 130, 2: 110, 3: 90, 4: 70, 5: 50,  6: 30}
 
 # Add calculated columns
 roads['length'] = roads['geometry'].length
