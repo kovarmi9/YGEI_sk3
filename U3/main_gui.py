@@ -4,7 +4,7 @@ from matplotlib import pyplot as plt
 from graph_reader import read_graph, read_nodes_names  # Import graph loading functions
 from graph_path_finder import GraphPathFinder  # Class for working with paths
 
-# Path to the graph file (with weights or uncosted)
+# Path to the graph file (with costs or uncosted)
 file = './U3/data/graph_uncosted.txt'
 
 # Path to the municipality file
