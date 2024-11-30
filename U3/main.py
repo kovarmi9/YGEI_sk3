@@ -95,7 +95,7 @@ mst_p, weight_p = SP.prim()
 print(f"Prim's Minimum Spanning Tree: {mst_p} with total weight: {weight_p}")
 
 # Plot the graph
-plt.figure(2, figsize=(8, 8))
+plt.figure(2, figsize=(10, 10))
 
 # First, plot the graph
 SP.plot_graph(C)
