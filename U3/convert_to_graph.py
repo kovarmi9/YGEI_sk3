@@ -1,3 +1,25 @@
+"""
+This script processes geographic data of roads and municipalities, and generates graph representations with weighted edges.
+
+Inputs:
+- GeoPackage files containing road and municipality data ('roads.gpkg', 'municipalities.gpkg').
+
+Outputs:
+- A visualization of the road network with municipalities.
+- Text files containing graph representations with weighted edges:
+  - 'graph_length_weight.txt' (weight based on road length)
+  - 'graph_weight_curvature.txt' (weight based on road curvature)
+  - 'graph_speed_weight.txt' (weight based on road design speed)
+- A text file ('municipalities_nearest_nodes.txt') containing the nearest road node coordinates for each municipality.
+
+Dependencies:
+- GeoPandas
+- Shapely
+- Matplotlib
+
+"""
+
+# imports
 import geopandas as gpd
 from shapely.geometry import Point, LineString, MultiLineString
 from matplotlib import pyplot as plt
@@ -11,14 +33,14 @@ roads = gpd.read_file(roads_path)
 municipalities = gpd.read_file(municipalities_path)
 
 # Plot the road network and municipalities
-plt.figure(figsize=(10, 10))
+plt.figure(1, figsize=(10, 10))
 roads.plot(color='blue', linewidth=0.5)
 municipalities.plot(ax=plt.gca(), color='red', markersize=10)  # Plot municipalities in red
 plt.title("Road Network with Municipalities")
 plt.xlabel("Y-axis")
 plt.ylabel("X-axis")
 plt.grid(True)
-#plt.savefig('road_network_with_municipalities.eps', format='eps')
+# plt.savefig('road_network_with_municipalities.eps', format='eps')
 plt.show()
 
 def calculate_curvature(row):
@@ -39,30 +61,30 @@ def calculate_curvature(row):
     # Return the curvature (ratio of total length to straight-line distance)
     return total_length / straight_distance
 
-def create_graph_file(roads, cost_column, output_file, default_cost=None):
+def create_graph_file(roads, weight_column, output_file, default_weight=None):
     """
-    Create a graph file with costed or uncosted edges.
+    Create a graph file with weighted or unweighted edges.
     """
     with open(output_file, 'w') as file:
         for _, row in roads.iterrows():
             geometry = row.geometry
-            if default_cost is not None:
-                cost = default_cost
+            if default_weight is not None:
+                weight = default_weight
             else:
-                cost = row[cost_column]
+                weight = row[weight_column]
             # Check if the geometry is a MultiLineString
             if isinstance(geometry, MultiLineString):
                 # For MultiLineString, use the start point of the first LineString and the end point of the last LineString
                 start_coords = list(geometry.geoms[0].coords)[0]  # First point of the first LineString
                 end_coords = list(geometry.geoms[-1].coords)[-1]  # Last point of the last LineString
-                file.write(f"{start_coords[0]} {start_coords[1]} {end_coords[0]} {end_coords[1]} {cost}\n")
+                file.write(f"{start_coords[0]} {start_coords[1]} {end_coords[0]} {end_coords[1]} {weight}\n")
             elif isinstance(geometry, LineString):
                 # For LineString, create edges between every two consecutive points
                 coords = list(geometry.coords)
                 for i in range(len(coords) - 1):
                     start = coords[i]
                     end = coords[i + 1]
-                    file.write(f"{start[0]} {start[1]} {end[0]} {end[1]} {cost}\n")
+                    file.write(f"{start[0]} {start[1]} {end[0]} {end[1]} {weight}\n")
 
 # Map road classes (speed limits based on road classification)
 speed_mapping = {1: 130, 2: 110, 3: 90, 4: 70, 5: 50,  6: 30}
@@ -71,8 +93,8 @@ speed_mapping = {1: 130, 2: 110, 3: 90, 4: 70, 5: 50,  6: 30}
 roads['length'] = roads['geometry'].length
 roads['design_speed'] = roads['TRIDA'].map(speed_mapping)
 roads['curvature'] = roads.apply(calculate_curvature, axis=1)
-roads['length_cost'] = 1 / roads['length']
-roads['speed_cost'] = 1 / roads['design_speed']
+roads['length_weight'] = 1 / roads['length']
+roads['speed_weight'] = 1 / roads['design_speed']
 
 # Function to extract nodes (start and end points) from MultiLineString
 def extract_nodes_from_multilinestring(geometry):
@@ -136,12 +158,12 @@ with open(output_file_path, 'w') as file:
         file.write(f"{name},{nearest_node.x},{nearest_node.y}\n")
 
 # Export of road graphs
-create_graph_file(roads, 'length_cost', 'data/graph_length_cost.txt')  # Cost based on length
-create_graph_file(roads, 'curvature', 'data/graph_curvature.txt')      # Cost based on curvature
-create_graph_file(roads, 'speed_cost', 'data/graph_speed_cost.txt')    # Cost based on speed
-create_graph_file(roads, None, 'data/graph_uncosted.txt', default_cost=1)  # Unweighted graph with cost = 1
+create_graph_file(roads, 'length_weight', 'data/graph_length_weight.txt')  # Weight based on length
+create_graph_file(roads, 'curvature', 'data/graph_curvature_weight.txt')  # Weight based on curvature
+create_graph_file(roads, 'speed_weight', 'data/graph_speed_weight.txt')   # Weight based on speed
+create_graph_file(roads, None, 'data/graph_unweighted.txt', default_weight=1)  # Unweighted graph with weight = 1
 
 # Output summary
-print(roads[['geometry', 'curvature', 'length_cost', 'speed_cost']].head())
-print("Graph files with cost-based edges have been successfully created.")
+print(roads[['geometry', 'curvature', 'length_weight', 'speed_weight']].head())
+print("Graph files with weight-based edges have been successfully created.")
 print("Nearest nodes of municipalities have been successfully written to the text file.")
