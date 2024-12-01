@@ -56,7 +56,12 @@ while N < N_max
     for j = 1:k
         cluster_points = M(L == j, :);
         
-        S_new(j, :) = mean(cluster_points, 1);
+        if isempty(cluster_points)
+            % If a centroid has no points assigned, reinitialize it randomly
+            S_new(j, :) = Min + (Max - Min) .* rand(1, 2);
+        else
+            S_new(j, :) = mean(cluster_points, 1);
+        end
     end
 
     % Plot the previous and new centroids
