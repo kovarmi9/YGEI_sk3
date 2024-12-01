@@ -1,0 +1,150 @@
+\section{Metody třídy MST} \label{AppenB}
+\begin{algorithm}
+    \setstretch{0.8}
+    \caption{Metoda \texttt{prim}}
+    \begin{algorithmic}[1]
+        \STATE \textbf{Vstup:} graf $G$
+        \STATE \textbf{Výstup:} seznam hran $(\text{start}, \text{end}, \text{weight})$ $T$, celkové ohodnocení $wt$
+        
+        \STATE $n \gets$ počet uzlů v grafu $G$
+        \STATE $v \gets [0] \times (n+1)$
+        \STATE $pq \gets$ prioritní fronta 
+        \STATE $wt \gets 0$ 
+        \STATE $T \gets [~]$ 
+
+        \STATE \textbf{Inicializace:}
+        \STATE $start\_node \gets$ libovolný uzel z $G$ 
+        
+        \FOR{každého souseda $neighbor$ a ohodnocení $weight$ uzlu $start\_node$}
+            \STATE Přidej hranu $(weight, start\_node, neighbor)$ do $pq$
+        \ENDFOR
+
+        \STATE $v[start\_node] \gets 1$
+
+        \WHILE{$pq$ není prázdná}
+            \STATE $(weight, from\_node, to\_node) \gets pq.get()$
+            
+            \IF{$v[to\_node] = 0$}
+                \STATE $v[to\_node] \gets 1$
+                \STATE Přidej hranu $(from\_node, to\_node, weight)$ do $T$
+                \STATE $wt \gets wt + weight$ 
+
+                \FOR{každého souseda $neighbor$ a ohodnocení $edge\_weight$ uzlu $to\_node$}
+                    \IF{$v[neighbor] = 0$}
+                        \STATE Přidej hranu $(edge\_weight, to\_node, neighbor)$ do $pq$
+                    \ENDIF
+                \ENDFOR
+            \ENDIF
+        \ENDWHILE
+
+        \STATE \textbf{return} $T$, $wt$
+    \end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}
+    \setstretch{0.8}
+    \caption{Metoda \texttt{boruvka}}
+    \begin{algorithmic}[1]
+        \STATE \textbf{Vstup:} graf $G$
+        \STATE \textbf{Výstup:} seznam hran $(\text{start}, \text{end}, \text{weight})$ $T$, celková ohodnocení $wt$
+
+        \STATE $V, E \gets$ seznam vrcholů a hran z grafu $G$
+        \STATE $T \gets [~]$
+        \STATE $wt \gets 0$
+        \STATE $n \gets |V|$ 
+        \STATE $P \gets [-1] \times (n+1)$
+        \STATE $r \gets [0] \times (n+1)$
+
+        \STATE \textbf{Inicializace:}
+        \FOR{každý vrchol $v \in V$}
+            \STATE $P[v] \gets v$
+        \ENDFOR
+
+        \STATE $ES \gets$ hrany $E$ setříděné podle ohodnocení (vzestupně)
+
+        \FOR{každou hranu $(u, v, w) \in ES$}
+            \IF{$\textbf{find}(u, P) \neq \textbf{find}(v, P)$} 
+                \STATE $(P, r) \gets \textbf{weighted\_union}(u, v, P, r)$ 
+                \STATE Přidej $(u, v, w)$ do $T$ 
+                \STATE $wt \gets wt + w$
+            \ENDIF
+        \ENDFOR
+
+        \STATE \textbf{return} $T$, $wt$
+    \end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}
+    \setstretch{0.8}
+    \caption{Metoda \texttt{plot\_mst}}
+    \begin{algorithmic}[1]
+        \STATE \textbf{Vstup:} seznam hran $(\text{start}, \text{end}, \text{weight})$ $T$, souřadnice uzlů $C$, styl linie $line$
+
+        \STATE $x\_edges \gets [~]$
+        \STATE $y\_edges \gets [~]$
+
+        \FOR{$(\text{start}, \text{end}, \text{weight})$ v $T$}
+            \STATE $x\_edges.\text{extend}([C[\text{start}][0], C[\text{end}][0], \text{None}])$ 
+            \STATE $y\_edges.\text{extend}([C[\text{start}][1], C[\text{end}][1], \text{None}])$ 
+        \ENDFOR
+
+        \STATE \textbf{Vykreslení hran:}
+        \STATE $\text{plt.plot}(x\_edges, y\_edges, \text{line}, \text{lw}=1)$
+
+        \STATE \textbf{Přidání mřížky a nastavení os:}
+        \STATE $\text{plt.grid}(\text{True})$ 
+        \STATE $\text{plt.axis}(\text{equal})$
+    \end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}
+    \setstretch{0.8}
+    \caption{Metoda \texttt{\_find}}
+    \begin{algorithmic}[1]
+        \STATE \textbf{Vstup:} uzel $u$, pole rodičů $P$
+        \STATE \textbf{Výstup:} kořen množiny obsahující $u$
+
+        \STATE $v \gets u$ 
+        \STATE \textbf{Najdi kořen:}
+        \WHILE{$P[u] \neq u$} 
+            \STATE $u \gets P[u]$ 
+        \ENDWHILE
+
+        \STATE $root \gets u$
+
+        \STATE \textbf{Kompresní fáze:}
+        \WHILE{$v \neq root$} 
+            \STATE $up \gets P[v]$ 
+            \STATE $P[v] \gets root$ 
+            \STATE $v \gets up$ 
+        \ENDWHILE
+
+        \STATE \textbf{return} $root$ 
+    \end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}
+    \setstretch{0.8}
+    \caption{Metoda \texttt{\_weighted\_union}}
+    \begin{algorithmic}[1]
+        \STATE \textbf{Vstup:} uzly $u$, $v$, pole rodičů $P$, pole hodností $r$
+        \STATE \textbf{Výstup:} aktualizovaná pole rodičů $P$ a hodností $r$
+
+        \STATE $root_u \gets \textbf{find}(u, P)$ 
+        \STATE $root_v \gets \textbf{find}(v, P)$ 
+
+        \IF{$root_u \neq root_v$} 
+            \IF{$r[root_u] > r[root_v]$} 
+                \STATE $P[root_v] \gets root_u$ 
+            \ELSIF{$r[root_v] > r[root_u]$} 
+                \STATE $P[root_u] \gets root_v$ 
+            \ELSE 
+                \STATE $P[root_u] \gets root_v$ 
+                \STATE $r[root_v] \gets r[root_v] + 1$ 
+            \ENDIF
+        \ENDIF
+
+        \STATE \textbf{return} $P$, $r$ 
+    \end{algorithmic}
+\end{algorithm}
+

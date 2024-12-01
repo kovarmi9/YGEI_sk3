@@ -1,0 +1,97 @@
+\section{Metody třídy ShortestPath} \label{AppenA}
+
+
+% First algorithm
+\begin{algorithm}
+    \setstretch{0.9}
+    \caption{Metoda \texttt{shortest\_cost\_path}}
+    \begin{algorithmic}[1]
+        \STATE \textbf{Vstup:} graf $G$, startovní uzel $A$, koncový uzel $B$
+        \STATE \textbf{Výstup:} seznam předchůdců $p$, celková ohodnocení cesty $d[B]$
+        \IF{$A = B$}
+            \STATE \textbf{return} $p$, $d$
+        \ENDIF
+        \IF{Pokud graf má zápornou hranu}
+            \STATE použij metodu \texttt{bellman\_ford}($G$,$A$,$B$)
+        \ELSE
+            \STATE použij metodu \texttt{dijkstra}($G$,$A$,$B$)
+        \ENDIF
+        \STATE \textbf{return} $p$, $d$
+    \end{algorithmic}
+\end{algorithm}
+
+% Second algorithm
+\begin{algorithm}
+    \setstretch{0.9}
+    \caption{Metoda \texttt{dijkstra}}
+    \begin{algorithmic}[1]
+        \STATE \textbf{Vstup:} graf $G$, startovní uzel $A$, koncový uzel $B$
+        \STATE \textbf{Výstup:} seznam předchůdců $p$, celkové ohodnocení cesty $d[B]$
+        \IF{$A = B$}
+            \STATE \textbf{return} $p$, $d[B]$
+        \ENDIF
+        \STATE \textbf{Inicializace:}
+        \STATE \quad $p \gets$ prázdný seznam předchůdců
+        \STATE \quad $d \gets$ seznam vzdáleností, každý prvek nastaven na $\infty$
+        \STATE \quad $PQ \gets$ prioritní fronta
+        \STATE do $PQ$ přidán uzel $A$ s ohodnocením $0$
+        \STATE $d[A] \gets 0$
+        \WHILE{$PQ$ není prázdná}
+            \STATE \textbf{Získání uzlu} $u \gets$ uzel s nejmenším ohodnocením z $PQ$
+            \STATE \textbf{Odstranění} $u$ z $PQ$
+            \IF{$d[u] < \text{ohodnocení uzlu $u$}$} 
+                \STATE \textbf{pokračuj}
+            \ENDIF
+            \IF{$u = B$}
+                \STATE \textbf{ukonči cyklus}
+            \ENDIF
+            \FOR{každého souseda $v$ uzlu $u$}
+                \STATE $w_{uv} \gets$ ohodnocení hrany mezi $u$ a $v$
+                \IF{$d[u] + w_{uv} < d[v]$}
+                    \STATE $d[v] \gets d[u] + w_{uv}$
+                    \STATE $p[v] \gets u$
+                    \STATE do $PQ$ přidán $v$ s ohodnocením $d[v]$
+                \ENDIF
+            \ENDFOR
+        \ENDWHILE
+        \STATE \textbf{return} $p$, $d[B]$
+    \end{algorithmic}
+\end{algorithm}
+
+\newpage
+
+% Third algorithm
+\begin{algorithm}
+    \setstretch{0.9}
+    \caption{Metoda \texttt{bellman\_ford}}
+    \begin{algorithmic}[1]
+        \STATE \textbf{Vstup:} graf $G$, startovní uzel $A$, koncový uzel $B$
+        \STATE \textbf{Výstup:} seznam předchůdců $p$, vzdálenost k cílovému uzlu $d[B]$
+        \IF{$A = B$}
+            \STATE \textbf{return} $[-1]$, 0 
+        \ENDIF
+        \STATE $n \gets \text{počet uzlů v grafu}$ 
+        \STATE $d \gets [\infty] \times (n+1)$ 
+        \STATE $p \gets [-1] \times (n+1)$ 
+        \STATE $d[A] \gets 0$
+        \FOR{$i = 1$ \textbf{to} $n-1$} 
+            \FOR{každý uzel $u$ v grafu $G$}
+                \FOR{každý soused $v$ a ohodnocení hrany mezi $u$ a $v$}
+                    \IF{$d[u] \neq \infty$ a $d[u] + \text{ohodnocení} < d[v]$} 
+                        \STATE $d[v] \gets d[u] + \text{ohodnocení}$
+                        \STATE $p[v] \gets u$
+                    \ENDIF
+                \ENDFOR
+            \ENDFOR
+        \ENDFOR
+        \STATE \textbf{Kontrola negativních cyklů:}
+        \FOR{každý uzel $u$ v grafu $G$}
+            \FOR{každý soused $v$ a ohodnocení hrany mezi $u$ a $v$}
+                \IF{$d[u] \neq \infty$ a $d[u] + \text{ohodnocení} < d[v]$} 
+                    \STATE \textbf{raise} \texttt{ValueError("Negative cycle detected in the graph")}
+                \ENDIF
+            \ENDFOR
+        \ENDFOR
+        \STATE \textbf{return} $p$, $d[B]$
+    \end{algorithmic}
+\end{algorithm}

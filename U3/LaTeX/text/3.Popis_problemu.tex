@@ -1,0 +1,30 @@
+\section{Popis problému}
+
+Graf je matematická datová struktura popisující vztahy mezi objekty. Skládá se z množiny uzlů (\texttt{U}) a množiny hran (\texttt{H}), které spojují dvojice uzlů. Graf slouží jako topologický model reality, kde je prostorová informace méně důležitá než vzájemné vztahy mezi jednotlivými prvky. Grafy nacházejí široké uplatnění v různých oblastech, jako je analýza dopravních sítí, řešení logistických problémů, optimalizace tras, plánování, navigace, zajištění propustnosti sítí a další \cite{geoinf8}\cite{geoinf9}.
+
+\subsection{Typy grafů podle orientace hran}
+Grafy lze rozdělit podle orientace hran na následující typy:
+\begin{itemize}
+    \item \textbf{Neorientované grafy}: Hrany nemají směr. Jestliže existuje hrana mezi uzly \texttt{A} a \texttt{B}, vztah mezi těmito uzly je symetrický a nezáleží na jejich pořadí\cite{geoinf8}.
+    
+    \item \textbf{Orientované grafy}: Každá hrana má definovaný směr, což znamená, že spojuje dvojici uzlů v určitém pořadí. Pokud existuje například hrana z uzlu \texttt{A} do uzlu \texttt{B}, nevyplývá z toho existence hrany v opačném směru\cite{geoinf8}.
+    
+    \item \textbf{Částečně orientované grafy}: Tyto grafy kombinují vlastnosti orientovaných a neorientovaných grafů. Některé hrany mohou být orientované, zatímco jiné zůstávají neorientované\cite{geoinf8}.
+\end{itemize}
+
+\subsection{Typy grafů podle ohodnocení hran}
+Grafy se dále rozlišují na základě ohodnocení hran, které vyjadřuje jejich „náročnost” na průchod:
+\begin{itemize}
+    \item \textbf{Neohodnocené grafy}: Všechny hrany mají stejné ohodnocení (například jednotkové).
+    
+    \item \textbf{Ohodnocené grafy}: Hrany mají přiřazeny různé ohodnocení, které mohou reprezentovat například vzdálenost, časovou náročnost, energetickou spotřebu nebo jiné charakteristiky.
+\end{itemize}
+
+\subsection{Typické problémy řešené na grafech}
+Grafy poskytují základ pro řešení mnoha úloh, mezi nejčastější patří:
+\begin{enumerate}
+    \item \textbf{Hledání nejkratší cesty}: Cílem je nalézt cestu, která minimalizuje součet ohodnocení hran na této cestě \cite{geoinf9}.
+    
+    \item \textbf{Hledání minimální kostry grafu}:  Jedná se o podgraf obsahující všechny uzly původního grafu, který je souvislý, bez kružnic, a jehož součet ohodnocení hran je minimální \cite{geoinf9}.
+\end{enumerate}
+

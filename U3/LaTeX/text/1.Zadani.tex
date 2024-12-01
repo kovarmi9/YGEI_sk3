@@ -1,0 +1,13 @@
+\section{Zadání}
+
+Implementujte Dijkstra algoritmus pro nalezení nejkratší cesty mezi dvěma uzly grafu. Vstupní data budou představována silniční sítí doplněnou vybranými sídly.\\
+Otestujte různé varianty volby ohodnocení hran grafu tak, aby nalezená cesta měla:
+\begin{itemize}
+    \item nejkratší Eukleidovskou vzdálenost,
+    \item nejmenší transportní čas (2 varianty).
+\end{itemize}
+Ve vybranémm GIS konvertujte podkladová data do grafové reprezentace představované neorientovaným grafem. Pro druhou variantu optimální cesty navrhněte vhodnou metriku, která zohledňuje rozdílnou dobu jízdy na různých typech komunikací dle jejich návrhové rychlosti a klikatosti. Využijte např. poměr délky polylinie \({\left\{p_i\right\}}_{i=1}^{n}\) a vzdálenosti koncových bodů polylinie 
+\[
+f = \frac{l(P)}{\left\|{p_1 - p_n}\right\|_2}.
+\]
+Každou z variant otestujte pro dvě různé cesty. Výsledky umístěte do tabulky, vlastní cesty vizualizujte. Dosažené výsledky porovnejte s vybraným navigačním SW.
