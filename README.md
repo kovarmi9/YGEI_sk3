@@ -57,3 +57,4 @@ This folder contains the implementation of algorithms for solving shortest path 
 - Finding the minimum spanning tree using Prim's algorithm
 - Using the weighted union heuristic
 - Using the path compression heuristic
+Class for finding shortest path  [`shortest_path`](https://github.com/kovarmi9/YGEI_sk3/blob/main/U3/shortest_path.py), class for finding minimum spanning tree [`mst`](https://github.com/kovarmi9/YGEI_sk3/blob/main/U3/mst.py) and class that inherits [`shortest_path`](https://github.com/kovarmi9/YGEI_sk3/blob/main/U3/shortest_path.py) and [`mst`](https://github.com/kovarmi9/YGEI_sk3/blob/main/U3/mst.py) into [`graph_path_finder`](https://github.com/kovarmi9/YGEI_sk3/blob/main/U3/graph_path_finder.py)
