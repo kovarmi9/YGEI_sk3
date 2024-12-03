@@ -27,7 +27,7 @@ PS = 0.1;   % Perturbation size for K-means
 clusters_hierar = Clustering.hierar(M, k);
 
 % DBSCAN clustering
-labels_dbscan = Clustering.dbscan(M, epsilon, minPts);
+clusters_dbscan = Clustering.dbscan(M, epsilon, minPts);
 
 %% K-means Visualization
 figure;
@@ -159,21 +159,26 @@ disp(clusters_hierar);
 figure;
 hold on;
 title('DBSCAN Clustering');
-% Create dynamic colors for DBSCAN visualization
-colors = lines(max(labels_dbscan));  % Unique colors for clusters
-for i = 1:max(labels_dbscan)
-    cluster_points = M(labels_dbscan == i, :);
-    if n_dim == 2
-        scatter(cluster_points(:, 1), cluster_points(:, 2), 50, 'Marker', 'x', 'MarkerFaceColor', colors(i, :));
-    elseif n_dim == 3
-        scatter3(cluster_points(:, 1), cluster_points(:, 2), cluster_points(:, 3), 50, 'Marker', 'x', 'MarkerFaceColor', colors(i, :));
+if n_dim == 1
+    for i = 1:length(clusters_dbscan)
+        cluster_points = M(clusters_dbscan{i}, :);
+        scatter(cluster_points, ones(size(cluster_points)), 50, V(i));
     end
-end
-if n_dim == 3
+elseif n_dim == 2
+    for i = 1:length(clusters_dbscan)
+        cluster_points = M(clusters_dbscan{i}, :);
+        scatter(cluster_points(:, 1), cluster_points(:, 2), 50, V(i));
+    end
+    axis equal;
+elseif n_dim == 3
+    for i = 1:length(clusters_dbscan)
+        cluster_points = M(clusters_dbscan{i}, :);
+        scatter3(cluster_points(:, 1), cluster_points(:, 2), cluster_points(:, 3), 50, V(i));
+    end
     view(3);
     rotate3d on;
 end
 hold off;
 disp('DBSCAN completed.');
 disp('Clusters:');
-
+disp(clusters_dbscan);
