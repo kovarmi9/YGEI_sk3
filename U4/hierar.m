@@ -57,13 +57,9 @@ for i = 1:n+1-k
     end
 end
 
-non_empty_clusters = {};
-for i = 1:length(clusters)
-    if ~isempty(clusters{i})
-        non_empty_clusters{end+1} = clusters{i};
-    end
-end
-clusters = non_empty_clusters;  % Replace the original clusters with non-empty ones
+% Selection of non empty clusters
+empty_indices = cellfun("isempty", clusters);
+clusters = clusters(~empty_indices);
 
 % Plot the final clusters
 V = ["rx", "bx", "cx", "mx"];
