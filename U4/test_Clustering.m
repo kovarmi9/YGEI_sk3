@@ -1,6 +1,6 @@
 clc; clear variables; close all; format long g
 
-n_dim = 4;  % Dimension (change to 1, 2, or 3)
+n_dim = 3;  % Dimension (change to 1, 2, or 3)
 
 % Generate points in n_dim dimensions
 A = randn(10, n_dim);
@@ -21,13 +21,13 @@ max_iter = 100;  % Max iterations for K-means
 PS = 0.1;   % Perturbation size for K-means
 
 % K-means clustering
-[S, L] = Clustering.mykmeans(M, k, max_iter, PS);
+[S, L] = Clustering.kmeans(M, k, max_iter, PS);
 
 % Hierarchical clustering
-clusters_hierarchical = Clustering.myhierar(M, k);
+clusters_hierar = Clustering.hierar(M, k);
 
 % DBSCAN clustering
-labels_dbscan = Clustering.mydbscan(M, epsilon, minPts);
+labels_dbscan = Clustering.dbscan(M, epsilon, minPts);
 
 %% K-means Visualization
 figure;
@@ -136,21 +136,24 @@ figure;
 hold on;
 title('Hierarchical Clustering');
 if n_dim == 2
-    for i = 1:length(clusters_hierarchical)
-        cluster_points = M(clusters_hierarchical{i}, :);
+    for i = 1:length(clusters_hierar)
+        cluster_points = M(clusters_hierar{i}, :);
         scatter(cluster_points(:, 1), cluster_points(:, 2), 50, V(i));
     end
     axis equal;
     
 elseif n_dim == 3
-    for i = 1:length(clusters_hierarchical)
-        cluster_points = M(clusters_hierarchical{i}, :);
+    for i = 1:length(clusters_hierar)
+        cluster_points = M(clusters_hierar{i}, :);
         scatter3(cluster_points(:, 1), cluster_points(:, 2), cluster_points(:, 3), 50, V(i));
     end
     view(3);
     rotate3d on;
 end
 hold off;
+disp('hierar completed.');
+disp('Clusters:');
+disp(clusters_hierar);
 
 %% DBSCAN Visualization
 figure;
@@ -171,6 +174,6 @@ if n_dim == 3
     rotate3d on;
 end
 hold off;
+disp('DBSCAN completed.');
+disp('Clusters:');
 
-disp('Clusters from DBSCAN:');
-disp(labels_dbscan);
