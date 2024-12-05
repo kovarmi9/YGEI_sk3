@@ -54,8 +54,8 @@ if n_dim == 2
                 break;
             end
 
-            % Sawe point
-            A = [A; x, y]; %#ok<AGROW>
+            % Save point
+            A = [A; x, y]; %#ok<AGROW> %Turn off the warning message about dimension changes
 
             % Disply new point on plot
             plot(x, y, 'g+', 'MarkerSize', 8, 'LineWidth', 1.5);
@@ -388,13 +388,14 @@ if n_dim < 5
 end
 
 %% Print of results
-
 disp('K-means ');
 disp('Centroids:');
 disp(S);
+
 disp('hierar ');
 disp('Clusters:');
 disp(clusters_hierar);
+
 disp('DBSCAN ');
 disp('Clusters:');
 disp(clusters_dbscan);

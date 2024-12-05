@@ -1,19 +1,32 @@
 classdef Clustering
+    % This class implements these clustering methods:
+    % kmeans
+    % hierar
+    % dbscan
     methods (Static)
         % K-means clustering
         function [S, L] = kmeans(M, k, max_iter, PS)
-            % M: Data points (matrix of size [num_points, n_dim])
-            % k: Number of clusters
-            % max_iter: Maximum number of iterations
-            % PS: Convergence tolerance for centroid movement
+            % kmeans - Perform K-means clustering
+            %
+            % Syntax:
+            %   [S, L] = Clustering.kmeans(M, k, max_iter, PS)
+            %
+            % Inputs:
+            %   M        - Data points (matrix of size [num_points, n_dim])
+            %   k        - Number of clusters.
+            %   max_iter - Maximum number of iterations.
+            %   PS       - Convergence tolerance for centroid movement.
+            %
+            % Outputs:
+            %   S        - Final centroid positions (matrix of size [k, n_dim])
+            %   L        - Cluster assignment for each data point (vector of size [num_points, 1])
             
-            % Range of the points
-            Max = max(M);
-            Min = min(M);
+            % Determine the range of the data points.
+            Max = max(M); % Maximum value for each dimension
+            Min = min(M); % Minimum value for each dimension
 
             % Randomly initialize centroids within the data range
-            r = Min + (Max - Min) .* rand(k, size(M, 2));
-            S = r; % Initial centroids
+            S = Min + (Max - Min) .* rand(k, size(M, 2));
 
             % Start the k-means iteration process
             N = 0; % Iteration counter
@@ -21,12 +34,15 @@ classdef Clustering
 
             % Loop until maximum iterations or convergence
             while N < N_max
-                % Step 1: Assign points to the nearest centroid
-                D = pdist2(M, S);  % Distance matrix between points and centroids
-                [~, L] = min(D, [], 2); % L contains the cluster index for each point
+
+                % Distance matrix between points and centroids
+                D = pdist2(M, S);  
+                
+                % L contains the cluster index for each point
+                [~, L] = min(D, [], 2);
 
                 % Recompute the centroids based on the assigned points
-                S_new = zeros(k, size(M, 2));
+                S_new = zeros(k, size(M, 2));% Initialize a matrix for updated centroids
 
                 for j = 1:k
                     cluster_points = M(L == j, :);
@@ -53,8 +69,17 @@ classdef Clustering
         
         % Hierarchical clustering
         function clusters = hierar(M, k)
-            % M: Data points (matrix of size [num_points, n_dim])
-            % k: Number of clusters
+            % hierar - Perform hierarchical clustering
+            %
+            % Syntax:
+            %   clusters = hierar(M, k)
+            %
+            % Inputs:
+            %   M        - Data points (matrix of size [num_points, n_dim])
+            %   k        - Number of clusters.
+            %
+            % Outputs:
+            %   clusters - Cell array where each cell contains the indices of points in a cluster
 
             % Compute the distance matrix
             distance_matrix = pdist2(M, M);
@@ -67,7 +92,7 @@ classdef Clustering
 
             % Clustering
             for i = 1:n+1-k
-                % Minimal value in matrix (excluding infinities)
+                % Minimal value in matrix
                 min_val = min(distance_matrix(:));
 
                 % Indices of minimal elements
@@ -109,10 +134,19 @@ classdef Clustering
 
         % DBSCAN clustering
         function clusters = dbscan(M, epsilon, minPts)
-            % M: Data points (matrix of size [num_points, n_dim])
-            % epsilon: Maximum distance between two points to be considered neighbors
-            % minPts: Minimum number of points to form region
-
+            % dbscan - Perform DBSCAN (Density-Based Spatial Clustering of Applications with Noise)
+            %
+            % Syntax:
+            %   clusters = dbscan(M, epsilon, minPts)
+            %
+            % Inputs:
+            %   M        - Data points (matrix of size [num_points, n_dim])
+            %   epsilon - Maximum distance between two points to be considered neighbors
+            %   minPts - Minimum number of points required to form a dense region (core point)
+            %
+            % Outputs:
+            %   clusters - Cell array where each cell contains the indices of points in a cluster
+           
             % Number of points
             n = size(M, 1);
 
