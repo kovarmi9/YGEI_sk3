@@ -1,88 +1,330 @@
 clc; clear variables; close all; format long g
 
-% Generate points
-A = randn(10,2);
-B = randn(15,2)*1.2 + [13,2];
-C = randn(10,2)*1.2 + [10,15];
-D = randn(10,2)*1.2 + [0,30];
+% Initialize n_dim to a non-valid value
+n_dim = -1;
 
-V = ["rx", "bx", "cx", "mx"];
+% Ask user for the number of dimensions and validate the input
+while true
+    % Ask the user for input
+    n_dim = input('Enter dimension (positive integer): ');
+    
+    % Check if the input is a valid positive integer
+    if isscalar(n_dim) && n_dim == fix(n_dim) && n_dim > 0
+        break; % Exit the loop if the input is valid
+    else
+        fprintf('Invalid input. Please enter a positive integer.\n');
+    end
+end
 
-% Plot the points
-figure;
-plot(A(:,1), A(:,2), V(1), B(:,1), B(:,2), V(2), C(:,1), C(:,2), V(3), D(:,1), D(:,2), V(4));
-hold on;
+% Generate points in n_dim dimensions
+A = randn(10, n_dim);
+B = randn(15, n_dim) * 1.2 + rand(1, n_dim) * 15;
+C = randn(20, n_dim) * 1.2 + rand(1, n_dim) * 20;
+D = randn(25, n_dim) * 1.2 + rand(1, n_dim) * 25;
+
+V = ["rx", "bx", "cx", "mx", "gx", "yx"];  % Cluster visualization markers
 
 % Combine all points into one matrix
 M = [A; B; C; D];
 
-% Number of clusters (k)
-k = 4;
-% Maximum number of iterations for the k-means algorithm
-max_iter = 10;
-% Convergence tolerance for centroid movement
-PS = 0.1;
+% Parameters for clustering
+k = 4;  % Number of clusters for K-means and Hierarchical
+epsilon = 5;  % DBSCAN: maximum distance between points
+minPts = 5;   % DBSCAN: minimum points to form a cluster
+max_iter = 100;  % Max iterations for K-means
+PS = 0.1;   % Perturbation size for K-means
 
-% Range of the points
-Max = max(M);
-Min = min(M);
+% K-means clustering
+[S, L] = Clustering.kmeans(M, k, max_iter, PS);
 
-% Randomly initialize centroids within the data range
-r1 = Min(1) + (Max(1) - Min(1)) .* rand(k, 1);
-r2 = Min(2) + (Max(2) - Min(2)) .* rand(k, 1);
+% Hierarchical clustering
+clusters_hierar = Clustering.hierar(M, k);
 
-r = [r1, r2];
-S = r; % Initial centroids
+% DBSCAN clustering
+clusters_dbscan = Clustering.dbscan(M, epsilon, minPts);
 
-% Plot initial centroids
-plot(r(:,1), r(:,2), 'bx', 'MarkerSize', 8, 'LineWidth', 2);
-
-% Start the k-means iteration process
-N = 0; % Iteration counter
-N_max = max_iter;
-
-% Loop until maximum iterations or convergence
-while N < N_max
-    % Step 1: Assign points to the nearest centroid
-    % Calculate the distance of each point to each centroid
-    D = sqrt((M(:,1) - S(:,1)').^2 + (M(:,2) - S(:,2)').^2);
-    
-    % Find the index of the minimum distance for each point
-    [~, L] = min(D, [], 2);
-    
-    % Step 2: Recompute the centroids based on the assigned points
-    S_new = zeros(k, 2);
-    
-    for j = 1:k
-        cluster_points = M(L == j, :);
-        
-        if isempty(cluster_points)
-            % If a centroid has no points assigned, reinitialize it randomly
-            S_new(j, :) = Min + (Max - Min) .* rand(1, 2);
-        else
-            S_new(j, :) = mean(cluster_points, 1);
+%% Plot of clustering
+if n_dim < 5
+    %% K-means Visualization
+    figure(1);
+    sgtitle('K-means Clustering');
+    if n_dim == 1
+        hold on;
+        for i = 1:k
+            cluster_points = M(L == i, :);
+            scatter(cluster_points, ones(size(cluster_points)), 50, V(i));
         end
-    end
-
-    % Plot the previous and new centroids
-    plot(S(:,1), S(:,2), 'bx', 'MarkerSize', 8, 'LineWidth', 2);
-    plot(S_new(:,1), S_new(:,2), 'gx', 'MarkerSize', 8, 'LineWidth', 2);
+        scatter(S(:, 1), ones(size(S(:, 1))), 100, 'kx', 'LineWidth', 3);
+        xlabel('Value');
+        ylabel('Cluster');
+        hold off;
+        
+    elseif n_dim == 2
+        hold on;
+        for i = 1:k
+            cluster_points = M(L == i, :);
+            scatter(cluster_points(:, 1), cluster_points(:, 2), 50, V(i));
+        end
+        scatter(S(:, 1), S(:, 2), 100, 'kx', 'LineWidth', 3);
+        axis([min(M(:,1))-5, max(M(:,1))+5, min(M(:,2))-5, max(M(:,2))+5]);
+        hold off;
+        
+    elseif n_dim == 3
+        hold on;
+        for i = 1:k
+            cluster_points = M(L == i, :);
+            scatter3(cluster_points(:, 1), cluster_points(:, 2), cluster_points(:, 3), 50, V(i));
+        end
+        scatter3(S(:, 1), S(:, 2), S(:, 3), 100, 'kx', 'LineWidth', 3);
+        view(3);
+        rotate3d on;
+        hold off;
+    elseif n_dim == 4
+        % Cut 1: e1, e2, e3 (ignoring e4)
+        subplot(2, 2, 1);
+        hold on;
+        for i = 1:k
+            cluster_points = M(L == i, :);
+            scatter3(cluster_points(:,1), cluster_points(:,2), cluster_points(:,3), 50, 'Marker', 'x');
+        end
+        scatter3(S(:,1), S(:,2), S(:,3), 100, 'kx', 'LineWidth', 3); % Black centroids
+        title('Cut e1, e2, e3');
+        xlabel('e1');
+        ylabel('e2');
+        zlabel('e3');
+        axis equal;
+        view(3);
+        rotate3d on;
     
-    % Check for convergence by comparing the centroid movement
-    diff = norm(S_new - S);
-    if diff < PS
-        disp('Convergence achieved.');
-        break;
+        % Cut 2: e1, e2, e4 (ignoring e3)
+        subplot(2, 2, 2);
+        hold on;
+        for i = 1:k
+            cluster_points = M(L == i, :);
+            scatter3(cluster_points(:,1), cluster_points(:,2), cluster_points(:,4), 50, 'Marker', 'x');
+        end
+        scatter3(S(:,1), S(:,2), S(:,4), 100, 'kx', 'LineWidth', 3); % Black centroids
+        title('Cut e1, e2, e4');
+        xlabel('e1');
+        ylabel('e2');
+        zlabel('e4');
+        axis equal;
+        view(3);
+        rotate3d on;
+    
+        % Cut 3: e1, e3, e4 (ignoring e2)
+        subplot(2, 2, 3);
+        hold on;
+        for i = 1:k
+            cluster_points = M(L == i, :);
+            scatter3(cluster_points(:,1), cluster_points(:,3), cluster_points(:,4), 50, 'Marker', 'x');
+        end
+        scatter3(S(:,1), S(:,3), S(:,4), 100, 'kx', 'LineWidth', 3);
+        title('Cut e1, e3, e4');
+        xlabel('e1');
+        ylabel('e3');
+        zlabel('e4');
+        axis equal;
+        view(3);
+        rotate3d on;
+    
+        % Cut 4: e2, e3, e4 (ignoring e1)
+        subplot(2, 2, 4);
+        hold on;
+        for i = 1:k
+            cluster_points = M(L == i, :);
+            scatter3(cluster_points(:,2), cluster_points(:,3), cluster_points(:,4), 50, 'Marker', 'x');
+        end
+        scatter3(S(:,2), S(:,3), S(:,4), 100, 'kx', 'LineWidth', 3);
+        title('Cut e2, e3, e4');
+        xlabel('e2');
+        ylabel('e3');
+        zlabel('e4');
+        axis equal;
+        view(3);
+        rotate3d on;
     end
+    
+    %% Hierarchical Clustering Visualization
+    figure(2);
+    hold on;
+    sgtitle('Hierarchical Clustering');
+    if n_dim == 1
+        for i = 1:length(clusters_hierar)
+            cluster_points = M(clusters_hierar{i}, :);
+            scatter(cluster_points, ones(size(cluster_points)), 50, V(i));
+        end
+    elseif n_dim == 2
+        for i = 1:length(clusters_hierar)
+            cluster_points = M(clusters_hierar{i}, :);
+            scatter(cluster_points(:, 1), cluster_points(:, 2), 50, V(i));
+        end
+        axis equal;
+        
+    elseif n_dim == 3
+        for i = 1:length(clusters_hierar)
+            cluster_points = M(clusters_hierar{i}, :);
+            scatter3(cluster_points(:, 1), cluster_points(:, 2), cluster_points(:, 3), 50, V(i));
+        end
+        view(3);
+        rotate3d on;
+    elseif n_dim == 4
+        % Cut 1: e1, e2, e3 (ignoring e4)
+        subplot(2, 2, 1);
+        hold on;
+        for i = 1:length(clusters_hierar)
+            cluster_points = M(clusters_hierar{i}, :);
+            scatter3(cluster_points(:, 1), cluster_points(:, 2), cluster_points(:, 3), 50, V(i));
+        end
+        title('Cut e1, e2, e3');
+        xlabel('e1');
+        ylabel('e2');
+        zlabel('e3');
+        axis equal;
+        view(3);
+        rotate3d on;
+    
+        % Cut 2: e1, e2, e4 (ignoring e3)
+        subplot(2, 2, 2);
+        hold on;
+        for i = 1:length(clusters_hierar)
+            cluster_points = M(clusters_hierar{i}, :);
+            scatter3(cluster_points(:, 1), cluster_points(:, 2), cluster_points(:, 4), 50, V(i));
+        end
+        title('Cut e1, e2, e4');
+        xlabel('e1');
+        ylabel('e2');
+        zlabel('e4');
+        axis equal;
+        view(3);
+        rotate3d on;
+    
+        % Cut 3: e1, e3, e4 (ignoring e2)
+        subplot(2, 2, 3);
+        hold on;
+        for i = 1:length(clusters_hierar)
+            cluster_points = M(clusters_hierar{i}, :);
+            scatter3(cluster_points(:, 1), cluster_points(:, 3), cluster_points(:, 4), 50, V(i));
+        end
+        title('Cut e1, e3, e4');
+        xlabel('e1');
+        ylabel('e3');
+        zlabel('e4');
+        axis equal;
+        view(3);
+        rotate3d on;
+    
+        % Cut 4: e2, e3, e4 (ignoring e1)
+        subplot(2, 2, 4);
+        hold on;
+        for i = 1:length(clusters_hierar)
+            cluster_points = M(clusters_hierar{i}, :);
+            scatter3(cluster_points(:, 2), cluster_points(:, 3), cluster_points(:, 4), 50, V(i));
+        end
+        title('Cut e2, e3, e4');
+        xlabel('e2');
+        ylabel('e3');
+        zlabel('e4');
+        axis equal;
+        view(3);
+        rotate3d on;
+    end
+    hold off;
+    
+    %% DBSCAN Visualization
 
-    % Update centroids for the next iteration
-    S = S_new;
-    N = N + 1;
-
-    % Pause to visualize
-    pause(0.5);
+    figure(3);
+    hold on;
+    sgtitle('DBSCAN Clustering');
+    if n_dim == 1
+        for i = 1:length(clusters_dbscan)
+            cluster_points = M(clusters_dbscan{i}, :);
+            scatter(cluster_points, ones(size(cluster_points)), 50, V(i));
+        end
+    elseif n_dim == 2
+        for i = 1:length(clusters_dbscan)
+            cluster_points = M(clusters_dbscan{i}, :);
+            scatter(cluster_points(:, 1), cluster_points(:, 2), 50, V(i));
+        end
+        axis equal;
+    elseif n_dim == 3
+        for i = 1:length(clusters_dbscan)
+            cluster_points = M(clusters_dbscan{i}, :);
+            scatter3(cluster_points(:, 1), cluster_points(:, 2), cluster_points(:, 3), 50, V(i));
+        end
+        view(3);
+        rotate3d on;
+    elseif n_dim == 4
+        % Cut 1: e1, e2, e3 (ignoring e4)
+        subplot(2, 2, 1);
+        hold on;
+        for i = 1:length(clusters_hierar)
+            cluster_points = M(clusters_hierar{i}, :);
+            scatter3(cluster_points(:, 1), cluster_points(:, 2), cluster_points(:, 3), 50, V(i));
+        end
+        title('Cut e1, e2, e3');
+        xlabel('e1');
+        ylabel('e2');
+        zlabel('e3');
+        axis equal;
+        view(3);
+        rotate3d on;
+    
+        % Cut 2: e1, e2, e4 (ignoring e3)
+        subplot(2, 2, 2);
+        hold on;
+        for i = 1:length(clusters_hierar)
+            cluster_points = M(clusters_hierar{i}, :);
+            scatter3(cluster_points(:, 1), cluster_points(:, 2), cluster_points(:, 4), 50, V(i));
+        end
+        title('Cut e1, e2, e4');
+        xlabel('e1');
+        ylabel('e2');
+        zlabel('e4');
+        axis equal;
+        view(3);
+        rotate3d on;
+    
+        % Cut 3: e1, e3, e4 (ignoring e2)
+        subplot(2, 2, 3);
+        hold on;
+        for i = 1:length(clusters_hierar)
+            cluster_points = M(clusters_hierar{i}, :);
+            scatter3(cluster_points(:, 1), cluster_points(:, 3), cluster_points(:, 4), 50, V(i));
+        end
+        title('Cut e1, e3, e4');
+        xlabel('e1');
+        ylabel('e3');
+        zlabel('e4');
+        axis equal;
+        view(3);
+        rotate3d on;
+    
+        % Cut 4: e2, e3, e4 (ignoring e1)
+        subplot(2, 2, 4);
+        hold on;
+        for i = 1:length(clusters_hierar)
+            cluster_points = M(clusters_hierar{i}, :);
+            scatter3(cluster_points(:, 2), cluster_points(:, 3), cluster_points(:, 4), 50, V(i));
+        end
+        title('Cut e2, e3, e4');
+        xlabel('e2');
+        ylabel('e3');
+        zlabel('e4');
+        axis equal;
+        view(3);
+        rotate3d on;
+    end
+    hold off;
 end
 
-hold off;
-disp('Centroids after convergence:');
-disp(S);
+%% Print of results
+
+    disp('hierar completed.');
+    disp('Clusters:');
+    disp(clusters_hierar);
+
+
+    disp('DBSCAN completed.');
+    disp('Clusters:');
+    disp(clusters_dbscan);

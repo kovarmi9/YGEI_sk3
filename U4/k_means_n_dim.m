@@ -1,6 +1,6 @@
 clc; clear variables; close all; format long g
 
-n_dim = 4;  % Dimension
+n_dim = 1;  % Dimension
 
 % Generate points in n_dim dimensions
 A = randn(10, n_dim);  % Cluster A

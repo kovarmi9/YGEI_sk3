@@ -8,7 +8,7 @@ B = randn(15, n_dim) * 1.2 + rand(1, n_dim) * 15;
 C = randn(20, n_dim) * 1.2 + rand(1, n_dim) * 20;
 D = randn(25, n_dim) * 1.2 + rand(1, n_dim) * 25;
 
-V = ["rx", "bx", "cx", "mx"];  % Cluster visualization markers
+V = ["rx", "bx", "cx", "mx", "gx", "yx"];  % Cluster visualization markers
 
 % Combine all points into one matrix
 M = [A; B; C; D];
@@ -135,7 +135,12 @@ end
 figure;
 hold on;
 title('Hierarchical Clustering');
-if n_dim == 2
+if n_dim == 1
+    for i = 1:length(clusters_hierar)
+        cluster_points = M(clusters_hierar{i}, :);
+        scatter(cluster_points, ones(size(cluster_points)), 50, V(i));
+    end
+elseif n_dim == 2
     for i = 1:length(clusters_hierar)
         cluster_points = M(clusters_hierar{i}, :);
         scatter(cluster_points(:, 1), cluster_points(:, 2), 50, V(i));
