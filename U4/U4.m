@@ -79,13 +79,6 @@ else
     D = randn(25, n_dim) * 1.2 + rand(1, n_dim) * 25;
 end
 
-
-% % Generate points in n_dim dimensions
-% A = randn(10, n_dim);
-% B = randn(15, n_dim) * 1.2 + rand(1, n_dim) * 15;
-% C = randn(20, n_dim) * 1.2 + rand(1, n_dim) * 20;
-% D = randn(25, n_dim) * 1.2 + rand(1, n_dim) * 25;
-
 V = ["rx", "bx", "cx", "mx", "gx", "yx"];  % Cluster visualization markers
 
 % Combine all points into one matrix
@@ -386,11 +379,12 @@ end
 
 %% Print of results
 
-    disp('hierar completed.');
-    disp('Clusters:');
-    disp(clusters_hierar);
-
-
-    disp('DBSCAN completed.');
-    disp('Clusters:');
-    disp(clusters_dbscan);
+disp('K-means ');
+disp('Centroids:');
+disp(S);
+disp('hierar ');
+disp('Clusters:');
+disp(clusters_hierar);
+disp('DBSCAN ');
+disp('Clusters:');
+disp(clusters_dbscan);

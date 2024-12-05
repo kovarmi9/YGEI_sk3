@@ -42,7 +42,6 @@ classdef Clustering
                 % Check for convergence by comparing the centroid movement
                 diff = norm(S_new - S);
                 if diff < PS
-                    disp('K-means convergence achieved.');
                     break;
                 end
 
