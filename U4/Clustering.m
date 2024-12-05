@@ -25,7 +25,7 @@ classdef Clustering
                 D = pdist2(M, S);  % Distance matrix between points and centroids
                 [~, L] = min(D, [], 2); % L contains the cluster index for each point
 
-                % Step 2: Recompute the centroids based on the assigned points
+                % Recompute the centroids based on the assigned points
                 S_new = zeros(k, size(M, 2));
 
                 for j = 1:k
@@ -65,7 +65,7 @@ classdef Clustering
             % Initialize clusters
             clusters = num2cell(1:n);
 
-            % Perform agglomerative clustering
+            % Clustering
             for i = 1:n+1-k
                 % Minimal value in matrix (excluding infinities)
                 min_val = min(distance_matrix(:));
@@ -111,7 +111,7 @@ classdef Clustering
         function clusters = dbscan(M, epsilon, minPts)
             % M: Data points (matrix of size [num_points, n_dim])
             % epsilon: Maximum distance between two points to be considered neighbors
-            % minPts: Minimum number of points to form a dense region
+            % minPts: Minimum number of points to form region
 
             % Number of points
             n = size(M, 1);
