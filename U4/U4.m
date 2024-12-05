@@ -94,6 +94,9 @@ PS = 0.1;   % Perturbation size for K-means
 % K-means clustering
 [S, L] = Clustering.kmeans(M, k, max_iter, PS);
 
+% K-means clustering (MATLAB built-in function)
+[L_, S_] = kmeans(M, k, 'MaxIter', max_iter);
+
 % Hierarchical clustering
 clusters_hierar = Clustering.hierar(M, k);
 
@@ -110,9 +113,10 @@ if n_dim < 5
     if n_dim == 1
         for i = 1:k
             cluster_points = M(L == i, :);
-            scatter(cluster_points, ones(size(cluster_points)), 50, V(i));
+            scatter(cluster_points, ones(size(cluster_points)), 20, V(i));
         end
-        scatter(S(:, 1), ones(size(S(:, 1))), 100, 'kx', 'LineWidth', 3);
+        scatter(S_(:, 1), ones(size(S(:, 1))),50, 'r+', 'LineWidth', 3);
+        scatter(S(:, 1), ones(size(S(:, 1))),50, 'kx', 'LineWidth', 3);
         xlabel('Value');
         ylabel('Cluster');
         hold off;
@@ -120,18 +124,20 @@ if n_dim < 5
     elseif n_dim == 2
         for i = 1:k
             cluster_points = M(L == i, :);
-            scatter(cluster_points(:, 1), cluster_points(:, 2), 50, V(i));
+            scatter(cluster_points(:, 1), cluster_points(:, 2), 20, V(i));
         end
-        scatter(S(:, 1), S(:, 2), 100, 'kx', 'LineWidth', 3);
+        scatter(S_(:, 1), S_(:, 2), 50, 'r+', 'LineWidth', 3);
+        scatter(S(:, 1), S(:, 2), 50, 'kx', 'LineWidth', 3);
         axis padded;
         hold off;
         
     elseif n_dim == 3
         for i = 1:k
             cluster_points = M(L == i, :);
-            scatter3(cluster_points(:, 1), cluster_points(:, 2), cluster_points(:, 3), 50, V(i));
+            scatter3(cluster_points(:, 1), cluster_points(:, 2), cluster_points(:, 3), 20, V(i));
         end
-        scatter3(S(:, 1), S(:, 2), S(:, 3), 100, 'kx', 'LineWidth', 3);
+        scatter3(S_(:, 1), S_(:, 2), S_(:, 3), 50, 'r+', 'LineWidth', 3);
+        scatter3(S(:, 1), S(:, 2), S(:, 3), 50, 'kx', 'LineWidth', 3);
         view(3);
         rotate3d on;
         hold off;
@@ -141,9 +147,10 @@ if n_dim < 5
         hold on;
         for i = 1:k
             cluster_points = M(L == i, :);
-            scatter3(cluster_points(:,1), cluster_points(:,2), cluster_points(:,3), 50, 'Marker', 'x');
+            scatter3(cluster_points(:,1), cluster_points(:,2), cluster_points(:,3), 20, 'Marker', 'x');
         end
-        scatter3(S(:,1), S(:,2), S(:,3), 100, 'kx', 'LineWidth', 3); % Black centroids
+        scatter3(S_(:,1), S_(:,2), S_(:,3), 50, 'r+', 'LineWidth', 3); % Red centroids
+        scatter3(S(:,1), S(:,2), S(:,3), 50, 'kx', 'LineWidth', 3); % Black centroids
         title('Cut e1, e2, e3');
         xlabel('e1');
         ylabel('e2');
@@ -157,9 +164,10 @@ if n_dim < 5
         hold on;
         for i = 1:k
             cluster_points = M(L == i, :);
-            scatter3(cluster_points(:,1), cluster_points(:,2), cluster_points(:,4), 50, 'Marker', 'x');
+            scatter3(cluster_points(:,1), cluster_points(:,2), cluster_points(:,4), 20, 'Marker', 'x');
         end
-        scatter3(S(:,1), S(:,2), S(:,4), 100, 'kx', 'LineWidth', 3); % Black centroids
+        scatter3(S_(:,1), S_(:,2), S_(:,4), 50, 'r+', 'LineWidth', 3); % Black centroids
+        scatter3(S(:,1), S(:,2), S(:,4), 50, 'kx', 'LineWidth', 3); % Black centroids
         title('Cut e1, e2, e4');
         xlabel('e1');
         ylabel('e2');
@@ -173,9 +181,10 @@ if n_dim < 5
         hold on;
         for i = 1:k
             cluster_points = M(L == i, :);
-            scatter3(cluster_points(:,1), cluster_points(:,3), cluster_points(:,4), 50, 'Marker', 'x');
+            scatter3(cluster_points(:,1), cluster_points(:,3), cluster_points(:,4), 20, 'Marker', 'x');
         end
-        scatter3(S(:,1), S(:,3), S(:,4), 100, 'kx', 'LineWidth', 3);
+        scatter3(S_(:,1), S_(:,3), S_(:,4), 50, 'r+', 'LineWidth', 3);
+        scatter3(S(:,1), S(:,3), S(:,4), 50, 'kx', 'LineWidth', 3);
         title('Cut e1, e3, e4');
         xlabel('e1');
         ylabel('e3');
@@ -189,9 +198,10 @@ if n_dim < 5
         hold on;
         for i = 1:k
             cluster_points = M(L == i, :);
-            scatter3(cluster_points(:,2), cluster_points(:,3), cluster_points(:,4), 50, 'Marker', 'x');
+            scatter3(cluster_points(:,2), cluster_points(:,3), cluster_points(:,4), 20, 'Marker', 'x');
         end
-        scatter3(S(:,2), S(:,3), S(:,4), 100, 'kx', 'LineWidth', 3);
+        scatter3(S_(:,2), S_(:,3), S_(:,4), 50, 'r+', 'LineWidth', 3);
+        scatter3(S(:,2), S(:,3), S(:,4), 50, 'kx', 'LineWidth', 3);
         title('Cut e2, e3, e4');
         xlabel('e2');
         ylabel('e3');
@@ -209,19 +219,19 @@ if n_dim < 5
     if n_dim == 1
         for i = 1:length(clusters_hierar)
             cluster_points = M(clusters_hierar{i}, :);
-            scatter(cluster_points, ones(size(cluster_points)), 50, V(i));
+            scatter(cluster_points, ones(size(cluster_points)), 20, V(i));
         end
     elseif n_dim == 2
         for i = 1:length(clusters_hierar)
             cluster_points = M(clusters_hierar{i}, :);
-            scatter(cluster_points(:, 1), cluster_points(:, 2), 50, V(i));
+            scatter(cluster_points(:, 1), cluster_points(:, 2), 20, V(i));
             axis padded;
         end
         
     elseif n_dim == 3
         for i = 1:length(clusters_hierar)
             cluster_points = M(clusters_hierar{i}, :);
-            scatter3(cluster_points(:, 1), cluster_points(:, 2), cluster_points(:, 3), 50, V(i));
+            scatter3(cluster_points(:, 1), cluster_points(:, 2), cluster_points(:, 3), 20, V(i));
         end
         view(3);
         rotate3d on;
@@ -231,7 +241,7 @@ if n_dim < 5
         hold on;
         for i = 1:length(clusters_hierar)
             cluster_points = M(clusters_hierar{i}, :);
-            scatter3(cluster_points(:, 1), cluster_points(:, 2), cluster_points(:, 3), 50, V(i));
+            scatter3(cluster_points(:, 1), cluster_points(:, 2), cluster_points(:, 3), 20, V(i));
         end
         title('Cut e1, e2, e3');
         xlabel('e1');
@@ -246,7 +256,7 @@ if n_dim < 5
         hold on;
         for i = 1:length(clusters_hierar)
             cluster_points = M(clusters_hierar{i}, :);
-            scatter3(cluster_points(:, 1), cluster_points(:, 2), cluster_points(:, 4), 50, V(i));
+            scatter3(cluster_points(:, 1), cluster_points(:, 2), cluster_points(:, 4), 20, V(i));
         end
         title('Cut e1, e2, e4');
         xlabel('e1');
@@ -261,7 +271,7 @@ if n_dim < 5
         hold on;
         for i = 1:length(clusters_hierar)
             cluster_points = M(clusters_hierar{i}, :);
-            scatter3(cluster_points(:, 1), cluster_points(:, 3), cluster_points(:, 4), 50, V(i));
+            scatter3(cluster_points(:, 1), cluster_points(:, 3), cluster_points(:, 4), 20, V(i));
         end
         title('Cut e1, e3, e4');
         xlabel('e1');
@@ -276,7 +286,7 @@ if n_dim < 5
         hold on;
         for i = 1:length(clusters_hierar)
             cluster_points = M(clusters_hierar{i}, :);
-            scatter3(cluster_points(:, 2), cluster_points(:, 3), cluster_points(:, 4), 50, V(i));
+            scatter3(cluster_points(:, 2), cluster_points(:, 3), cluster_points(:, 4), 20, V(i));
         end
         title('Cut e2, e3, e4');
         xlabel('e2');
@@ -297,19 +307,19 @@ if n_dim < 5
     if n_dim == 1
         for i = 1:length(clusters_dbscan)
             cluster_points = M(clusters_dbscan{i}, :);
-            scatter(cluster_points, ones(size(cluster_points)), 50, V(i));
+            scatter(cluster_points, ones(size(cluster_points)), 20, V(i));
         end
     elseif n_dim == 2
         for i = 1:length(clusters_dbscan)
             cluster_points = M(clusters_dbscan{i}, :);
-            scatter(cluster_points(:, 1), cluster_points(:, 2), 50, V(i));
+            scatter(cluster_points(:, 1), cluster_points(:, 2), 20, V(i));
             axis padded;
         end
         axis equal;
     elseif n_dim == 3
         for i = 1:length(clusters_dbscan)
             cluster_points = M(clusters_dbscan{i}, :);
-            scatter3(cluster_points(:, 1), cluster_points(:, 2), cluster_points(:, 3), 50, V(i));
+            scatter3(cluster_points(:, 1), cluster_points(:, 2), cluster_points(:, 3), 20, V(i));
         end
         view(3);
         rotate3d on;
@@ -319,7 +329,7 @@ if n_dim < 5
         hold on;
         for i = 1:length(clusters_hierar)
             cluster_points = M(clusters_hierar{i}, :);
-            scatter3(cluster_points(:, 1), cluster_points(:, 2), cluster_points(:, 3), 50, V(i));
+            scatter3(cluster_points(:, 1), cluster_points(:, 2), cluster_points(:, 3), 20, V(i));
         end
         title('Cut e1, e2, e3');
         xlabel('e1');
@@ -334,7 +344,7 @@ if n_dim < 5
         hold on;
         for i = 1:length(clusters_hierar)
             cluster_points = M(clusters_hierar{i}, :);
-            scatter3(cluster_points(:, 1), cluster_points(:, 2), cluster_points(:, 4), 50, V(i));
+            scatter3(cluster_points(:, 1), cluster_points(:, 2), cluster_points(:, 4), 20, V(i));
         end
         title('Cut e1, e2, e4');
         xlabel('e1');
@@ -349,7 +359,7 @@ if n_dim < 5
         hold on;
         for i = 1:length(clusters_hierar)
             cluster_points = M(clusters_hierar{i}, :);
-            scatter3(cluster_points(:, 1), cluster_points(:, 3), cluster_points(:, 4), 50, V(i));
+            scatter3(cluster_points(:, 1), cluster_points(:, 3), cluster_points(:, 4), 20, V(i));
         end
         title('Cut e1, e3, e4');
         xlabel('e1');
@@ -364,7 +374,7 @@ if n_dim < 5
         hold on;
         for i = 1:length(clusters_hierar)
             cluster_points = M(clusters_hierar{i}, :);
-            scatter3(cluster_points(:, 2), cluster_points(:, 3), cluster_points(:, 4), 50, V(i));
+            scatter3(cluster_points(:, 2), cluster_points(:, 3), cluster_points(:, 4), 20, V(i));
         end
         title('Cut e2, e3, e4');
         xlabel('e2');

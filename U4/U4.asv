@@ -3,74 +3,73 @@ clc; clear variables; close all; format long g
 % Initialize n_dim to a non-valid value
 n_dim = -1;
 
-% Ask user for the number of dimensions and validate the input
+% Ask user for the number of dimensions
 while true
     % Ask the user for input
     n_dim = input('Enter dimension (positive integer): ');
     
     % Check if the input is a valid positive integer
     if isscalar(n_dim) && n_dim == fix(n_dim) && n_dim > 0
-        break; % Exit the loop if the input is valid
+        break; % Exit loop if the input is valid
     else
         fprintf('Invalid input. Please enter a positive integer.\n');
     end
 end
 
-% Branch for handling 2D specific user input
+% 2D specific user input
 if n_dim == 2
     % Ask user if points should be generated or input manually
-    use_random = input('User inpust points? (1 for yes, 0 for no): ');
-    
-    if ~use_random
+    use_input = input('User input points? yes/no: ', 's');  % 's' means text iput
+
+    use_input = lower(use_input);  % off key sensitivity
+
+    if strcmp(use_input, 'yes')  % if user type 'yes'
+        % Interactive input
+        disp('Click on the plot to add points: Press Enter to continue.');
+
+        % Plot for useinput
+        figure(4);
+        hold on;
+        title('Click on the plot to add points: Press Enter to continue');
+        xlabel('X');
+        ylabel('Y');
+        grid on;
+
+        % Initialization for userinput points
+        A = [];
+        B = [];
+        C = [];
+        D = [];
+
+        % NSize of graph for user input
+        axis([0 25 0 25]);
+
+        % User input interactivly
+        while true
+            % Function for user input
+            [x, y, button] = ginput(1);
+
+            % If enter is pressd exit loop
+            if isempty(x)
+                break;
+            end
+
+            % Sawe point
+            A = [A; x, y]; %#ok<AGROW>
+
+            % Disply new point on plot
+            plot(x, y, 'g+', 'MarkerSize', 8, 'LineWidth', 1.5);
+        end
+
+        disp('User-added points:');
+        disp(A);
+
+    else
         % Generate random points
         A = randn(10, n_dim);
         B = randn(15, n_dim) * 1.2 + rand(1, n_dim) * 15;
         C = randn(20, n_dim) * 1.2 + rand(1, n_dim) * 20;
         D = randn(25, n_dim) * 1.2 + rand(1, n_dim) * 25;
-    else
-        % Interactive user input
-        disp('Click on the plot to add points: Pres enter to continue.');
-        
-        % Prepare figure for user input
-        figure(4);
-        hold on;
-        title('Click on the plot to add points: Pres enter to continue');
-        xlabel('X');
-        ylabel('Y');
-        grid on;
-
-        % Initialize storage for user-input points
-        A = [];
-        B = [];
-        C = [];
-        D = [];
-        
-        % Set fixed axis limits (0 to 25 for both axes)
-        axis([0 25 0 25]);
-
-        % Allow user to input points interactively
-        while true
-            [x, y, button] = ginput(1);
-            
-            % If Enter is pressed, exit the loop
-            if isempty(x)
-                break;
-            end
-            
-            % Check if the point is within the valid range (0 to 25)
-            if x >= 0 && x <= 25 && y >= 0 && y <= 25
-                % Store the user input point (can modify logic to assign to clusters)
-                A = [A; x, y]; %#ok<AGROW>
-                
-                % Plot the newly added point
-                plot(x, y, 'g+', 'MarkerSize', 8, 'LineWidth', 1.5);
-            else
-                disp('Point out of bounds! Please click within the range 0 to 25.');
-            end
-        end
-        
-        disp('User-added points:');
-        disp(A);
     end
 else
     % Generate points in n_dim dimensions
@@ -79,12 +78,6 @@ else
     C = randn(20, n_dim) * 1.2 + rand(1, n_dim) * 20;
     D = randn(25, n_dim) * 1.2 + rand(1, n_dim) * 25;
 end
-
-% % Generate points in n_dim dimensions
-% A = randn(10, n_dim);
-% B = randn(15, n_dim) * 1.2 + rand(1, n_dim) * 15;
-% C = randn(20, n_dim) * 1.2 + rand(1, n_dim) * 20;
-% D = randn(25, n_dim) * 1.2 + rand(1, n_dim) * 25;
 
 V = ["rx", "bx", "cx", "mx", "gx", "yx"];  % Cluster visualization markers
 
@@ -101,6 +94,9 @@ PS = 0.1;   % Perturbation size for K-means
 % K-means clustering
 [S, L] = Clustering.kmeans(M, k, max_iter, PS);
 
+% K-means clustering (MATLAB built-in function)
+[L_, S_] = kmeans(M, k, 'MaxIter', max_iter);
+
 % Hierarchical clustering
 clusters_hierar = Clustering.hierar(M, k);
 
@@ -111,35 +107,36 @@ clusters_dbscan = Clustering.dbscan(M, epsilon, minPts);
 if n_dim < 5
     %% K-means Visualization
     figure(1);
+    hold on;
     sgtitle('K-means Clustering');
     axis equal;
     if n_dim == 1
-        hold on;
         for i = 1:k
             cluster_points = M(L == i, :);
-            scatter(cluster_points, ones(size(cluster_points)), 50, V(i));
+            scatter(cluster_points, ones(size(cluster_points)), 10, V(i));
         end
-        scatter(S(:, 1), ones(size(S(:, 1))), 100, 'kx', 'LineWidth', 3);
+        scatter(S_(:, 1), ones(size(S(:, 1))),50, 'r+', 'LineWidth', 3);
+        scatter(S(:, 1), ones(size(S(:, 1))),10, 'kx', 'LineWidth', 3);
         xlabel('Value');
         ylabel('Cluster');
         hold off;
         
     elseif n_dim == 2
-        hold on;
         for i = 1:k
             cluster_points = M(L == i, :);
             scatter(cluster_points(:, 1), cluster_points(:, 2), 50, V(i));
         end
+        scatter(S_(:, 1), S_(:, 2), 100, 'r+', 'LineWidth', 3);
         scatter(S(:, 1), S(:, 2), 100, 'kx', 'LineWidth', 3);
-        %axis([min(M(:,1))-5, max(M(:,1))+5, min(M(:,2))-5, max(M(:,2))+5]);
+        axis padded;
         hold off;
         
     elseif n_dim == 3
-        hold on;
         for i = 1:k
             cluster_points = M(L == i, :);
             scatter3(cluster_points(:, 1), cluster_points(:, 2), cluster_points(:, 3), 50, V(i));
         end
+        scatter3(S_(:, 1), S_(:, 2), S_(:, 3), 100, 'r+', 'LineWidth', 3);
         scatter3(S(:, 1), S(:, 2), S(:, 3), 100, 'kx', 'LineWidth', 3);
         view(3);
         rotate3d on;
@@ -152,6 +149,7 @@ if n_dim < 5
             cluster_points = M(L == i, :);
             scatter3(cluster_points(:,1), cluster_points(:,2), cluster_points(:,3), 50, 'Marker', 'x');
         end
+        scatter3(S_(:,1), S_(:,2), S_(:,3), 100, 'r+', 'LineWidth', 3); % Red centroids
         scatter3(S(:,1), S(:,2), S(:,3), 100, 'kx', 'LineWidth', 3); % Black centroids
         title('Cut e1, e2, e3');
         xlabel('e1');
@@ -168,6 +166,7 @@ if n_dim < 5
             cluster_points = M(L == i, :);
             scatter3(cluster_points(:,1), cluster_points(:,2), cluster_points(:,4), 50, 'Marker', 'x');
         end
+        scatter3(S_(:,1), S_(:,2), S_(:,4), 100, 'r+', 'LineWidth', 3); % Black centroids
         scatter3(S(:,1), S(:,2), S(:,4), 100, 'kx', 'LineWidth', 3); % Black centroids
         title('Cut e1, e2, e4');
         xlabel('e1');
@@ -184,6 +183,7 @@ if n_dim < 5
             cluster_points = M(L == i, :);
             scatter3(cluster_points(:,1), cluster_points(:,3), cluster_points(:,4), 50, 'Marker', 'x');
         end
+        scatter3(S_(:,1), S_(:,3), S_(:,4), 100, 'r+', 'LineWidth', 3);
         scatter3(S(:,1), S(:,3), S(:,4), 100, 'kx', 'LineWidth', 3);
         title('Cut e1, e3, e4');
         xlabel('e1');
@@ -200,7 +200,8 @@ if n_dim < 5
             cluster_points = M(L == i, :);
             scatter3(cluster_points(:,2), cluster_points(:,3), cluster_points(:,4), 50, 'Marker', 'x');
         end
-        scatter3(S(:,2), S(:,3), S(:,4), 100, 'kx', 'LineWidth', 3);
+        scatter3(S_(:,2), S_(:,3), S_(:,4), 5, 'r+', 'LineWidth', 3);
+        scatter3(S(:,2), S(:,3), S(:,4), 5, 'kx', 'LineWidth', 3);
         title('Cut e2, e3, e4');
         xlabel('e2');
         ylabel('e3');
@@ -224,7 +225,7 @@ if n_dim < 5
         for i = 1:length(clusters_hierar)
             cluster_points = M(clusters_hierar{i}, :);
             scatter(cluster_points(:, 1), cluster_points(:, 2), 50, V(i));
-            %axis([min(M(:,1))-5, max(M(:,1))+5, min(M(:,2))-5, max(M(:,2))+5]);
+            axis padded;
         end
         
     elseif n_dim == 3
@@ -312,7 +313,7 @@ if n_dim < 5
         for i = 1:length(clusters_dbscan)
             cluster_points = M(clusters_dbscan{i}, :);
             scatter(cluster_points(:, 1), cluster_points(:, 2), 50, V(i));
-            axis([min(M(:,1))-5, max(M(:,1))+5, min(M(:,2))-5, max(M(:,2))+5]);
+            axis padded;
         end
         axis equal;
     elseif n_dim == 3
@@ -388,11 +389,12 @@ end
 
 %% Print of results
 
-    disp('hierar completed.');
-    disp('Clusters:');
-    disp(clusters_hierar);
-
-
-    disp('DBSCAN completed.');
-    disp('Clusters:');
-    disp(clusters_dbscan);
+disp('K-means ');
+disp('Centroids:');
+disp(S);
+disp('hierar ');
+disp('Clusters:');
+disp(clusters_hierar);
+disp('DBSCAN ');
+disp('Clusters:');
+disp(clusters_dbscan);
