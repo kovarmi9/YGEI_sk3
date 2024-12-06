@@ -1,0 +1,34 @@
+\section{Popis problému}
+
+Shlukování je metoda neřízené klasifikace, která se používá k identifikaci podobných skupin dat. Cílem je rozdělit data do shluků, přičemž data v každém shluku jsou si co nejvíce podobná a shluky navzájem jsou co nejvíce odlišné. Shlukování se používá například v DPZ pro neříznou klasifikaci satelitních snímků.\cite{potuckova2024}
+
+\subsection{Dílčí kroky shlukové analýzy}
+
+Shlukování zahrnuje několik klíčových kroků. Nejprve je třeba zjistit, zda jsou data vhodná pro shlukovou analýzu. Pokud data nemají tendenci vytvářet shluky v daném příznakovém prostoru, nebude shluková analýza účinná. Z tohoto důvodu je důležité provést následující kroky:
+
+\begin{itemize}
+    \item \textbf{Výběr příznaků}: Je nutné vybrat relevantní příznaky a minimalizovat redundanci nebo korelaci mezi nimi.
+    \item \textbf{Míry podobnosti/rozdílnosti}: Určení, jak měřit "blízkost" nebo "rozdílnost" mezi jednotlivými body.
+    \item \textbf{Rozhodovací kritérium}: Výběr metody pro optimalizaci výsledků, např. pomocí nákladové funkce.
+    \item \textbf{Výběr algoritmu shlukování}: Volí se na základě charakteristik dat.
+    \item \textbf{Validace}: Ověření kvality výsledků.
+    \item \textbf{Interpretace výsledků}: Posledním krokem je interpretace výsledků získaných ze shlukování.
+\end{itemize}
+
+\subsection{Přístupy ke shlukové analýze}
+
+\begin{itemize}
+    \item \textbf{Sekvenční přístup}: Tento přístup nevyžaduje předem stanovený počet shluků a algoritmus postupně přiřazuje data k shlukům na základě definovaných parametrů, jako je prahová hodnota vzdálenosti.
+    \item \textbf{Hierarchický přístup}: Algoritmus spojuje (Aglomerativní hierarchické algoritmy) nebo dělí (Dělící hierarchické algoritmy) shluky na základě podobnosti mezi body. Vzniká struktura podobná binárnímu strmu.
+    \item \textbf{Optimalizace nákladové funkce}: Založen na optimalizaci nákladové funkce \(J\) (funkce vektorů datové sady \(X\)) parametrizované neznámým vektorem \(\Theta\).
+\end{itemize}
+
+\subsection{Běžně používané algoritmy}
+
+\begin{itemize}
+    \item \textbf{K-means}: Algoritmus, který přiřazuje data k centroidům shluků, které se v každé iteraci přepočítávají. Je citlivý na šum v datech a počáteční inicializaci centroidů.
+    \item \textbf{Hierarchické shlukování}: Tento přístup postupně spojuje nebo dělí shluky na základě jejich podobnosti. Je vhodný pro analýzu hierarchických vztahů mezi daty. Výsledky lze vizualizovat jako dendrogram, což umožňuje snadno pochopit strukturu dat.
+    \item \textbf{DBSCAN}: Algoritmus identifikuje husté oblasti jako shluky a řídké oblasti ignoruje šum. Vstupní parametry, jako hustota bodů a okolí \(\varepsilon\), určují, které body patří do shluků, a to bez nutnosti předem definovat počet shluků.
+    \item \textbf{Fuzzy shlukování}: Tento algoritmus umožňuje, aby každý bod patřil do více shluků s různou mírou příslušnosti, což je užitečné pro data, kde jsou hranice mezi shluky nejednoznačné nebo rozmazané.\cite{koutroumbas2008}
+\end{itemize}
+

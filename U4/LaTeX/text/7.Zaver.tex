@@ -1,0 +1,12 @@
+\section{Závěr}
+
+Byl vyhotoven skript v MATLABu, který provádí shlukování dat pomocí různých algoritmů, včetně K-means, hierarchického shlukování a DBSCAN. Algoritmus K-means byl porovnán s vestavěnou funkcí v MATLABu. Bylo zjištěno, že v některých případech se výsledky shlukování liší, v jiných se naopak shodují. To může být způsobeno náhodnou inicializací počátečních centroidů, která ovlivňuje výsledky K-means algoritmu. 
+
+\subsection{Možné oblasti pro vylepšení}
+
+\begin{itemize}
+    \item \textbf{Další metody shlukování}: Lze přidat další metody clusterizace, jako je například ISODATA nebo fuzzy shlukování.
+    \item \textbf{Automatizace výběru parametrů}: Parametry pro shlukování, jako je počet shluků pro K-means nebo hodnoty epsilon a minPts pro DBSCAN, by mohli být nastaveny automaticky na základě analýzy dat před samotným zpracováním.
+    \item \textbf{Vizualizace pro vyšší dimenze}: Pro dimenze vyšší než 3 by bylo vhodné implementovat pokročilé metody vizualizace více dimenzionálních dat, jako je například metoda hlavních komponent (PCA) nebo t-SNE, které umožňují redukci dimenzí pro lepší zobrazení dat.
+    \item \textbf{Zrychlení algoritmů}: Optimalizace algoritmů, by mohla urychlit zpracování velkých souborů dat.
+\end{itemize}

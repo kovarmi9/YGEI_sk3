@@ -1,0 +1,138 @@
+\section{Popis metod}
+Pro výpočet shlukování byla vytvořena třída \texttt{Clustering}, která obsahuje metody pro různé algoritmy shlukování: k-means (\texttt{kmeans}), hierarchické shlukování (\texttt{hierar}) a DBSCAN (\texttt{dbscan}).
+\subsection{K-means}
+
+K-means přiřazuje body k nejbližším centroidům, probíhá v několika iteracích, kdy se na základě aktuálních poloh centroidů přiřazují body k jednotlivým shlukům a následně se centroidy přepočítávají. Tento proces pokračuje, dokud se pozice centroidů stabilizují nebo dokud není dosaženo maximálního počtu iterací. Popis výpočtu k-means je uveden v následujícím pseudokódu:
+
+\begin{algorithm}
+    \setstretch{1.2}
+    \caption{Metoda \texttt{kmeans}}
+    \begin{algorithmic}[1]
+        \STATE \textbf{Vstup:} $M$ -- Matice bodů, $k$ -- Počet klastrů, $max\_iter$ -- Počet iterací, $PS$ -- Tolerance konvergence\\
+        \STATE \textbf{Výstup:} $S$ -- Pozice centroidů, $L$ -- Přiřazení bodů ke klastrům
+        \STATE $Max, Min \gets \text{max}(M), \text{min}(M)$ // Určení rozsahu dat
+        \STATE $S \gets Min + (Max - Min) \cdot \text{rand}(k, \text{size}(M, 2))$ // Inicializace centroidů
+        \STATE $N \gets 0$, $N\_max \gets max\_iter$
+        
+        \WHILE{$N < N\_max$}
+            \STATE $D \gets \text{pdist2}(M, S)$ // Výpočet vzdáleností
+            \STATE $L \gets \text{argmin}(D, \text{axis}=2)$ // Přiřazení bodů
+            \STATE $S\_new \gets \text{zeros}(k, \text{size}(M, 2))$
+            \FOR{$j \gets 1$ \TO $k$}
+                \STATE $cluster\_points \gets M[L == j, :]$
+                \IF{$\text{isempty}(cluster\_points)$}
+                    \STATE $S\_new[j, :] \gets Min + (Max - Min) \cdot \text{rand}(1, \text{size}(M, 2))$ // Inicializace nového centroidu
+                \ELSE
+                    \STATE $S\_new[j, :] \gets \text{mean}(cluster\_points, \text{axis}=1)$ // Výpočet nového centroidu
+                \ENDIF
+            \ENDFOR
+            \STATE $diff \gets \text{norm}(S\_new - S)$ // Kontrola konvergence
+            \IF{$diff < PS$} \STATE \textbf{break} \ENDIF
+            \STATE $S \gets S\_new$, $N \gets N + 1$
+        \ENDWHILE
+        \STATE \textbf{return} $S, L$
+    \end{algorithmic}
+\end{algorithm}
+\newpage
+
+\subsection{Hierarchické shlukování}
+
+Hierarchické shlukování je metoda, která vytváří hierarchii shluků tím, že postupně spojuje (aglomerační přístup) data na základě vzdálenosti mezi jednotlivými body. Popis výpočtu hierarchického shlukování je uveden v následujícím pseudokódu:
+
+\begin{algorithm}
+    \setstretch{1.2}
+    \caption{Metoda \texttt{hierar}}
+    \begin{algorithmic}[1]
+        \STATE \textbf{Vstup:} $M$ -- Matice bodů, $k$ -- Počet klastrů\\
+        \STATE \textbf{Výstup:} $clusters$ -- Seznam shluků, kde každý shluk obsahuje indexy bodů v daném shluku
+        \STATE $distance\_matrix \gets \text{pdist2}(M, M)$ // Výpočet matice vzdáleností
+        \STATE $n \gets \text{size}(M, 1)$ // Počet bodů
+        \STATE $clusters \gets \text{num2cell}(1:n)$ // Inicializace klastrů, každý bod je ve svém vlastním shluku
+        
+        \FOR{$i \gets 1$ \TO $n + 1 - k$}
+            \STATE $min\_val \gets \min(distance\_matrix(:))$ // Minimalní hodnota v matici
+            \STATE $[row\_indices, col\_indices] \gets \text{find}(distance\_matrix == min\_val)$ // Indexy min hodnot
+            \STATE $valid\_pairs \gets (row\_indices \neq col\_indices)$ // Filtrace párů, kde indexy jsou různé
+            \STATE $row\_indices \gets row\_indices(valid\_pairs)$, $col\_indices \gets col\_indices(valid\_pairs)$
+            
+            \FOR{$j \gets 1$ \TO \text{length}(row\_indices)}
+                \STATE $row \gets row\_indices(j)$, $col \gets col\_indices(j)$
+                \STATE $clusters[row] \gets clusters[row] \cup clusters[col]$ // Spojení shluků
+                \STATE $clusters[col] \gets []$ // Vyprázdnění sloučeného shluku
+            \ENDFOR
+
+            \STATE $distance\_matrix \gets \text{inf}(\text{length}(clusters))$ // Resetování matice
+            \FOR{$m \gets 1$ \TO \text{length}(clusters)}
+                \FOR{$n \gets 1$ \TO \text{length}(clusters)}
+                    \IF{$m \neq n$ \textbf{and} $clusters[m] \neq []$ \textbf{and} $clusters[n] \neq []$}
+                        \STATE $dist \gets \min(\text{pdist2}(M(clusters[m], :), M(clusters[n], :)), [], \text{all})$ 
+                        \STATE $distance\_matrix[m, n] \gets dist$
+                        \STATE $distance\_matrix[n, m] \gets dist$
+                    \ENDIF
+                \ENDFOR
+            \ENDFOR
+        \ENDFOR
+
+        \STATE $empty\_indices \gets \textit{cellfun}(\texttt{'isempty'}, clusters)$ // Hledání prázdných shluků
+        \STATE $clusters \gets clusters(\neg empty\_indices)$ // Výběr neprázdných shluků
+        \STATE \textbf{return} $clusters$
+    \end{algorithmic}
+\end{algorithm}
+
+\subsection{DBSCAN}
+
+DBSCAN (Density-Based Spatial Clustering of Applications with Noise) se zaměřuje na identifikaci hustých oblastí v prostoru a ignoruje šum (tj. body, které nepatří k žádnému shluku). Tento algoritmus nevyžaduje stanovení počtu shluků předem. Popis výpočtu DBSCAN je uveden v následujícím pseudokódu:
+
+\begin{algorithm}
+    \setstretch{1.2}
+    \caption{Metoda \texttt{dbscan}}
+    \begin{algorithmic}[1]
+        \STATE \textbf{Vstup:} $M$ -- Matice bodů, $epsilon$ -- Maximální vzdálenost mezi dvěma body pro označení sousedů, $minPts$ -- Minimální počet bodů pro označení husté oblasti (jádro)\\
+        \STATE \textbf{Výstup:} $clusters$ -- Seznam shluků, kde každý shluk obsahuje indexy bodů v daném shluku
+        \STATE $n \gets \text{size}(M, 1)$ // Počet bodů
+        \STATE $labels \gets \text{zeros}(n, 1)$ // Inicializace popisků klastrů
+        \STATE $cluster\_id \gets 0$ // Počáteční ID pro shluky
+        \STATE $clusters \gets \text{cell}(n, 1)$ // Inicializace seznamu pro shluky
+
+        \FOR{$i \gets 1$ \TO $n$}
+            \IF{$labels[i] \neq 0$}
+                \STATE \textbf{continue} // Pokud je bod již navštívený, přeskoč ho
+            \ENDIF
+
+            \STATE $neighbors \gets \text{find}(\text{pdist2}(M(i, :), M) \leq $epsilon$)$ // Hledání sousedů bodu
+            \IF{$\text{numel}(neighbors) < minPts$}
+                \STATE $labels[i] \gets -1$ // Označení bodu jako šumu
+                \STATE \textbf{continue}
+            \ENDIF
+
+            \STATE $cluster\_id \gets cluster\_id + 1$ // Vytvoření nového shluku
+            \STATE $labels[i] \gets cluster\_id$ // Přiřazení bodu k novému shluku
+            \STATE $current\_cluster \gets neighbors$ // Aktuální seznam sousedních bodů
+
+            \STATE $k \gets 1$
+            \WHILE{$k \leq \text{numel}(current\_cluster)$}
+                \STATE $j \gets current\_cluster(k)$
+                \IF{$labels[j] = -1$}
+                    \STATE $labels[j] \gets cluster\_id$ // Změna šumu na okrajový bod
+                \ENDIF
+
+                \IF{$labels[j] = 0$}
+                    \STATE $labels[j] \gets cluster\_id$ // Přiřazení bodu k aktuálnímu shluku
+                    \STATE $new\_neighbors \gets \text{find}(\text{pdist2}(M(j, :), M) \leq $epsilon$)$
+
+                    \IF{$\text{numel}(new\_neighbors) \geq minPts$}
+                        \STATE $current\_cluster \gets \text{union}(current\_cluster, new\_neighbors)$ // Nový sousedé do seznamu
+                    \ENDIF
+                \ENDIF
+
+                \STATE $k \gets k + 1$
+            \ENDWHILE
+
+            \STATE $clusters[cluster\_id] \gets current\_cluster$ // Uložení bodů do aktuálního shluku
+        \ENDFOR
+
+        \STATE $empty\_indices \gets \textit{cellfun}(\texttt{'isempty'}, clusters)$ // Hledání prázdných shluků
+        \STATE $clusters \gets clusters(\neg empty\_indices)$ // Výběr neprázdných shluků
+        \STATE \textbf{return} $clusters$
+    \end{algorithmic}
+\end{algorithm}
