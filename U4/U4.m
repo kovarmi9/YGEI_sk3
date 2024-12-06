@@ -117,8 +117,6 @@ if n_dim < 5
         end
         scatter(S_(:, 1), ones(size(S(:, 1))),50, 'r+', 'LineWidth', 3);
         scatter(S(:, 1), ones(size(S(:, 1))),50, 'kx', 'LineWidth', 3);
-        xlabel('Value');
-        ylabel('Cluster');
         hold off;
         
     elseif n_dim == 2
