@@ -28,6 +28,10 @@ covMatrix2 = np.cov(points2)
 corrMatrix1 = np.corrcoef(points1)
 corrMatrix2 = np.corrcoef(points2)
 
+# Compute eigenvalues and eigenvectors for the covariance matrices
+eigenvalues1, eigenvectors1 = np.linalg.eig(covMatrix1)
+eigenvalues2, eigenvectors2 = np.linalg.eig(covMatrix2)
+
 # Display covariance and correlation matrices
 print('Covariance Matrix (points1):')
 print(covMatrix1)
@@ -38,6 +42,16 @@ print('Correlation Matrix (points2):')
 print(corrMatrix1)
 print('Correlation Matrix (points2):')
 print(corrMatrix2)
+
+print('Eigenvalues (points1):')
+print(eigenvalues1)
+print('Eigenvectors (points1):')
+print(eigenvectors1)
+
+print('Eigenvalues (points2):')
+print(eigenvalues2)
+print('Eigenvectors (points2):')
+print(eigenvectors2)
 
 # Plot first dataset in 3D
 fig1 = plt.figure()
