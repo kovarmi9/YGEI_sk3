@@ -1,7 +1,7 @@
 clc; clear variables; close all; format long g
 
 % Number of points
-num_points = 200;
+num_points = 4;
 
 % Generate data
 x = randn(1, num_points) * 7;
@@ -35,6 +35,23 @@ disp('Correlation Matrix (points1):');
 disp(corrMatrix1);
 disp('Correlation Matrix (points2):');
 disp(corrMatrix2);
+
+% Compute eigenvalues and eigenvectors for the first dataset
+[eigenvectors1, eigenvalues1] = eig(covMatrix1);
+
+% Compute eigenvalues and eigenvectors for the second dataset
+[eigenvectors2, eigenvalues2] = eig(covMatrix2);
+
+% Display eigenvalues and eigenvectors
+disp('Eigenvalues (points1):');
+disp(diag(eigenvalues1));
+disp('Eigenvectors (points1):');
+disp(eigenvectors1);
+
+disp('Eigenvalues (points2):');
+disp(diag(eigenvalues2));
+disp('Eigenvectors (points2):');
+disp(eigenvectors2);
 
 % Plot the original data
 figure(1)
