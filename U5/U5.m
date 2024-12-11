@@ -18,23 +18,29 @@ z = randn(1, num_points);
 points2 =  [x; y; z];
 
 % Computing the covariance matrix
-covMatrix = cov(points1);
+covMatrix1 = cov(points1);
+covMatrix2 = cov(points2);
 
 % Computing the correlation matrix
-corrMatrix = corr(points2);
+corrMatrix1 = corr(points1);
+corrMatrix2 = corr(points2);
 
 % Displaying covariance and correlation matrices
-disp('Covariance Matrix:');
-disp(covMatrix);
+disp('Covariance Matrix (points1):');
+disp(covMatrix1);
+disp('Covariance Matrix (points2):');
+disp(covMatrix2);
 
-disp('Correlation Matrix:');
-disp(corrMatrix);
+disp('Correlation Matrix (points1):');
+disp(corrMatrix1);
+disp('Correlation Matrix (points2):');
+disp(corrMatrix2);
 
 % Plot the original data
 figure(1)
 scatter3(points1(1, :), points1(2, :), points1(3, :), 'filled');
 hold on;
-title('Generated 3D Data', 'FontSize', 15);
+title('Generated 3D Data (points1)', 'FontSize', 15);
 xlabel('x', 'FontSize', 12);
 ylabel('y', 'FontSize', 12);
 zlabel('z', 'FontSize', 12);
@@ -46,7 +52,7 @@ hold off;
 figure(2)
 scatter3(points2(1, :), points2(2, :), points2(3, :), 'filled');
 hold on;
-title('Generated 3D Data', 'FontSize', 15);
+title('Generated 3D Data (points2)', 'FontSize', 15);
 xlabel('x', 'FontSize', 12);
 ylabel('y', 'FontSize', 12);
 zlabel('z', 'FontSize', 12);

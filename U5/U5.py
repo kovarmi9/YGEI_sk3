@@ -20,18 +20,24 @@ z2 = np.random.randn(num_points)
 # Combine second 3D dataset
 points2 = np.vstack([x2, y2, z2])
 
-# Compute the covariance matrix for the first dataset
-covMatrix = np.cov(points1)
+# Compute the covariance matrix
+covMatrix1 = np.cov(points1)
+covMatrix2 = np.cov(points2)
 
-# Compute the correlation matrix for the second dataset
-corrMatrix = np.corrcoef(points2)
+# Compute the correlation matrix
+corrMatrix1 = np.corrcoef(points1)
+corrMatrix2 = np.corrcoef(points2)
 
 # Display covariance and correlation matrices
 print('Covariance Matrix (points1):')
-print(covMatrix)
+print(covMatrix1)
+print('Covariance Matrix (points2):')
+print(covMatrix2)
 
 print('Correlation Matrix (points2):')
-print(corrMatrix)
+print(corrMatrix1)
+print('Correlation Matrix (points2):')
+print(corrMatrix2)
 
 # Plot first dataset in 3D
 fig1 = plt.figure()
