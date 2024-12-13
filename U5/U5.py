@@ -50,14 +50,14 @@ print('Correlation Matrix points2:')
 print(corrMatrix2)
 
 # Compute eigenvalues and eigenvectors for points1
-eigenvalues1, eigenvectors1 = np.linalg.eig(covMatrix1)
+eigenvalues1, eigenvectors1 = np.linalg.eig(corrMatrix1)
 print('Eigenvalues points1:')
 print(eigenvalues1)
 print('Eigenvectors points1:')
 print(eigenvectors1)
 
 # Compute eigenvalues and eigenvectors for points2
-eigenvalues2, eigenvectors2 = np.linalg.eig(covMatrix2)
+eigenvalues2, eigenvectors2 = np.linalg.eig(corrMatrix2)
 print('Eigenvalues points2:')
 print(eigenvalues2)
 print('Eigenvectors points2:')

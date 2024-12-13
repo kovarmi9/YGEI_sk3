@@ -47,14 +47,14 @@ disp('Correlation Matrix points2:');
 disp(corrMatrix2);
 
 % Compute eigenvalues and eigenvectors for points1
-[eigenvectors1, eigenvalues1] = eig(covMatrix1);
+[eigenvectors1, eigenvalues1] = eig(corrMatrix1);
 disp('Eigenvalues points1:');
 disp(diag(eigenvalues1));
 disp('Eigenvectors points1:');
 disp(eigenvectors1);
 
 % Compute eigenvalues and eigenvectors for points2
-[eigenvectors2, eigenvalues2] = eig(covMatrix2);
+[eigenvectors2, eigenvalues2] = eig(corrMatrix2);
 disp('Eigenvalues points2:');
 disp(diag(eigenvalues2));
 disp('Eigenvectors points2:');
