@@ -1,0 +1,13 @@
+\section{Popis problému}
+
+Metoda hlavních komponent (PCA) je technika používaná pro dekorelaci a redukci rozměru dat. Cílem je najít nové osy (komponenty), které co nejvíce vysvětlují variabilitu původních dat. PCA je založena na transformaci původních proměnných do nových, vzájemně ortogonálních komponent. První komponenta je ta, která vysvětluje největší část variability v datech, druhá komponenta vysvětluje co nejvíce variability zůstávající po první a tak dále. Význam jednotlivých komponent je určen hodnotami vlastních čísel, která udávají, jaký podíl celkové variability daná komponenta vysvětluje.\cite{potuckova2024}\cite{koutroumbas2008}
+
+\subsection{Dílčí kroky analýzy hlavních komponent}
+
+\begin{itemize}
+    \item \textbf{Příprava dat}: Ověření zda má PCA smysl a případné odstranění odlehlých hodnot.
+    \item \textbf{Výpočet korelační/kovarianční matice}: Kovarianční matice se využívá v případě, kdy sledované náhodné veličiny jsou ve stejných nebo porovnatelných měřících jednotkách a rozptyly těchto veličin nejsou zásadně odlišné. Při nesplnění obou uvedených podmínek se metoda hlavních komponent aplikuje s využitím korelační matice.\cite{potuckova2024}
+    \item \textbf{Vlastní čísla a vlastní vektory}: Výpočet vlastních čísel a vektorů kovarianční/korelační matice.
+    \item \textbf{Transformace dat}: Původní data jsou transformována na nové osy, které odpovídají hlavním komponentám.
+\end{itemize}
+

@@ -1,0 +1,22 @@
+\section{Postup}
+
+Úloha byla zpracována v softwaru MATLAB a programovacím jazyce Python.
+
+\subsection{Generování dat}
+Nejprve bylo vygenerováno 200 bodů s normálním rozdělením pro proměnné \(x\) a \(y\).
+
+Pro první datovou sadu byly souřadnice ve směru osy \(y\) vynásobeny dvěma, aby získaly protáhlý charakter. Poté byla data rotována maticí rotace o úhel \(\pi / 4\), aby se natočila vůči původním osám. Výsledkem je datová sada \texttt{points1}.
+
+Pro druhou datovou sadu byl vytvořen náhodný úhel pro kruh pomocí \(2\pi x\) a náhodný poloměr \(r = y\). Uprostřed kruhově generovaných dat byla vytvořena „díra“ s poloměrem 0.8. Body byly kombinovány do matice \texttt{points2}.
+
+\subsection{Výpočet kovarianční a korelační matice}
+Byly vypočteny kovarianční a kovarianční matice pro obě datové sady \texttt{points1} a \texttt{points2}.
+
+\subsection{Výpočet vlastních čísel a vektorů}
+Pro obě datové sady byly vypočítány vlastní čísla a vlastní vektory korelačních matic. Vlastní čísla a vektory byly seřazeny sestupně podle velikosti vlastních čísel.
+
+\subsection{Analýza hlavních komponent}
+Bylo ověřeno, zda první hlavní komponenta obsahuje alespoň 70\% informace pro první datovou sadu. Pro druhou datovou sadu bylo ověřeno, zda je vliv transformace minimální (rozdíl v informacích mezi hlavními komponentami není větší než 10\%).
+
+\subsection{Vizualizace dat}
+Byly grafy pro obě datové sady. Hlavní komponenty byly vykresleny jako šipky, které ukazují směr a velikost jednotlivých komponent.
