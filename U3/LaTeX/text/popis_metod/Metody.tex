@@ -1,0 +1,84 @@
+\section{Popis metod}
+\subsection{Nejkratší cesta grafem}
+
+Jedná se o postup, který určí cestu s nejmenší sumou ohodnocení z uzlu \texttt{A} do \texttt{B}. Pro určení nejkratší cesty grafem byla vytvořena třída \texttt{ShortestPath}, která je inicializována grafem reprezentovaným slovníkem. Klíče tohoto slovníku odpovídají uzlům grafu a hodnoty jsou další slovníky, které popisují sousedy každého uzlu a ohodnocení hran mezi nimi. Sousedé jsou uloženi jako klíče, přičemž ohodnocení hran mezi uzly jsou přiřazeny jako hodnoty.\\
+Metody třídy \texttt{ShortestPath} jsou popsány v příloze \ref{AppenA}. Metody třídy \texttt{ShortestPath} obsahuje následující metody:
+\begin{itemize}
+    \item \texttt{shortest\_cost\_path}\\
+    Je metoda, která slouží k určení nejkratší cesty mezi dvěma body. Použije se v případě kdy nevíme zda se v grafu nachází hrana se záporným ohodnocením.\\
+    \textbf{Vstup : }graf $G$, startovní uzel $A$, koncový uzel $B$\\
+    \textbf{Výstup : }seznam předchůdců $p$, celková ohodnocení cesty $d[B]$
+    
+    \item \texttt{dijkstra}\\
+    Je metoda, která využívá k určení nejkratší cesty Dijkstrův algoritmus. Použije se v případě kdy víme že v grafu se nenachází hrana se záporným ohodnocením.\\
+    \textbf{Vstup : }graf $G$, startovní uzel $A$, koncový uzel $B$\\
+    \textbf{Výstup : }seznam předchůdců $p$, celková ohodnocení cesty $d[B]$
+
+    \item \texttt{bellman\_ford}\\
+    Je metoda, která využívá k určení nejkratší cesty Bellmanův–Fordův algoritmus. Použije se v případě kdy víme že v grafu se nachází hrana se záporným ohodnocením.\\
+    \textbf{Vstup : }graf $G$, startovní uzel $A$, koncový uzel $B$\\
+    \textbf{Výstup : }seznam předchůdců $p$, celková ohodnocení cesty $d[B]$
+\end{itemize}
+
+
+
+\subsection{Minimální kostra grafu:}
+Jedná se o postup, který určí minimální kostru pro zadaný graf. Minimální kostra grafu je podgraf, který obsahuje všechny uzly původního grafu a co nejmenší množství hran, tak aby byl stále souvislý a součet vah těchto hran byl minimální. Pro určení minimální kostry grafu byla vytvořena třída \texttt{MST}. Třída \texttt{MST} je inicializována grafem, který je reprezentován slovníkem, kde klíče odpovídají uzlům grafu a hodnoty jsou další slovníky popisující sousedy každého uzlu a váhy hran mezi nimi. Sousedé jsou uloženi jako klíče, přičemž váhy hran mezi uzly jsou přiřazeny jako hodnoty.\\
+Metody třídy \texttt{MST} jsou popsány v příloze \ref{AppenB}. Metody třídy \texttt{MST} obsahuje následující metody:
+\begin{itemize}
+    \item \texttt{prim}\\
+    Je metoda, která slouží k určení minimální kostry grafu za pomoci Jarníkova algoritmu.\\
+    \textbf{Vstup : } graf $G$\\
+    \textbf{Výstup : } seznam hran $(\text{start}, \text{end}, \text{weight})$ $T$, celková ohodnocení $wt$
+    \item \texttt{boruvka}\\
+    Je metoda, která slouží k určení minimální kostry grafu za pomoci Borůvkova algoritmu. Pro zrychlení procesu je použita heuristika Weighted Union a heuristika Path Compresion.\\
+    \textbf{Vstup : } graf $G$\\
+    \textbf{Výstup : } seznam hran $(\text{start}, \text{end}, \text{weight})$ $T$, celková ohodnocení $wt$
+    \item \texttt{plot\_mst}\\
+    Je metoda, která slouží k vykreslení minimální kostry.\\
+    \textbf{Vstup : } seznam hran $(\text{start}, \text{end}, \text{weight})$ $T$, souřadnice uzlů $C$, styl linie $line$
+\end{itemize}
+
+\subsection{Vyhledání cesty v grafu:}
+Pro vyhledávání a práci s grafy byla vytvořena třída \texttt{GraphPathFinder}, která dědí vlastnosti tříd \texttt{ShortestPath} a \texttt{MST}. Třída \texttt{GraphPathFinder} je inicializována grafem, který je reprezentován slovníkem, kde klíče odpovídají uzlům grafu a hodnoty jsou další slovníky popisující sousedy každého uzlu a váhy hran mezi nimi. Sousedé jsou uloženi jako klíče, přičemž váhy hran mezi uzly jsou přiřazeny jako hodnoty.\\
+Metody třídy \texttt{GraphPathFinder} jsou popsány v příloze \ref{AppenC}. Metody třídy \texttt{GraphPathFinder} obsahuje následující metody:
+\begin{itemize}
+    \item \texttt{DFS}\\
+    Je metoda, která slouží k prohledání grafu do hloubky.\\
+    \textbf{Vstup : } graf $G$, startovní uzel $A$\\
+    \textbf{Výstup : } seznam předchůdců $p$
+    
+    \item \texttt{BFS}\\
+    Je metoda, která slouží k prohledání grafu do šířky.\\
+    \textbf{Vstup : } graf $G$, startovní uzel $A$\\
+    \textbf{Výstup : } seznam předchůdců $p$
+    
+    \item \texttt{all\_shortest\_paths}\\
+    Je metoda, která slouží k vyhledání nejkratší cesty mezi všemi uzly.\\
+    \textbf{Vstup : } graf $G$\\
+    \textbf{Výstup : } slovník obsahující dvojici bodů a nejkratší cestu mezi nimi $paths$
+    
+    \item \texttt{plot\_graph}\\
+    Je metoda, která slouží k vykreslení celého grafu.\\
+    \textbf{Vstup : } graf $G$, souřadnice uzlů $C$, styl linie $line$, barva bodů uzlů $\text{points}$, velikost uzlů a $\text{point\_size}$
+    
+    \item \texttt{plot\_path}\\
+    Je metoda, která slouží k vykreslení cesty.\\
+    \textbf{Vstup : } souřadnice uzlů $C$, cesta $P$ a styl linie $linie$
+    
+    \item \texttt{plot\_node\_names}\\
+    Je metoda, která slouží k vykreslení názvů uzlů.\\
+    \textbf{Vstup : } souřadnice a názvy uzlů $node\_names$
+    
+    \item \texttt{rec\_red\_nodes}\\
+    Je metoda, která slouží k vykreslení specifických uzlů červeně.\
+    \textbf{Vstup : } seznam uzlů $nodes$, seznam souřadnic $C$, velikost bodu $size$
+    
+    \item \texttt{rec\_path}\\
+    Je metoda, která slouží ke zpětnému vytvoření cesty mezi dvěma body\\
+    \textbf{Vstup : } startovní uzel $A$, koncový uzel $B$, seznam předchůdců $p$\\
+    \textbf{Výstup : } cesta $path$
+    
+    \item metody třídy \texttt{ShortestPath}
+    \item metody třídy \texttt{MST}
+\end{itemize}

@@ -1,0 +1,17 @@
+\section{Závěr}
+
+V rámci této úlohy byly implementovány algoritmy pro řešení úloh spojených s grafy, konkrétně pro nalezení nejkratších cest a minimálních koster. Nejprve byla na základě geografických dat pro území okresu Rokycany vytvořena grafová reprezentace, která byla následně použita k testování různých variant algoritmů. Bylo provedeno prohledávání grafu do hloubky (DFS) a prohledávání grafu do šířky (BFS). Dále byla nalezena nejkratší cesta mezi uživatelem zvolenými obcemi pomocí Dijkstrova algoritmu, který je určen pro nalezení nejkratší cesty mezi dvěma uzly v grafu s kladně ohodnocenými hranami. Pro grafy obsahující záporné ohodnocení hran byl aplikován Bellman-Fordův algoritmus. Dalším krokem bylo vyhledání nejkratších cest mezi všemi dvojicemi uzlů v grafu. Pro nalezení minimálních koster grafu byly implementovány dva různé algoritmy: Primův a Borůvkův algoritmus. K optimalizaci běhu některých algoritmů byly použity heuristiky, jako jsou Weighted Union a Path Compression. Ve všech případech byly výsledky vypisovány do konzole a byly vytvořeny vizualizace, které zprostředkovaly přehled o nalezených cestách a minimálních kostrách (viz výsledky).
+
+\subsection{Další Možné Neřešené Problémy a Náměty na Vylepšení}
+
+\begin{itemize} 
+    \item \textbf{Tvorba grafu:} Při tvorbě grafové reprezentace jsou obce reprezentovány bodovou vrstvou, která je přiřazena k nejbližším uzlům. Tento přístup však může vést k chybnému přiřazení, pokud se obec nachází v oblasti, kde není žádný uzel v bezprostřední blízkosti. V takovém případě může být obec přiřazena k uzlu, který leží na silnici, která jí vůbec neprochází. Možných řešení tohoto problému je několik. Jednou z variant by bylo využití polygonové vrstvy obcí pro generování grafu. Tento přístup by ale mohl vést k situaci, kdy by jedna obec byla reprezentována více uzly. Aktuální přístup přiřazuje každé obci právě jeden uzel, přičemž zůstávají volné uzly, které nepatří žádné obci a reprezentují „křižovatky mimo obce“. Dalším problémem je přítomnost krátkých silničních úseků, které jsou v grafech zohledněny jako hrany, přestože neodpovídají významným dopravním trasám. Řešením by mohlo být sloučení těchto krátkých úseků silnic dohromady s většími úseky silnic.
+
+    \item \textbf{Rekonstrukce cesty:} Na základě uživatelova zadání vracet rovnou uzly, které tvoří nejkratší cestu a ne pouze seznam předchůdců.
+    
+    \item \textbf{Vykreslení grafu:} Vytvořit robustnější metody, které dokážou rychleji vykreslit graf. Bylo by také výhodné vytvořit třídu, která by se specializovala pouze na vykreslování grafů, čímž by ulehčila práci uživateli s vizualizacemi grafů.
+
+    \item \textbf{Uzly spojené dvěma hranami:}Vytvořit metodu, která dokáže efektivně vykreslit situaci, kdy jsou dva uzly spojeny více než jednou hranou. Tato funkce by mohla být užitečná v případě, že by hrany reprezentovaly pouze přímou spojnici mezi dvěma body.
+    
+    \item \textbf{Spojení všech uzlů nejkratší cestou:} Pro zrychlení výpočtů by bylo efektivnější přejít na Floydův–Warshallův algoritmus, který vyhledává všechny nejkratší cesty v jednom průchodu. Aktuálně je problém řešen pomocí dvou vnořených cyklů \texttt{for}, které hledají nejkratší cestu pro každou kombinaci uzlů. Zároveň se momentálně u každé dvojice kontroluje, zda neexistují hrany se záporným ohodnocením, což by stačilo provést pouze jednou.
+\end{itemize}

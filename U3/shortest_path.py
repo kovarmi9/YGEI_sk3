@@ -91,7 +91,7 @@ class ShortestPath:
     
     def bellman_ford(self, start: int, target: int)-> tuple[list, float]:
         """
-        Dijkstra's algorithm to find the shortest path in a graph with non-negative weights.
+        Bellman-Ford algorithm for finding the shortest path in a graph (including undirected graphs with negative weights).
 
         Parameters:
             start (int): Starting node.

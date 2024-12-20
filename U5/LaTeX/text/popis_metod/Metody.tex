@@ -1,0 +1,33 @@
+\section{Popis metod}
+
+\begin{algorithm}
+    \setstretch{1.2}
+    \caption{Postup analýzy hlavních komponent}
+    \begin{algorithmic}[1]
+        \STATE $x \gets \text{randn}(1, num\_points)$ // Generování dat pro $x$
+        \STATE $y \gets \text{randn}(1, num\_points)$ // Generování dat pro $y$
+        \STATE $theta \gets \pi / 4$ // Úhel rotace
+        \STATE $rotation\_matrix \gets \begin{bmatrix} \cos(\theta) & -\sin(\theta) \\ \sin(\theta) & \cos(\theta) \end{bmatrix}$ // Definice rotační matice
+        \STATE $points1 \gets rotation\_matrix \cdot \begin{bmatrix} x \\ y \cdot 2 \end{bmatrix}$ // Kombinace dat do points1
+        \STATE $circle\_angle \gets 2 \cdot \pi \cdot x$ // Vytvoření náhodného úhlu pro kruh
+        \STATE $r \gets y$ // Vytvoření náhodného poloměru pro kruh
+        \WHILE{$\text{any}(r < 0.8)$}
+            \STATE $r(r < 0.8) \gets \sqrt{\text{rand}(1, \text{sum}(r < 0.8))}$ // Vytvoření díry v datech
+        \ENDWHILE
+        \STATE $points2 \gets \begin{bmatrix} r \cdot \cos(circle\_angle) \\ r \cdot \sin(circle\_angle) \end{bmatrix}$ // Kombinace dat do points2
+        \STATE $covMatrix1 \gets \text{cov}(points1')$
+        \STATE $covMatrix2 \gets \text{cov}(points2')$
+        \STATE $corrMatrix1 \gets \text{corr}(points1')$
+        \STATE $corrMatrix2 \gets \text{corr}(points2')$
+        \STATE $[eigenvectors1, eigenvalues1] \gets \text{eig}(corrMatrix1)$
+        \STATE $[eigenvectors2, eigenvalues2] \gets \text{eig}(corrMatrix2)$
+        \STATE $[eigenvalues\_sorted1, indices1] \gets \text{sort}(\text{diag}(eigenvalues1), 'descend')$
+        \STATE $eigvecsort1 \gets eigenvectors1(:, indices1)$
+        \STATE $[eigenvalues\_sorted2, indices2] \gets \text{sort}(\text{diag}(eigenvalues2), 'descend')$
+        \STATE $eigvecsort2 \gets eigenvectors2(:, indices2)$
+        \STATE $info\_pc1\_points1 \gets eigenvalues\_sorted1(1) / \text{sum}(eigenvalues\_sorted1)$
+        \STATE $info\_pc1\_points2 \gets eigenvalues\_sorted2(1) / \text{sum}(eigenvalues\_sorted2)$
+        \STATE $info\_pc2\_points2 \gets eigenvalues\_sorted2(2) / \text{sum}(eigenvalues\_sorted2)$
+        \STATE $diff\_info\_points2 \gets \text{abs}(info\_pc1\_points2 - info\_pc2\_points2)$
+    \end{algorithmic}
+\end{algorithm}

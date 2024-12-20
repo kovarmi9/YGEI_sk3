@@ -1,0 +1,184 @@
+\section{Metody třídy GraphPathFinder} \label{AppenC}
+
+\begin{algorithm}
+    \setstretch{0.8}
+    \caption{Metoda \texttt{DFS}}
+    \begin{algorithmic}[1]
+        \STATE \textbf{Vstup:} graf $G$, startovní uzel $A$
+        \STATE \textbf{Výstup:} seznam předchůdců $p$
+        
+        \STATE $n \gets$ počet vrcholů v $G$
+        \STATE $p \gets [-1] \times (n + 1)$ 
+        \STATE $S \gets [0] \times (n + 1)$ 
+        \STATE $St \gets [~]$ 
+
+        \STATE $St.\text{append}(A)$ 
+
+        \WHILE{$St$ není prázdný}
+            \STATE $A \gets St.\text{pop}()$
+            \STATE $S[A] \gets 1$
+
+            \FOR{$v$ v $\text{reverse}(G[A])$}
+                \IF{$S[v] = 0$} 
+                    \STATE $p[v] \gets A$
+                    \STATE $St.\text{append}(v)$
+                \ENDIF
+            \ENDFOR
+
+            \STATE $S[A] \gets 2$ 
+        \ENDWHILE
+
+        \STATE \textbf{return} $p$
+    \end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}
+    \setstretch{0.9}
+    \caption{Metoda \texttt{BFS}}
+    \begin{algorithmic}[1]
+        \STATE \textbf{Vstup:} graf $G$, startovní uzel $A$
+        \STATE \textbf{Výstup:} seznam předchůdců $p$
+        
+        \STATE $n \gets$ počet vrcholů v $G$
+        \STATE $p \gets [-1] \times (n + 1)$ 
+        \STATE $S \gets [0] \times (n + 1)$ 
+        \STATE $Q \gets [~]$ 
+
+        \STATE $S[A] \gets 1$ 
+        \STATE $Q.\text{append}(A)$ 
+
+        \WHILE{$Q$ není prázdná}
+            \STATE $start \gets Q.\text{pop}(0)$
+            
+            \FOR{$v$ v $G[A]$}
+                \IF{$S[v] = 0$}
+                    \STATE $S[v] \gets 1$
+                    \STATE $p[v] \gets A$
+                    \STATE $Q.\text{append}(v)$
+                \ENDIF
+            \ENDFOR
+
+            \STATE $S[A] \gets 2$
+        \ENDWHILE
+
+        \STATE \textbf{return} $p$
+    \end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}
+    \setstretch{0.9}
+    \caption{Metoda \texttt{all\_shortest\_paths}}
+    \begin{algorithmic}[1]
+        \STATE \textbf{Vstup:} graf $G$
+        \STATE \textbf{Výstup:} slovník obsahující dvojici bodů a nejkratší cestu mezi nimi $paths$
+        
+        \STATE $paths \gets \{~\}$
+        \STATE $keys \gets$ seznam všech uzlů v $G$
+        
+        \FOR{$i \gets 0$ \TO $\text{len}(keys) - 1$}
+            \FOR{$j \gets i + 1$ \TO $\text{len}(keys) - 1$}
+                \STATE $(P, d_\text{min}) \gets \text{shortest\_cost\_path}(keys[i], keys[j])$
+                
+                \STATE $path \gets \text{rec\_path}(keys[i], keys[j], P)$
+                
+                \STATE $paths[(keys[i], keys[j])] \gets (path, d_\text{min})$
+            \ENDFOR
+        \ENDFOR
+        
+        \STATE \textbf{return} $paths$ 
+    \end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}
+    \setstretch{0.9}
+    \caption{Metoda \texttt{plot\_graph}}
+    \begin{algorithmic}[1]
+        \STATE \textbf{Vstup:} graf $G$, souřadnice uzlů $C$, styl linie $line$, barva bodů uzlů $\text{points}$, velikost uzlů a $\text{point\_size}$
+        
+        \FOR{$\text{node}, (x, y)$ \textbf{in} $C$}
+            \STATE Vykresli bod na souřadnicích $(x, y)$ s barvou $\text{points}$ a velikostí $\text{point\_size}$
+            \STATE Přidej popisek uzlu $\text{node}$ na pozici $(x + 5, y)$ s velikostí písma $5$
+        \ENDFOR
+        
+        \FOR{$\text{node}, \text{neighbors}$ \textbf{in} $G$}
+            \STATE $x_\text{start}, y_\text{start} \gets C[\text{node}]$ 
+            \FOR{$\text{neighbor}$ \textbf{in} $\text{neighbors}$}
+                \STATE $x_\text{end}, y_\text{end} \gets C[\text{neighbor}]$ \COMMENT{Souřadnice sousedního uzlu}
+                \STATE Vykresli čáru mezi $(x_\text{start}, y_\text{start})$ a $(x_\text{end}, y_\text{end})$ se stylem $\text{line}$ a tloušťkou $1$
+            \ENDFOR
+        \ENDFOR
+        
+
+        \STATE Nastav popisky os: X-osa a Y-osa
+        \STATE Aktivuj mřížku
+    \end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}
+    \setstretch{0.9}
+    \caption{Metoda \texttt{plot\_path}}
+    \begin{algorithmic}[1]
+        \STATE \textbf{Vstup:} souřadnice uzlů $C$, cesta $P$ a styl linie $linie$
+        
+        \STATE $x_\text{coords} \gets [~]$
+        \STATE $y_\text{coords} \gets [~]$ 
+        \FOR{$\text{node}$ \textbf{in} \text{path}}
+            \STATE $(x, y) \gets C[\text{node}]$
+            \STATE Přidej $x$ do $x_\text{coords}$
+            \STATE Přidej $y$ do $y_\text{coords}$
+        \ENDFOR
+        
+        \STATE Vykresli čáru mezi souřadnicemi v $x_\text{coords}$ a $y_\text{coords}$ se stylem $\text{line}$ a tloušťkou 1
+    \end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}
+    \setstretch{0.9}
+    \caption{Metoda \texttt{plot\_node\_names}}
+    \begin{algorithmic}[1]
+        \STATE \textbf{Vstup:} souřadnice a názvy uzlů $node\_names$
+        
+        \FOR{každý uzel $\text{node}$ a jeho souřadnice $(x, y)$ v $node\_names$}
+            \STATE Vykresli černý bod na souřadnicích $(x, y)$ s velikostí bodu $\text{markersize}$
+
+            \FOR{každý posun $(dx, dy)$ v \{(-10, 100), (10, 100), (0, 90), (0, 110), (-10, 90), (10, 110), (-10, 110), (10, 90)\}}
+                \STATE Vykresli bílý text na souřadnicích $(x + dx, y + dy)$ s velikostí písma $\text{fontsize}$ a barvou bílé
+            \ENDFOR
+
+            \STATE Vykresli černý text na souřadnicích $(x, y + 100)$ s velikostí písma $\text{fontsize}$ a barvou černé
+        \ENDFOR
+    \end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}
+    \setstretch{0.9}
+    \caption{Metoda \texttt{plot\_red\_nodes}}
+    \begin{algorithmic}[1]
+        \STATE \textbf{Vstup:} seznam uzlů $nodes$, seznam souřadnic $C$, velikost bodu $size$
+        \FOR{každý uzel $\text{node}$ v $nodes$}
+            \IF{$\text{node} \in C$}
+                \STATE Získat souřadnice $(x, y)$ z $C[\text{node}]$
+                \STATE Vykreslit červený bod na souřadnicích $(x, y)$ s velikostí $size$
+            \ENDIF
+        \ENDFOR
+    \end{algorithmic}
+\end{algorithm}
+\newpage
+\begin{algorithm}
+    \setstretch{0.9}
+    \caption{Metoda \texttt{rec\_path}}
+        \begin{algorithmic}[1]
+        \STATE \textbf{Vstup:} startovní uzel $A$, koncový uzel $B$, seznam předchůdců $p$
+        \STATE \textbf{Výstup:} cesta $path$
+        \STATE $path \gets [~]$
+        \WHILE{$B \neq A$ \textbf{and} $B \neq -1$}
+            \STATE $path.\text{append}(B)$
+            \STATE $B \gets p[B]$
+        \ENDWHILE
+        \STATE $path.\text{append}(B)$
+        \IF{$B \neq start$}
+            \STATE \textbf{print}("Incorrect path")
+        \ENDIF
+        \STATE \textbf{return} $path$
+    \end{algorithmic}
+\end{algorithm}

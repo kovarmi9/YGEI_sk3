@@ -1,0 +1,19 @@
+\newpage
+\section{Postup}
+
+Úloha byla zpracována v softwaru MATLAB.
+
+\subsection{Vstupy a nastavení}
+Na začátku skriptu je požadováno, aby uživatel zadal dimenzi prostoru v němž bude shlukování probíhat. Tento vstup je validován, aby bylo zajištěno, že uživatel zadá platné číslo dimenze. Pokud je zvolen prostor o dvou dimenzích, skript umožňuje dále dvě možnosti: buď uživatel zadá body manuálně kliknutím do grafu, nebo jsou body automaticky generovány. Pro jiné dimenze jsou body vždy generovány automaticky. Parametry pro různé, shlukovací algoritmy jsou vloženy přímo do skriptu v němž je lze měnit.
+
+\subsection{Metody shlukování}
+Pro shlukování dat jsou použity následující metody:
+
+\begin{itemize}
+    \item \textbf{K-means}: K-means je použit jak jako vlastní implementace, tak jako vestavěná funkce v MATLABu.
+    \item \textbf{Hierarchické shlukování}: Použita byla vlastní implementace.
+    \item \textbf{DBSCAN}: Použita byla vlastní implementace.
+\end{itemize}
+
+\subsection{Vizualizace}
+Pro vizualizaci výsledků shlukování jsou body zobrazeny do grafů v závislosti na dimenzi dat. V případě 1D dat jsou zobrazeny na jedné ose, pro 2D jsou body zobrazeny v rovinném grafu, pro 3D jsou body vykresleny ve 3D prostoru. Pro 4D jsou zobrazeny čtyři řezy 4D prostoru jako čtyři 3D grafy. Pro vyšší dimenze nejsou grafy vkreslovány. V grafech jsou jednotlivé shluky barevně odlišeny. Pro K-means jsou také zobrazeny centroidy každého shluku.

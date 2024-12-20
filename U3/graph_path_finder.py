@@ -146,8 +146,8 @@ class GraphPathFinder(ShortestPath,MST):
                 x_end, y_end = C[neighbor]
                 plt.plot([x_start, x_end], [y_start, y_end], line, lw=1)  # Line between nodes
 
-        plt.xlabel("X-axis")
-        plt.ylabel("Y-axis")
+        plt.xlabel("Y-axis")
+        plt.ylabel("X-axis")
         plt.grid(True)
 
     def plot_path(self, path:list, C:dict, line: str = 'r-')-> None:

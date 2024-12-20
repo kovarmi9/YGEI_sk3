@@ -47,35 +47,38 @@ This folder contains the implementation of algorithms for automated object recog
 ### [U3 - Shortest Path in Graph](https://github.com/kovarmi9/YGEI_sk3/tree/main/U3)
 #### [Assignment](https://github.com/k155cvut/ygei/blob/main/cviceni/geoinf_cv4.pdf)
 
-This folder contains the implementation of algorithms for solving shortest path problems and other problems in graphs. The process follows these steps:
+This folder contains the implementation of algorithms for solving shortest path problems and other problems in graphs. 
+- **Class Implementations**:
+  - [`shortest_path`](https://github.com/kovarmi9/YGEI_sk3/blob/main/U3/shortest_path.py): Finding shortest paths in graphs.
+  - [`mst`](https://github.com/kovarmi9/YGEI_sk3/blob/main/U3/mst.py): Implements algorithms for finding the minimum spanning tree.
+  - [`graph_path_finder`](https://github.com/kovarmi9/YGEI_sk3/blob/main/U3/graph_path_finder.py): Inherits from `shortest_path` and `mst` to integrate their functionalities.
+  
+The process follows these steps:
+- Data preprocessing and export to text file
+- Graph lading from text file
+- Dijkstra’s algorithm  
+- Solution for graphs with negative weights
+- Finding the shortest paths between all pairs of nodes
+- Finding the minimum spanning tree using Kruskal's algorithm
+- Finding the minimum spanning tree using Prim's algorithm
+- Using the weighted union heuristic
+- Using the path compression heuristic
 
-- **Data Preprocessing and Export**:
-  - **GeoPandas** and **Shapely** are used to load geospatial data for roads [`roads.gpkg`](https://github.com/kovarmi9/YGEI_sk3/blob/main/U3/data/roads.gpkg) and municipalities [`municipalities.gpkg`](https://github.com/kovarmi9/YGEI_sk3/blob/main/U3/data/municipalities.gpkg).
-  - The data is visualized using **Matplotlib** to display the road network and municipality locations.
-  - **Road Attributes Calculation**:
-    - **Curvature**: Calculated as the ratio of the total length to straight-line distance for each road segment.
-    - **Road Length Cost**: Inverse of the road segment length.
-    - **Speed Cost**: Inverse of the designed speed limit for each road segment.
-  - **Municipality Node Assignment**:
-    - Municipalities are assigned to the nearest road node (start or end point of a road segment) using the **GeoPandas** `distance` method.
-  - **Graph Creation**:
-    - A graph is created by treating each road segment as an edge, with associated costs based on length, curvature, or speed.
-    - The graph is exported as text files with different cost metrics (e.g., length, curvature, speed).
-  - **Export**:
-    - The municipality data, including the nearest road node coordinates, is saved to a text file.
-    - The road graph data with various cost metrics is exported to separate text files for further use in shortest path algorithms.
-       - [municipalities_nearest_nodes.txt](https://github.com/kovarmi9/YGEI_sk3/tree/main/U3/data/municipalities_nearest_nodes.txt).
-       - [graph_length_cost.txt](https://github.com/kovarmi9/YGEI_sk3/tree/main/U3/data/graph_length_cost.txt)
-       - [graph_curvature.txt](https://github.com/kovarmi9/YGEI_sk3/tree/main/U3/data/graph_curvature.txt)
-       - [graph_speed_cost.txt](https://github.com/kovarmi9/YGEI_sk3/tree/main/U3/data/graph_speed_cost.txt)
-       - [graph_uncosted.txt](https://github.com/kovarmi9/YGEI_sk3/tree/main/U3/data/graph_uncosted.txt)
+### [U4 - Clustering algorithms](https://github.com/kovarmi9/YGEI_sk3/tree/main/U4)
+#### [Assignment](https://geo.fsv.cvut.cz/gwiki/155YGEI_Geoinformatika)
 
-- **Graph Loading from Text File**:
+This folder contains the implementation of clustering algorithms. The process includes the following steps:
+- Generation of four sets of n-dimensional clusters
+- Implementation of the k-means algorithm
+- Comparison with the built-in k-means function
+- Implementation of hierarchical clustering
+- Implementation of DBSCAN (Density-Based Spatial Clustering of Applications with Noise)
 
-- **Dijkstra’s Algorithm**  
-- **Solution for graphs with negative weights**:
-- **Finding the shortest paths between all pairs of nodes**:
-- **Finding the minimum spanning tree using Kruskal's algorithm**:
-- **Finding the minimum spanning tree using Prim's algorithm**:
-- **Using the Weighted Union heuristic**:
-- **Using the Path Compression heuristic**:
+### [U5 - Principal Component Method](https://github.com/kovarmi9/YGEI_sk3/tree/main/U5)
+#### [Assignment](https://geo.fsv.cvut.cz/gwiki/155YGEI_Geoinformatika)
+
+This folder contains the implementation of principal component analysis (PCA). The process includes the following steps:
+- Generation of two sets of 2D points
+- Calculation of the correlation and covariance matrices
+- Computation of eigenvalues and eigenvectors
+- Determining the percentage of variance explained by the principal components

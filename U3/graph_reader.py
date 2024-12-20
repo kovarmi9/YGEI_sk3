@@ -82,7 +82,7 @@ def read_nodes_names(file_name):
 
     Parameters:
         file_name (str): Path to the file containing node data. Each line should follow the format:
-                         name x y
+                         name, x, y
                          where `name` is the node name, and `x` and `y` are its coordinates.
 
     Returns:
@@ -93,8 +93,8 @@ def read_nodes_names(file_name):
     # Open the file in read mode with UTF-8 encoding
     with open(file_name, 'r', encoding='utf-8') as f:
         for line in f:
-            # Remove extra spaces at the beginning and end, then split the line by spaces
-            parts = line.strip().split()
+            # Remove extra spaces at the beginning and end, then split the line by comma
+            parts = line.strip().split(',')
 
             # Check if the line contains exactly 3 parts: name, x, and y
             if len(parts) == 3:
