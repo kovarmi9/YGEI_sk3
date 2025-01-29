@@ -82,3 +82,11 @@ This folder contains the implementation of principal component analysis (PCA). T
 - Calculation of the correlation and covariance matrices
 - Computation of eigenvalues and eigenvectors
 - Determining the percentage of variance explained by the principal components
+
+### [U6 - Laser Scanning](https://github.com/kovarmi9/YGEI_sk3/tree/main/U6)
+#### [Assignment](https://geo.fsv.cvut.cz/gwiki/155YGEI_Geoinformatika)
+
+This folder contains the implementation of laser scanning data processing. The process includes the following steps:
+- Filtering of point cloud data from the archaeological site Klobásná using CloudCompare or LasTools
+- Conversion of the filtered point cloud to a raster format
+- Visualization and highlighting of mounds
